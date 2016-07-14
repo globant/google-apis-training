@@ -1,0 +1,61 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.appengine:gradle-appengine-plugin:1.9.26'
+    }
+}
+
+repositories {
+    mavenCentral();
+}
+
+
+apply plugin: 'war'
+apply plugin: 'appengine'
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+dependencies {
+    appengineSdk 'com.google.appengine:appengine-java-sdk:1.9.38'
+
+    compile 'com.google.appengine:appengine-endpoints:1.9.38'
+    compile 'com.google.appengine:appengine-endpoints-deps:1.9.38'
+    compile 'javax.servlet:servlet-api:2.5'
+    compile 'javax.inject:javax.inject:1'
+    compile 'com.google.inject:guice:3.0'
+    compile 'com.google.inject.extensions:guice-servlet:3.0'
+    compile 'com.google.guava:guava:19.0'
+    compile 'com.googlecode.objectify:objectify:5.1.13'
+    compile 'javax.jdo:jdo-api:3.0.1'
+
+    testCompile 'com.google.appengine:appengine-testing:1.9.38'
+    testCompile 'com.google.appengine:appengine-api-stubs:1.9.38'
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.mockito:mockito-all:1.9.0'
+}
+
+appengine {
+    httpAddress = "0.0.0.0"
+    downloadSdk = true
+    appcfg {
+ 	    oauth2 = true
+	}
+
+	jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000']
+}
+
+task deploy << {
+}
+
+deploy.dependsOn appengineUpdate
+
+
+
+task run << {
+}
+
+run.dependsOn appengineRun

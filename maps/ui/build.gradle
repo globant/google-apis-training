@@ -1,0 +1,69 @@
+plugins {
+    id "com.moowork.gulp" version "0.13"
+    id "com.moowork.node" version "0.13"
+}
+
+apply plugin: 'com.moowork.gulp'
+
+task build << {
+}
+
+build.dependsOn gulp_default
+
+gulp_default.dependsOn 'bower'
+
+// Get the path for the locally installed binaries
+task npmBin << {
+    new ByteArrayOutputStream().withStream { os ->
+        def result = exec {
+            executable = 'npm'
+            args = ['bin']
+            standardOutput = os
+        }
+        ext.binPath = os.toString().trim() + "/"
+    }
+}
+
+task npm(type: Exec) {
+    description = "Grab NodeJS dependencies (from package.json)"
+    commandLine = ["npm", "install"]
+    inputs.file "package.json"
+    outputs.dir "node_modules"
+
+    tasks.npmBin.execute()
+}
+
+task bower(dependsOn: 'npm', type: Exec){
+    commandLine "${npmBin.binPath}bower", 'install'
+}
+
+// Set proxy to gradle
+task setHttpProxyFromEnv {
+    def map = ['HTTP_PROXY': 'http', 'HTTPS_PROXY': 'https']
+    for (e in System.getenv()) {
+        def key = e.key.toUpperCase()
+        if (key in map) {
+            def base = map[key]
+            def url = e.value.toURL()
+            System.setProperty("${base}.proxyHost", url.host.toString())
+            System.setProperty("${base}.proxyPort", url.port.toString())
+            System.setProperty("${base}.nonProxyHosts", "localhost|192.168.99.100|127.0.0.1")
+        }
+    }
+}
+// before build proxy is set
+build.dependsOn setHttpProxyFromEnv
+
+task deploy(dependsOn: 'copyAppFile', type: Exec) {
+
+    //mustRunAfter 'copyAppFile'
+    commandLine 'gcloud', 'app', 'deploy', 'dist/app.yaml'
+}
+
+task copyAppFile << {
+  copy {
+		from 'appengine'
+    into 'dist'
+	}
+}
+copyAppFile.dependsOn build
