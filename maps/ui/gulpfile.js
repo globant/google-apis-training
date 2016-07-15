@@ -267,7 +267,7 @@ gulp.task('serve:dist', ['default'], function() {
 });
 
 // Build production files, the default task
-gulp.task('default', ['clean'], function(cb) {
+gulp.task('build', ['clean'], function(cb) {
   // Uncomment 'cache-config' if you are going to use service workers.
   runSequence(
     ['ensureFiles', 'copy', 'styles'],
@@ -275,6 +275,8 @@ gulp.task('default', ['clean'], function(cb) {
     'vulcanize', // 'cache-config',
     cb);
 });
+
+gulp.task('default', ['build']);
 
 // Build then deploy to GitHub pages gh-pages branch
 gulp.task('build-deploy-gh-pages', function(cb) {

@@ -9,8 +9,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
-<dom-module id="my-view1">
+<dom-module id="maps-home">
 
   <template>
 
@@ -45,11 +46,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <iron-ajax id="userInfo"
+      url="http://localhost:8080/_ah/api/userApi/v1/users"
+      method="GET"
+      headers="{{authorization}}"
+      handle-as="json"
+      on-response="handleResponse"
+      ></iron-ajax>
+
     <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+      <p>ID: {{data.id}}</p>
+      <p>User: {{data.email}}</p>
+      <p>Active: {{data.active}}</p>
     </div>
 
   </template>
@@ -57,9 +65,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
 
     Polymer({
+      is: 'maps-home',
 
-      is: 'my-view1'
+      properties: {
+        user: {
+          type: Object,
+          value: null,
+          observer: 'userChanged'
+        },
 
+        authorization: {
+          type: Object,
+          computed: 'getToken(user)'
+        }
+      },
+
+      getToken: function (user) {
+        if(user) {
+          var authR = user.getAuthResponse();
+          return {
+            Authorization: authR['token_type'] + ' ' + authR['access_token']
+          };
+        }
+        return '';
+      },
+
+      userChanged: function () {
+        if(this.$.userInfo) {
+          this.$.userInfo.generateRequest();
+        }
+      },
+
+      handleResponse: function (e, response) {
+        var res = response.parseResponse();
+        this.data = res.items[0];
+      }
     });
 
   </script>

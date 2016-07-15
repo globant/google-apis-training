@@ -3,7 +3,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/google-signin/google-signin.html">
 
-<dom-module id="maps-poc-login">
+<dom-module id="maps-login">
   <template>
     <style>
       :host {
@@ -49,7 +49,7 @@
 
     <google-signin
       label-signin="Sign-in"
-      client-id="1058583912977-upoulnl93armugnho0i1epirec4158am.apps.googleusercontent.com"
+      client-id=""
       scopes="profile email openid"
       on-google-signin-success="handleSignedIn"
     ></google-signin>
@@ -59,7 +59,7 @@
   </template>
   <script>
     Polymer({
-      is: 'maps-poc-login',
+      is: 'maps-login',
       properties: {
         user: {
           type: Object,
@@ -83,7 +83,6 @@
       },
       handleSignedIn: function () {
         this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
-        console.log(this.user);
       }
 
     });
