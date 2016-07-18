@@ -1,9 +1,12 @@
+
 plugins {
     id "com.moowork.gulp" version "0.13"
     id "com.moowork.node" version "0.13"
 }
 
 apply plugin: 'com.moowork.gulp'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 task build << {
 }
@@ -13,7 +16,7 @@ build.dependsOn gulp_default
 gulp_default.dependsOn 'bower'
 
 // Get the path for the locally installed binaries
-task npmBin << {
+/*task npmBin << {
     new ByteArrayOutputStream().withStream { os ->
         def result = exec {
             executable = 'npm'
@@ -35,6 +38,40 @@ task npm(type: Exec) {
 
 task bower(dependsOn: 'npm', type: Exec){
     commandLine "${npmBin.binPath}bower", 'install'
+}*/
+
+task npmBin << {
+    new ByteArrayOutputStream().withStream { os ->
+        def result = exec {
+            executable = 'npm'
+            args = ['bin']
+            standardOutput = os
+        }
+        ext.binPath = os.toString().trim() + "/"
+    }
+}
+
+task npm(type: Exec) {
+    description = "Grab NodeJS dependencies (from package.json)"
+    
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+	    commandLine 'cmd', '/c', 'npm', 'install'
+	} else {
+		commandLine 'npm', 'install'
+		inputs.file "package.json"
+	    outputs.dir "node_modules"
+	
+	    tasks.npmBin.execute()
+	}
+}
+
+task bower(dependsOn: 'npm', type: Exec){
+    
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+	    commandLine 'cmd', '/c', 'stop.cmd', 'bower', 'install'
+	} else {
+		commandLine "${npmBin.binPath}bower", 'install'
+	}
 }
 
 // Set proxy to gradle

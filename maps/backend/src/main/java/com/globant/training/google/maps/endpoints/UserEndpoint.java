@@ -21,15 +21,13 @@ import com.google.inject.Inject;
  * 
  * @author gaston.aguilera
  */
-@Api(name = "userApi", version = "v1", 
-scopes = {Constants.EMAIL_SCOPE},
-clientIds = {Constants.WEB_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.IOS_CLIENT_ID},
-audiences = {Constants.ANDROID_AUDIENCE}
-// namespace = @ApiNamespace(ownerDomain = "training.google.maps.globant.com",
-// ownerName = "training.google.maps.globant.com",
-// packagePath = "com.globant.training.google.maps.endpoints")
-)
-
+@Api(name = "maps", version = "v1", 
+    scopes = {Constants.EMAIL_SCOPE},
+    clientIds = {
+        Constants.WEB_CLIENT_ID, 
+        Constants.API_EXPLORER_CLIENT_ID
+    },
+    description = "API for maps poc - users.")
 public class UserEndpoint extends BaseEndpoint {
 
   private final UserService userService;

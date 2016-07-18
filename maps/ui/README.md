@@ -12,15 +12,15 @@ An app engine application used as UI of Maps POC.
 
 ## Compile it
 ```sh
-./gradlew build
+gradle build
 ```
 ## Run it
 ```sh
-./gradlew run
+gradle run
 ```
 ## Deploy it
 ```sh
-./gradlew deploy
+gradle deploy
 ```
 ## HTTP Proxy Settings
 

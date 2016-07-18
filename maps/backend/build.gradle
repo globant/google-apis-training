@@ -8,6 +8,8 @@ buildscript {
     }
 }
 
+
+
 repositories {
     mavenCentral();
 }
@@ -15,6 +17,8 @@ repositories {
 
 apply plugin: 'war'
 apply plugin: 'appengine'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
@@ -54,8 +58,40 @@ task deploy << {
 deploy.dependsOn appengineUpdate
 
 
-
 task run << {
 }
 
 run.dependsOn appengineRun
+
+def constantFile = 'src/main/java/com/globant/training/google/maps/configs/Constants.java'
+def tempDir = 'build/tmp/sourcesCache'
+def constantFileName = 'Constants.java'
+
+compileJava.doFirst {
+    copy {
+        from(constantFile)
+        into(tempDir)
+    }
+    ant.replace(file: constantFile, token: '@WEB_CLIENT_ID@', value: clientId)
+}
+
+compileJava.doLast {
+    copy {
+        from(tempDir + '/' + constantFileName)
+        into(project.file(constantFile).parent)
+    }
+}
+
+war {
+  eachFile {
+      if (it.name == 'appengine-web.xml') {
+        it.filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: ['APPENGINE_APP_ID': appengineId])
+      }
+      
+      if (it.name == 'token.html') {
+        it.filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: ['CLIENT_ID': clientId, 'API_KEY': apiKey])
+      }
+  }
+}
+
+
