@@ -1,7 +1,8 @@
-
+//Bower dependencies
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/google-signin/google-signin.html">
+
+<link rel="import" href="maps-login-button.html">
 
 <dom-module id="maps-login">
   <template>
@@ -47,12 +48,7 @@
     <img id="logo" src="../images/touch/icon-512x512.png">
     <h1>[[title]]</h1>
 
-    <google-signin
-      label-signin="Sign-in"
-      client-id=""
-      scopes="profile email openid"
-      on-google-signin-success="handleSignedIn"
-    ></google-signin>
+    <maps-login-button user="{{user}}"></maps-login-button>
 
     <div id="space"></div>
 
@@ -80,9 +76,6 @@
         offline: {
           type: Boolean
         }
-      },
-      handleSignedIn: function () {
-        this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
       }
 
     });

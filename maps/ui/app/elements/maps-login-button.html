@@ -1,0 +1,37 @@
+//Bower dependencies
+<link rel="import" href="../bower_components/google-signin/google-signin.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+//Local dependencies
+
+
+<dom-module id="maps-login-button">
+  <template>
+    <google-signin
+      client-id="@Client ID@"
+      scopes="profile email openid"
+      on-google-signin-success="_handleSignIn"
+      on-google-signed-out="_handleSignOut"
+    ></google-signin>
+  </template>
+  <script>
+    Polymer({
+      is: 'maps-login-button',
+
+      properties: {
+        user: {
+          type: Object,
+          notify: true
+        }
+      },
+
+      _handleSignIn: function () {
+        this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
+      },
+
+      _handleSignOut: function () {
+        this.user = null;
+      }
+    });
+  </script>
+</dom-module>

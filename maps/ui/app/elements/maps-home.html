@@ -9,7 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="maps-request.html">
 
 <dom-module id="maps-home">
 
@@ -46,19 +46,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <iron-ajax id="userInfo"
-      url="http://localhost:8080/_ah/api/userApi/v1/users"
-      method="GET"
-      headers="{{authorization}}"
-      handle-as="json"
-      on-response="handleResponse"
-      ></iron-ajax>
+    <maps-request id="userInfo"
+      endpoint="_ah/api/userApi/v1/users"
+      data="{{users}}"
+      ></maps-request>
 
-    <div class="card">
-      <p>ID: {{data.id}}</p>
-      <p>User: {{data.email}}</p>
-      <p>Active: {{data.active}}</p>
-    </div>
+    <template dom-repeat="{{users}}">
+      <div class="card">
+        <p>ID: {{item.id}}</p>
+        <p>User: {{item.email}}</p>
+        <p>Active: {{item.active}}</p>
+      </div>
+    </template>
 
   </template>
 
@@ -70,35 +69,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         user: {
           type: Object,
-          value: null,
-          observer: 'userChanged'
+          value: null
         },
 
-        authorization: {
+        users: {
           type: Object,
-          computed: 'getToken(user)'
+          value: {}
         }
       },
 
-      getToken: function (user) {
-        if(user) {
-          var authR = user.getAuthResponse();
-          return {
-            Authorization: authR['token_type'] + ' ' + authR['access_token']
-          };
-        }
-        return '';
-      },
-
-      userChanged: function () {
-        if(this.$.userInfo) {
-          this.$.userInfo.generateRequest();
-        }
-      },
-
-      handleResponse: function (e, response) {
-        var res = response.parseResponse();
-        this.data = res.items[0];
+      ready: function (user) {
+        this.$.userInfo.generateRequest();
       }
     });
 

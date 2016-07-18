@@ -1,0 +1,95 @@
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="maps-request">
+  <template>
+    <iron-ajax id="xhr"
+      url="[[_url]]"
+      method="[[method]]"
+      headers="[[_authorization]]"
+      params="[[params]]"
+      body="[[body]]"
+      handle-as="json"
+      on-response="_handleResponse"
+      ></iron-ajax>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'maps-request',
+
+      properties: {
+        user: {
+          type: Object,
+          value: null
+        },
+
+        endpoint: {
+          type: String,
+          value: ''
+        },
+
+        data: {
+          type: Object,
+          notify: true,
+          value: null
+        },
+
+        method: {
+          type: String,
+          value: 'GET'
+        },
+
+        params: {
+          type: Object,
+          value: {}
+        },
+
+        body: {
+          type: Object,
+          value: {}
+        },
+
+        _url: {
+          type: String,
+          computed: '_getUrl(endpoint)'
+        },
+
+        _authorization: {
+          type: Object,
+          computed: '_generateAuthorization(user)'
+        }
+      },
+
+      _generateAuthorization: function (user) {
+        if(user) {
+          var authR = user.getAuthResponse();
+          return {
+            Authorization: authR['token_type'] + ' ' + authR['access_token']
+          };
+        }
+        return '';
+      },
+
+      _getUrl: function(endpoint) {
+        return 'http://localhost:8080/' + endpoint;
+      },
+
+      _handleResponse: function (e, response) {
+        var res = response.parseResponse();
+        this.data = res.items;
+
+        this.fire('response', this.data);
+      },
+
+      _handleError: function (e, error) {
+        this.fire('error', error);
+      },
+
+      generateRequest: function () {
+        this.$.xhr.generateRequest();
+      }
+
+
+    });
+  </script>
+</dom-module>
