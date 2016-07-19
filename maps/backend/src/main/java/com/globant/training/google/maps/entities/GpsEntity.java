@@ -1,18 +1,19 @@
 package com.globant.training.google.maps.entities;
 
 import java.util.Date;
-import java.util.List;
 
 /**
- * Class to represent the Item to be Tracked by the Devices.
+ * Class to represent a GPS entity
  * 
  * @author gabriel.sideri
  */
-public class ItemEntity extends BaseEntity {
+public class GpsEntity extends BaseEntity implements Device {
 
   private String name;
 
-  private List<Device> devices;
+  private String serialNumber;
+
+  private DeviceType type;
 
   private boolean active;
 
@@ -20,53 +21,73 @@ public class ItemEntity extends BaseEntity {
 
   private Date lastUpdated;
 
-  /**
-   * Gets item´s name.
+  /*
+   * (non-Javadoc)
    * 
-   * @return the item´s name
+   * @see com.example.helloendpoints.entities.Device#getName()
    */
+  @Override
   public String getName() {
     return name;
   }
 
-  /**
-   * Sets the item´s name.
+  /*
+   * (non-Javadoc)
    * 
-   * @param name the item name
+   * @see com.example.helloendpoints.entities.Device#setName(java.lang.String)
    */
+  @Override
   public void setName(String name) {
     this.name = name;
   }
 
   /**
-   * Gets a list of devices which tracks the item.
+   * Gets GPS serial number.
    * 
-   * @return a list of devices
+   * @return the GPS serial number
    */
-  public List<Device> getDevices() {
-    return devices;
+  public String getSerialNumber() {
+    return serialNumber;
   }
 
   /**
-   * Sets the list of devices to track the item.
+   * Sets the GPS serial number
    * 
-   * @param devices a list of devices
+   * @param serialNumber the GPS serial number.
    */
-  public void setDevices(List<Device> devices) {
-    this.devices = devices;
+  public void setSerialNumber(String serialNumber) {
+    this.serialNumber = serialNumber;
   }
 
   /**
-   * Returns <b>true</b> if the item is active, otherwise <b>false</b>
+   * Gets the {@link DeviceType}.
    * 
-   * @return if item is active or not.
+   * @return the Device Type
+   */
+  public DeviceType getType() {
+    return type;
+  }
+
+  /**
+   * Set the {@link DeviceType}.
+   * 
+   * @param type the Device Type
+   */
+  public void setType(DeviceType type) {
+    this.type = type;
+  }
+
+  /**
+   * Returns <b>true</b> if GPS is active, otherwise <b>false</b>
+   * 
+   * @return if GPS is active or not.
    */
   public boolean isActive() {
     return active;
   }
 
   /**
-   * Sets a flag to indicate if the item is active or not.
+   * Sets flag to indicate if GPS is active or not.
    * 
    * @param active true or false
    */
@@ -75,7 +96,7 @@ public class ItemEntity extends BaseEntity {
   }
 
   /**
-   * Gets the date where the Item was created
+   * Gets the date where the GPS was created
    * 
    * @return the creation date.
    */
@@ -84,7 +105,7 @@ public class ItemEntity extends BaseEntity {
   }
 
   /**
-   * Sets the date where the Item was created.
+   * Sets the date where the GPS was created.
    * 
    * @param created the date
    */

@@ -2,10 +2,6 @@ package com.globant.training.google.maps.endpoints;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.List;
-
-import javax.inject.Named;
-
 import com.globant.training.google.maps.configs.Constants;
 import com.globant.training.google.maps.entities.UserEntity;
 import com.globant.training.google.maps.services.UserService;
@@ -16,20 +12,22 @@ import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.users.User;
 import com.google.inject.Inject;
 
+import java.util.List;
+
+import javax.inject.Named;
+
 /**
  * API endpoints for {@link User} operations.
  * 
  * @author gaston.aguilera
  */
-@Api(name = "userApi", version = "v1", 
-scopes = {Constants.EMAIL_SCOPE},
-clientIds = {Constants.WEB_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.IOS_CLIENT_ID},
-audiences = {Constants.ANDROID_AUDIENCE}
-// namespace = @ApiNamespace(ownerDomain = "training.google.maps.globant.com",
-// ownerName = "training.google.maps.globant.com",
-// packagePath = "com.globant.training.google.maps.endpoints")
-)
-
+@Api(name = "maps", version = "v1", 
+    scopes = {Constants.EMAIL_SCOPE},
+    clientIds = {
+        Constants.WEB_CLIENT_ID, 
+        Constants.API_EXPLORER_CLIENT_ID
+    },
+    description = "API for maps poc - users.")
 public class UserEndpoint extends BaseEndpoint {
 
   private final UserService userService;
@@ -48,9 +46,7 @@ public class UserEndpoint extends BaseEndpoint {
    * Find {@link EntityUser} in the application.
    * 
    * @param user currently authenticated {@link User}
-   * 
    * @return {@link EntityUser}
-   * 
    * @throws NotFoundException if none antenna found for provided id.
    */
   @ApiMethod(name = "findUsers", path = "users", httpMethod = HttpMethod.GET)
@@ -79,7 +75,6 @@ public class UserEndpoint extends BaseEndpoint {
 
     UserEntity userToCreate = new UserEntity();
     userToCreate.setEmail(user.getEmail());
-    
     userService.addUser(userToCreate);
   }
 }

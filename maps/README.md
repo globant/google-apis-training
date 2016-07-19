@@ -16,17 +16,17 @@ cd maps
 
 ## Compile it
 ```sh
-./gradlew build
+gradle build
 ```
 ## Run backend
 ```sh
 cd backend
-./gradlew run
+gradle run
 ```
 ## Run ui
 ```sh
 cd backend
-./gradlew run
+gradle run
 ```
 ## Use it
 Open your brower in http://localhost:5000

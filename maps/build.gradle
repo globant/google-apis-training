@@ -2,3 +2,26 @@
 task wrapper(type: Wrapper) {
     gradleVersion = gradleVersion
 }
+
+
+
+task config << { 
+
+	if(!project.hasProperty('appengineId')){
+		throw new GradleException('You must provide -PappengineId property')
+	}
+	if(!project.hasProperty('clientId')){
+		throw new GradleException('You must provide -PclientId property')
+	}
+	if(!project.hasProperty('apiKey')){
+		throw new GradleException('You must provide -PapiKey property')
+	}
+	
+	Properties props = new Properties()
+	File propsFile = new File('./gradle.properties')
+	
+	props.setProperty('appengineId', appengineId)
+	props.setProperty('clientId', clientId)
+	props.setProperty('apiKey', apiKey)
+	props.store(propsFile.newWriter(), null)
+}

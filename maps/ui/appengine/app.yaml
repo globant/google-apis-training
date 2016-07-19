@@ -1,4 +1,3 @@
-
 service: default
 api_version: 2
 runtime: python27
