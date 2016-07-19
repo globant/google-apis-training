@@ -18,7 +18,7 @@ cd maps
 ```sh
 gradle  -PappengineId=<<appengineId>> -PclientId=<<clientId>> -PapiKey=<<apiKey>> config
 ```
-This task write the gradle.properties file.
+This task writes the gradle.properties file.
 
 or if you prefer put a gradle.properties file in the maps root folder with following configurations
 ```
@@ -26,9 +26,9 @@ appengineId=<<appengineId>>
 clientId=<<clientId>>
 apiKey=<<apiKey>>
 ```
-appengineId: AppEngine app id.
-clientId: OAuth 2.0 Client id from [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
-apiKey: Api Key from [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+- appengineId: AppEngine app id.
+- clientId: OAuth 2.0 Client id from [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+- apiKey: Api Key from [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
 
 ## Compile it
 ```sh
