@@ -49,6 +49,25 @@ task bower(dependsOn: 'npm', type: Exec){
 	}
 }
 
+task deploy(dependsOn: 'copyAppFile', type: Exec) {
+
+    mustRunAfter 'copyAppFile'
+
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+	    commandLine 'cmd', '/c', 'gcloud',  'app', 'deploy', 'dist/app.yaml'
+	} else {
+		commandLine 'gcloud', 'app', 'deploy', 'dist/app.yaml'
+	}
+}
+
+task copyAppFile << {
+  copy {
+		from 'appengine'
+    	into 'dist'
+	}
+}
+copyAppFile.dependsOn build
+
 // Set proxy to gradle
 task setHttpProxyFromEnv {
     def map = ['HTTP_PROXY': 'http', 'HTTPS_PROXY': 'https']
@@ -65,23 +84,3 @@ task setHttpProxyFromEnv {
 }
 // before build proxy is set
 build.dependsOn setHttpProxyFromEnv
-
-task deploy(dependsOn: 'copyAppFile', type: Exec) {
-
-    //mustRunAfter 'copyAppFile'
-    
-    
-    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
-	    commandLine 'cmd', '/c', 'gcloud',  'app', 'deploy', 'dist/app.yaml'
-	} else {
-		commandLine 'gcloud', 'app', 'deploy', 'dist/app.yaml'
-	}
-}
-
-task copyAppFile << {
-  copy {
-		from 'appengine'
-    	into 'dist'
-	}
-}
-copyAppFile.dependsOn build

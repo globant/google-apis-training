@@ -94,4 +94,20 @@ war {
   }
 }
 
+// Set proxy to gradle
+task setHttpProxyFromEnv {
+    def map = ['HTTP_PROXY': 'http', 'HTTPS_PROXY': 'https']
+    for (e in System.getenv()) {
+        def key = e.key.toUpperCase()
+        if (key in map) {
+            def base = map[key]
+            def url = e.value.toURL()
+            System.setProperty("${base}.proxyHost", url.host.toString())
+            System.setProperty("${base}.proxyPort", url.port.toString())
+            System.setProperty("${base}.nonProxyHosts", "localhost|192.168.99.100|127.0.0.1")
+        }
+    }
+}
+// before build proxy is set
+build.dependsOn setHttpProxyFromEnv
 
