@@ -54,5 +54,14 @@ This is an IDE’s plugin which offers check and suggestion at coding time in th
 http://eclipse-cs.sourceforge.net/update/
 ```
 
+### Formatter
+This in charge of organize your code and imports. There are located at
+```sh
+/backend/src/main/resources/eclipse-java-google-style-formatter.xml
+/backend/src/main/resources/intellij-java-google-style-formatter.xml
+```
+Also you need to configure the organize imports orders as follows:
+
+![Organize Imports](/src/main/resources/organize-imports.png "Organize Imports")
 
 
