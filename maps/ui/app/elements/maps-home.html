@@ -47,11 +47,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <maps-request id="userInfo"
-      endpoint="_ah/api/userApi/v1/users"
+      user="[[user]]"
+      endpoint="_ah/api/maps/v1/users"
       data="{{users}}"
       ></maps-request>
 
-    <template dom-repeat="{{users}}">
+    <template is="dom-repeat" items="{{users}}">
       <div class="card">
         <p>ID: {{item.id}}</p>
         <p>User: {{item.email}}</p>
@@ -78,7 +79,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      ready: function (user) {
+      ready: function () {
         this.$.userInfo.generateRequest();
       }
     });

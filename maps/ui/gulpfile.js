@@ -1,12 +1,3 @@
-/*
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-*/
-
 'use strict';
 
 // Include promise polyfill for node 0.10 compatibility
@@ -24,11 +15,10 @@ var path = require('path');
 var fs = require('fs');
 var glob = require('glob-all');
 var historyApiFallback = require('connect-history-api-fallback');
-var packageJson = require('./package.json');
-var crypto = require('crypto');
 var ensureFiles = require('./tasks/ensure-files.js');
+var javaProperties = require('java-properties');
 
-// var ghPages = require('gulp-gh-pages');
+var googleClientId = javaProperties.of('../gradle.properties').get('clientId');
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -133,24 +123,13 @@ gulp.task('copy', function() {
     dot: true
   }).pipe(gulp.dest(dist()));
 
-  // Copy over only the bower_components we need
-  // These are things which cannot be vulcanized
   var bower = gulp.src([
-    'app/bower_components/{webcomponentsjs,platinum-sw,sw-toolbox,promise-polyfill}/**/*'
+    'app/bower_components/**/*'
   ]).pipe(gulp.dest(dist('bower_components')));
 
   return merge(app, bower)
     .pipe($.size({
       title: 'copy'
-    }));
-});
-
-// Copy web fonts to dist
-gulp.task('fonts', function() {
-  return gulp.src(['app/fonts/**'])
-    .pipe(gulp.dest(dist('fonts')))
-    .pipe($.size({
-      title: 'fonts'
     }));
 });
 
@@ -162,50 +141,11 @@ gulp.task('html', function() {
 });
 
 // Vulcanize granular configuration
-gulp.task('vulcanize', function() {
-  return gulp.src('app/elements/elements.html')
-    .pipe($.vulcanize({
-      stripComments: true,
-      inlineCss: true,
-      inlineScripts: true
-    }))
+gulp.task('copy:elements', function() {
+  return gulp.src('app/elements/**/*.html')
+    .pipe($.replace('@Client ID@', googleClientId))
     .pipe(gulp.dest(dist('elements')))
-    .pipe($.size({title: 'vulcanize'}));
-});
-
-// Generate config data for the <sw-precache-cache> element.
-// This include a list of files that should be precached, as well as a (hopefully unique) cache
-// id that ensure that multiple PSK projects don't share the same Cache Storage.
-// This task does not run by default, but if you are interested in using service worker caching
-// in your project, please enable it within the 'default' task.
-// See https://github.com/PolymerElements/polymer-starter-kit#enable-service-worker-support
-// for more context.
-gulp.task('cache-config', function(callback) {
-  var dir = dist();
-  var config = {
-    cacheId: packageJson.name || path.basename(__dirname),
-    disabled: false
-  };
-
-  glob([
-    'index.html',
-    './',
-    'bower_components/webcomponentsjs/webcomponents-lite.min.js',
-    '{elements,scripts,styles}/**/*.*'],
-    {cwd: dir}, function(error, files) {
-    if (error) {
-      callback(error);
-    } else {
-      config.precache = files;
-
-      var md5 = crypto.createHash('md5');
-      md5.update(JSON.stringify(config.precache));
-      config.precacheFingerprint = md5.digest('hex');
-
-      var configPath = path.join(dir, 'cache-config.json');
-      fs.writeFile(configPath, JSON.stringify(config), callback);
-    }
-  });
+    .pipe($.size({title: 'Copy elements'}));
 });
 
 // Clean output directory
@@ -227,10 +167,6 @@ gulp.task('serve', ['styles'], function() {
         }
       }
     },
-    // Run as an https by uncommenting 'https: true'
-    // Note: this uses an unsigned certificate which on first access
-    //       will present a certificate warning in the browser.
-    // https: true,
     server: {
       baseDir: ['.tmp', 'app'],
       middleware: [historyApiFallback()]
@@ -257,46 +193,26 @@ gulp.task('serve:dist', ['default'], function() {
         }
       }
     },
-    // Run as an https by uncommenting 'https: true'
-    // Note: this uses an unsigned certificate which on first access
-    //       will present a certificate warning in the browser.
-    // https: true,
     server: dist(),
     middleware: [historyApiFallback()]
   });
+
+  gulp.watch(['app/**/*.html', '!app/bower_components/**/*.html'], ['html', 'copy:elements', reload]);
+  gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
+  gulp.watch(['app/scripts/**/*.js'], reload);
+  gulp.watch(['app/images/**/*'], reload);
 });
 
 // Build production files, the default task
 gulp.task('build', ['clean'], function(cb) {
-  // Uncomment 'cache-config' if you are going to use service workers.
   runSequence(
     ['ensureFiles', 'copy', 'styles'],
-    ['images', 'fonts', 'html'],
-    'vulcanize', // 'cache-config',
+    ['images', 'html'],
+    'copy:elements',
     cb);
 });
 
 gulp.task('default', ['build']);
-
-// Build then deploy to GitHub pages gh-pages branch
-gulp.task('build-deploy-gh-pages', function(cb) {
-  runSequence(
-    'default',
-    'deploy-gh-pages',
-    cb);
-});
-
-// Deploy to GitHub pages gh-pages branch
-gulp.task('deploy-gh-pages', function() {
-  return gulp.src(dist('**/*'))
-    // Check if running task from Travis CI, if so run using GH_TOKEN
-    // otherwise run using ghPages defaults.
-    .pipe($.if(process.env.TRAVIS === 'true', $.ghPages({
-      remoteUrl: 'https://$GH_TOKEN@github.com/polymerelements/polymer-starter-kit.git',
-      silent: true,
-      branch: 'gh-pages'
-    }), $.ghPages()));
-});
 
 // Load tasks for web-component-tester
 // Adds tasks for `gulp test:local` and `gulp test:remote`
