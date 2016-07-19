@@ -8,7 +8,7 @@ import java.util.Map;
  * 
  * @author gabriel.sideri
  */
-public class RfidEntity extends BaseEntity implements Device {
+public class RfidEntity extends BaseOfyEntity implements Device {
 
   private String name;
 

@@ -12,6 +12,7 @@ import com.googlecode.objectify.ObjectifyFilter;
 
 import com.globant.training.google.maps.daos.UserDao;
 import com.globant.training.google.maps.daos.objectify.OfyService;
+import com.globant.training.google.maps.daos.objectify.UserOfyDao;
 import com.globant.training.google.maps.endpoints.UserEndpoint;
 import com.globant.training.google.maps.services.UserService;
 import com.globant.training.google.maps.services.UserServiceImpl;
@@ -65,7 +66,7 @@ public class GuiceConfig extends GuiceServletContextListener {
       requestStaticInjection(OfyService.class);
 
       bind(ObjectifyFilter.class).in(Singleton.class);
-      bind(UserDao.class);
+      bind(UserDao.class).to(UserOfyDao.class);
       bind(UserService.class).annotatedWith(Names.named("userService")).to(UserServiceImpl.class);
     }
   }

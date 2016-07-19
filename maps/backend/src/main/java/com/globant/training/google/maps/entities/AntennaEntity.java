@@ -8,7 +8,7 @@ import java.util.Date;
  * @author gabriel.sideri
  *
  */
-public class AntennaEntity extends BaseEntity {
+public class AntennaEntity extends BaseOfyEntity {
 
   private RfidEntity rfidDevice;
 

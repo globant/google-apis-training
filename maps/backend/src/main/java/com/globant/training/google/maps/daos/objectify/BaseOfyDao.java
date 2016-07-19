@@ -1,12 +1,11 @@
-package com.globant.training.google.maps.daos;
+package com.globant.training.google.maps.daos.objectify;
 
 import com.google.common.collect.Lists;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.cmd.LoadType;
 
-import com.globant.training.google.maps.daos.objectify.OfyService;
-import com.globant.training.google.maps.entities.BaseEntity;
+import com.globant.training.google.maps.entities.BaseOfyEntity;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ import java.util.Map;
  * @author gabriel.sideri
  * @param <T> the Entity to be used
  */
-public class BaseDao<T extends BaseEntity> {
+public class BaseOfyDao<T extends BaseOfyEntity> {
 
   private final Class<T> entity;
 
@@ -47,7 +46,7 @@ public class BaseDao<T extends BaseEntity> {
    * 
    * @param entity the entity to use into the DAO
    */
-  protected BaseDao(Class<T> entity) {
+  protected BaseOfyDao(Class<T> entity) {
     this.entity = entity;
   }
 
