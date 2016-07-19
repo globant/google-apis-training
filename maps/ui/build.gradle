@@ -1,9 +1,12 @@
+
 plugins {
     id "com.moowork.gulp" version "0.13"
     id "com.moowork.node" version "0.13"
 }
 
 apply plugin: 'com.moowork.gulp'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 task build << {
 }
@@ -12,7 +15,6 @@ build.dependsOn gulp_default
 
 gulp_default.dependsOn 'bower'
 
-// Get the path for the locally installed binaries
 task npmBin << {
     new ByteArrayOutputStream().withStream { os ->
         def result = exec {
@@ -26,16 +28,45 @@ task npmBin << {
 
 task npm(type: Exec) {
     description = "Grab NodeJS dependencies (from package.json)"
-    commandLine = ["npm", "install"]
-    inputs.file "package.json"
-    outputs.dir "node_modules"
-
-    tasks.npmBin.execute()
+    
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+	    commandLine 'cmd', '/c', 'npm', 'install'
+	} else {
+		commandLine 'npm', 'install'
+		inputs.file "package.json"
+	    outputs.dir "node_modules"
+	
+	    tasks.npmBin.execute()
+	}
 }
 
 task bower(dependsOn: 'npm', type: Exec){
-    commandLine "${npmBin.binPath}bower", 'install'
+    
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+	    commandLine 'cmd', '/c', 'bower', 'install'
+	} else {
+		commandLine "${npmBin.binPath}bower", 'install'
+	}
 }
+
+task deploy(dependsOn: 'copyAppFile', type: Exec) {
+
+    mustRunAfter 'copyAppFile'
+
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+	    commandLine 'cmd', '/c', 'gcloud',  'app', 'deploy', 'dist/app.yaml'
+	} else {
+		commandLine 'gcloud', 'app', 'deploy', 'dist/app.yaml'
+	}
+}
+
+task copyAppFile << {
+  copy {
+		from 'appengine'
+    	into 'dist'
+	}
+}
+copyAppFile.dependsOn build
 
 // Set proxy to gradle
 task setHttpProxyFromEnv {
@@ -53,17 +84,3 @@ task setHttpProxyFromEnv {
 }
 // before build proxy is set
 build.dependsOn setHttpProxyFromEnv
-
-task deploy(dependsOn: 'copyAppFile', type: Exec) {
-
-    //mustRunAfter 'copyAppFile'
-    commandLine 'gcloud', 'app', 'deploy', 'dist/app.yaml'
-}
-
-task copyAppFile << {
-  copy {
-		from 'appengine'
-    into 'dist'
-	}
-}
-copyAppFile.dependsOn build
