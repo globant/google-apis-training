@@ -10,104 +10,104 @@ import java.util.Date;
  */
 public class TrackPointEntity extends BaseEntity {
 
-	private Device device;
-	
-	private Double latitude;
-	
-	private Double longitude;
+  private Device device;
 
-	private Date measuredDate;
-	
-	private Date savedDate;
+  private Double latitude;
 
-	/**
-	 * Get the Device associated with the Tack Point
-	 * 
-	 * @return the Device
-	 */
-	public Device getDevice() {
-		return device;
-	}
+  private Double longitude;
 
-	/**
-	 * Sets the Device associated with the Track Point
-	 * 
-	 * @param device the device
-	 */
-	public void setDevice(Device device) {
-		this.device = device;
-	}
+  private Date measuredDate;
 
-	/**
-	 * Gets the Latitude where the device registered the Track Point
-	 * 
-	 * @return the Latitude
-	 */
-	public Double getLatitude() {
-		return latitude;
-	}
+  private Date savedDate;
 
-	/**
-	 * Sets the Latitude to register the Track Point
-	 * 
-	 * @param latitude the Latitude
-	 */
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
+  /**
+   * Get the Device associated with the Tack Point.
+   * 
+   * @return the Device
+   */
+  public Device getDevice() {
+    return device;
+  }
 
-	/**
-	 * Gets the Longitude where the device registered the Track Point
-	 * 
-	 * @return the Longitude
-	 */
-	public Double getLongitude() {
-		return longitude;
-	}
+  /**
+   * Sets the Device associated with the Track Point.
+   * 
+   * @param device the device
+   */
+  public void setDevice(Device device) {
+    this.device = device;
+  }
 
-	/**
-	 * Sets the Longitude to register the Track Point
-	 * 
-	 * @param Longitude the Longitude
-	 */
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
-	}
+  /**
+   * Gets the Latitude where the device registered the Track Point.
+   * 
+   * @return the Latitude
+   */
+  public Double getLatitude() {
+    return latitude;
+  }
 
-	/**
-	 * Gets the date when the track point was measured by the device
-	 * 
-	 * @return the measured date
-	 */
-	public Date getMeasuredDate() {
-		return measuredDate;
-	}
+  /**
+   * Sets the Latitude to register the Track Point.
+   * 
+   * @param latitude the Latitude
+   */
+  public void setLatitude(Double latitude) {
+    this.latitude = latitude;
+  }
 
-	/**
-	 * Sets the date when the track point was measured by the device
-	 * 
-	 * @param measuredDate the measured Date
-	 */
-	public void setMeasuredDate(Date measuredDate) {
-		this.measuredDate = measuredDate;
-	}
+  /**
+   * Gets the Longitude where the device registered the Track Point.
+   * 
+   * @return the Longitude
+   */
+  public Double getLongitude() {
+    return longitude;
+  }
 
-	/**
-	 * Gets the date when the track point was saved
-	 * 
-	 * @return the saved date
-	 */
-	public Date getSavedDate() {
-		return savedDate;
-	}
+  /**
+   * Sets the Longitude to register the Track Point.
+   * 
+   * @param longitude the Longitude
+   */
+  public void setLongitude(Double longitude) {
+    this.longitude = longitude;
+  }
 
-	/**
-	 * Sets the date when the track point was saved
-	 * 
-	 * @param measuredDate the saved Date
-	 */
-	public void setSavedDate(Date savedDate) {
-		this.savedDate = savedDate;
-	}
-	
+  /**
+   * Gets the date when the track point was measured by the device.
+   * 
+   * @return the measured date
+   */
+  public Date getMeasuredDate() {
+    return measuredDate;
+  }
+
+  /**
+   * Sets the date when the track point was measured by the device.
+   * 
+   * @param measuredDate the measured Date
+   */
+  public void setMeasuredDate(Date measuredDate) {
+    this.measuredDate = measuredDate;
+  }
+
+  /**
+   * Gets the date when the track point was saved.
+   * 
+   * @return the saved date
+   */
+  public Date getSavedDate() {
+    return savedDate;
+  }
+
+  /**
+   * Sets the date when the track point was saved.
+   * 
+   * @param savedDate the saved Date
+   */
+  public void setSavedDate(Date savedDate) {
+    this.savedDate = savedDate;
+  }
+
 }

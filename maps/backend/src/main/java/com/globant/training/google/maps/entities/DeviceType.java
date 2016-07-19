@@ -6,5 +6,5 @@ package com.globant.training.google.maps.entities;
  * @author gabriel.sideri
  */
 public enum DeviceType {
-	GPS, RFID;
+  GPS, RFID;
 }
