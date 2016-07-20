@@ -138,7 +138,7 @@ gulp.task('html', function() {
     dist());
 });
 
-// Vulcanize granular configuration
+// Copy bower components
 gulp.task('copy:elements', function() {
   return gulp.src('app/elements/**/*.html')
     .pipe($.replace('@Client ID@', googleClientId))
@@ -210,9 +210,9 @@ gulp.task('serve:dist', ['default'], function() {
     middleware: [historyApiFallback()]
   });
 
-  gulp.watch(['app/**/*.html', '!app/bower_components/**/*.html'], ['html', 'copy:elements', reload]);
+  gulp.watch(['app/**/*.html', '!app/bower_components/**/*.html'], ['lint', 'html', 'copy:elements', reload]);
   gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
-  gulp.watch(['app/scripts/**/*.js'], reload);
+  gulp.watch(['app/scripts/**/*.js'], ['lint', reload]);
   gulp.watch(['app/images/**/*'], reload);
 });
 
