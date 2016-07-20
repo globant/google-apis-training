@@ -1,14 +1,17 @@
 package com.globant.training.google.maps.daos.objectify;
 
+import com.google.common.collect.Lists;
+
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.cmd.LoadType;
+
+import com.globant.training.google.maps.daos.Dao;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.cmd.LoadType;
 
 
 /**
@@ -17,7 +20,7 @@ import com.googlecode.objectify.cmd.LoadType;
  * @author gabriel.sideri
  * @param <T> the Class of Entity to be used
  */
-public class BaseOfyDao<T> {
+public class BaseOfyDao<T> implements Dao<T> {
 
   private final Class<T> entity;
 

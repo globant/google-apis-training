@@ -1,10 +1,10 @@
 package com.globant.training.google.maps.daos;
 
+import com.googlecode.objectify.Key;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import com.googlecode.objectify.Key;
 
 /**
  * Generic Dao Interface.

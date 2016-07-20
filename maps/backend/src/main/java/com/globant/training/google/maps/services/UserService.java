@@ -16,15 +16,14 @@ public interface UserService {
    * 
    * @return a list with all users
    */
-  public List<AppUser> getAllUsers();
+  List<AppUser> getAllUsers();
 
   /**
    * Adds a new user.
    * 
    * @param user the user to be added
    */
-  public void addUser(AppUser user);
-
+  void addUser(AppUser user);
 
 
 }

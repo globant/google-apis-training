@@ -1,19 +1,24 @@
 package com.globant.training.google.maps.entities;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
- * Class to represent a GPS entity
+ * Class to represent a RFID entity
  * 
  * @author gabriel.sideri
  */
-public class GpsEntity extends BaseEntity implements Device {
+public class Rfid extends BaseEntity implements Device {
 
   private String name;
 
-  private String serialNumber;
+  private long rfidId;
 
   private DeviceType type;
+
+  private String manufacturer;
+
+  private Map<String, String> data;
 
   private boolean active;
 
@@ -42,21 +47,21 @@ public class GpsEntity extends BaseEntity implements Device {
   }
 
   /**
-   * Gets GPS serial number.
+   * Gets the RFID ID.
    * 
-   * @return the GPS serial number
+   * @return the RFID ID assigned
    */
-  public String getSerialNumber() {
-    return serialNumber;
+  public long getRfidId() {
+    return rfidId;
   }
 
   /**
-   * Sets the GPS serial number
+   * Sets the RFID ID.
    * 
-   * @param serialNumber the GPS serial number.
+   * @param rfidId the RFID ID
    */
-  public void setSerialNumber(String serialNumber) {
-    this.serialNumber = serialNumber;
+  public void setRfidId(long rfidId) {
+    this.rfidId = rfidId;
   }
 
   /**
@@ -78,16 +83,52 @@ public class GpsEntity extends BaseEntity implements Device {
   }
 
   /**
-   * Returns <b>true</b> if GPS is active, otherwise <b>false</b>
+   * Gets the Manufacturer Name.
    * 
-   * @return if GPS is active or not.
+   * @return the Manufacturer name
+   */
+  public String getManufacturer() {
+    return manufacturer;
+  }
+
+  /**
+   * Sets the Manufacturer Name.
+   * 
+   * @param manufacturer the manufacturer
+   */
+  public void setManufacturer(String manufacturer) {
+    this.manufacturer = manufacturer;
+  }
+
+  /**
+   * Gets a Map with Additional information if was provided.
+   * 
+   * @return A Map with additional information
+   */
+  public Map<String, String> getData() {
+    return data;
+  }
+
+  /**
+   * Sets a Map With Additional information.
+   * 
+   * @param data Map with additional information
+   */
+  public void setData(Map<String, String> data) {
+    this.data = data;
+  }
+
+  /**
+   * Returns <b>true</b> if RFID is active, otherwise <b>false</b>
+   * 
+   * @return if RFID is active or not.
    */
   public boolean isActive() {
     return active;
   }
 
   /**
-   * Sets flag to indicate if GPS is active or not.
+   * Sets flag to indicate if RFID is active or not.
    * 
    * @param active true or false
    */
@@ -96,7 +137,7 @@ public class GpsEntity extends BaseEntity implements Device {
   }
 
   /**
-   * Gets the date where the GPS was created
+   * Gets the date where the RFID Device was created.
    * 
    * @return the creation date.
    */
@@ -105,7 +146,7 @@ public class GpsEntity extends BaseEntity implements Device {
   }
 
   /**
-   * Sets the date where the GPS was created.
+   * Sets the date where the RFID Device was created.
    * 
    * @param created the date
    */
@@ -130,5 +171,4 @@ public class GpsEntity extends BaseEntity implements Device {
   public void setLastUpdated(Date lastUpdated) {
     this.lastUpdated = lastUpdated;
   }
-
 }

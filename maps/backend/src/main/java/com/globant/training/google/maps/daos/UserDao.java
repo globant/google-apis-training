@@ -5,7 +5,7 @@ import com.globant.training.google.maps.entities.AppUser;
 import java.util.List;
 
 /**
- * User DAO Class.
+ * User DAO Interface.
  * 
  * @author gabriel.sideri
  */
@@ -18,9 +18,11 @@ public interface UserDao {
    */
   List<AppUser>  getAll();
   
-  /**
-   * @param user
-   * @return
+  /** 
+   * Save or Update User.
+   * 
+   * @param user the user
+   * @return the user persisted
    */
   AppUser put(AppUser user);
 

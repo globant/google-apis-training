@@ -8,9 +8,9 @@ import java.util.Date;
  * @author gabriel.sideri
  *
  */
-public class AntennaEntity extends BaseEntity {
+public class Antenna extends BaseEntity {
 
-  private RfidEntity rfidDevice;
+  private Rfid rfidDevice;
 
   private Double latitude;
 
@@ -27,7 +27,7 @@ public class AntennaEntity extends BaseEntity {
    * 
    * @return the RFID Device
    */
-  public RfidEntity getRfidDevice() {
+  public Rfid getRfidDevice() {
     return rfidDevice;
   }
 
@@ -36,7 +36,7 @@ public class AntennaEntity extends BaseEntity {
    * 
    * @param rfidDevice the RFID Device
    */
-  public void setRfidDevice(RfidEntity rfidDevice) {
+  public void setRfidDevice(Rfid rfidDevice) {
     this.rfidDevice = rfidDevice;
   }
 

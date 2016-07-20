@@ -7,7 +7,7 @@ import com.googlecode.objectify.annotation.Id;
  * 
  * @author gabriel.sideri
  */
-public abstract class BaseEntity implements Entity{
+public abstract class BaseEntity {
 
   @Id
   protected Long id;

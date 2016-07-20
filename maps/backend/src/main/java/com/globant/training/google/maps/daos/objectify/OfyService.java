@@ -1,9 +1,10 @@
 package com.globant.training.google.maps.daos.objectify;
 
-import com.globant.training.google.maps.entities.AppUser;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+
+import com.globant.training.google.maps.entities.AppUser;
 
 
 /**

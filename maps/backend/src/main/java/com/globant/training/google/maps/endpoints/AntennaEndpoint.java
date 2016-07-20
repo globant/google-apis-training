@@ -6,20 +6,18 @@ import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.NotFoundException;
 
-import com.globant.training.google.maps.entities.AntennaEntity;
+import com.globant.training.google.maps.entities.Antenna;
 
 import javax.inject.Named;
 
-
-
 /**
- * API endpoints for {@link AntennaEntity} operations.
+ * API endpoints for {@link Antenna} operations.
  * 
  * @author gastonaguilera
  *
  */
 @Api(name = "antennaApi", version = "v1",
-        namespace = @ApiNamespace(ownerDomain = "training.google.maps.globant.com",
+    namespace = @ApiNamespace(ownerDomain = "training.google.maps.globant.com",
         ownerName = "training.google.maps.globant.com",
         packagePath = "com.globant.training.google.maps.endpoints"))
 public class AntennaEndpoint {
@@ -30,15 +28,15 @@ public class AntennaEndpoint {
    * 
    * @param antennaId the id to be found.
    * 
-   * @return {@link AntennaEntity}
+   * @return {@link Antenna}
    * 
    * @throws NotFoundException if none antenna found for provided id.
    */
   @ApiMethod(name = "getConference", path = "antenna/{antennaId}", httpMethod = HttpMethod.GET)
-  public AntennaEntity getAntenna(@Named("antennaId") final Long antennaId)
+  public Antenna getAntenna(@Named("antennaId") final Long antennaId)
       throws NotFoundException {
-    
-    AntennaEntity antenna = new AntennaEntity();
+
+    Antenna antenna = new Antenna();
     antenna.setId(antennaId);
 
     return antenna;
