@@ -5,24 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.cmd.LoadType;
 
 public interface Dao<T> {
   
-  /**
-   * Gets the {@link Objectify} service.
-   * 
-   * @return {@link Objectify} access
-   */
-  Objectify ofy();
-
-  /**
-   * Gets the {@link Objectify} opetations.
-   * 
-   * @return the {@link Objectify} opetations
-   */
-  LoadType<T> query();
 
   /**
    * Gets all entities.

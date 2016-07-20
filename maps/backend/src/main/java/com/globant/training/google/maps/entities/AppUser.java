@@ -3,95 +3,79 @@ package com.globant.training.google.maps.entities;
 import java.util.Date;
 import java.util.List;
 
+import com.googlecode.objectify.annotation.Entity;
+
 /**
- * Interface to represents the behavior of a MapsUser.
+ * Class to represent a Maps User Objectify Entity
  * 
  * @author gabriel.sideri
  *
  */
-public interface AppUser extends Entity{
+@Entity(name = "Users")
+public class AppUser  extends BaseEntity {
 
-  /**
-   * Gets the user´s name.
-   * 
-   * @return the user´s name
-   */
-  String getName();
 
-  /**
-   * Sets the user´s name.
-   * 
-   * @param name the user´s name
-   */
-  void setName(String name);
+  private String name;
 
-  /**
-   * Gets the user´s email.
-   * 
-   * @return the user´s email
-   */
-  String getEmail();
+  private String email;
 
-  /**
-   * Sets the user´s email.
-   * 
-   * @param email the user email
-   */
-  void setEmail(String email);
+  private List<String> roles;
 
-  /**
-   * Gets a list of user´s roles.
-   * 
-   * @return the user´s roles
-   */
-  List<String> getRoles();
+  private boolean active;
 
-  /**
-   * Sets the user´s roles.
-   * 
-   * @param roles the user's roles
-   */
-  void setRoles(List<String> roles);
+  private Date created;
 
-  /**
-   * Returns <b>true</b> if the User is active, otherwise <b>false</b>
-   * 
-   * @return if the User is active or not.
-   */
-  boolean isActive();
+  private Date lastUpdate;
 
-  /**
-   * Sets flag to indicate if the User is active or not.
-   * 
-   * @param active true or false
-   */
-  void setActive(boolean active);
+  public String getName() {
+    return name;
+  }
 
-  /**
-   * Gets the date where the User was created
-   * 
-   * @return the creation date.
-   */
-  Date getCreated();
+  public void setName(String name) {
+    this.name = name;
+  }
 
-  /**
-   * Sets the date where the User was created.
-   * 
-   * @param created the date
-   */
-  void setCreated(Date created);
+  public String getEmail() {
+    return email;
+  }
 
-  /**
-   * Returns when the entity was modified.
-   * 
-   * @return last updated
-   */
-  Date getLastUpdated();
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-  /**
-   * Sets the last updated.
-   * 
-   * @param lastUpdated the last updated
-   */
-  void setLastUpdated(Date lastUpdated);
+  public List<String> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(List<String> roles) {
+    this.roles = roles;
+  }
+
+  public boolean isActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
+  }
+
+  public Date getCreated() {
+    return created;
+  }
+
+  public void setCreated(Date created) {
+    this.created = created;
+  }
+
+  public Date getLastUpdate() {
+    return lastUpdate;
+  }
+
+  public void setLastUpdate(Date lastUpdate) {
+    this.lastUpdate = lastUpdate;
+  }
 }
+
+
+
+

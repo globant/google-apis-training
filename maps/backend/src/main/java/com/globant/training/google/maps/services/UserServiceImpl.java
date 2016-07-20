@@ -1,12 +1,11 @@
 package com.globant.training.google.maps.services;
 
 
-import com.google.inject.Inject;
+import java.util.List;
 
 import com.globant.training.google.maps.daos.UserDao;
 import com.globant.training.google.maps.entities.AppUser;
-
-import java.util.List;
+import com.google.inject.Inject;
 
 /**
  * {@link UserService} Implementation
@@ -30,7 +29,7 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public List<AppUser> getAllUsers() {
-    return (List<AppUser>) userDao.getAll();
+    return userDao.getAll();
   }
 
   /*
@@ -42,7 +41,7 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public void addUser(AppUser user){
-    //userDao.put(user);
+    userDao.put(user);
   }
   
 

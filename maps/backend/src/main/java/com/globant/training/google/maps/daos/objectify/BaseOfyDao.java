@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.globant.training.google.maps.entities.Entity;
 import com.google.common.collect.Lists;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
@@ -16,9 +15,10 @@ import com.googlecode.objectify.cmd.LoadType;
  * Generic Dao Class for access to Google Data Store.
  * 
  * @author gabriel.sideri
- * @param <T> the Entity to be used
+ * @param <T> the Inteface (Type) of Entity to be used
+ * @param <T> the Class of Entity to be used
  */
-public class BaseOfyDao<K, T extends K> {
+public class BaseOfyDao<T> {
 
   private final Class<T> entity;
 
@@ -54,9 +54,8 @@ public class BaseOfyDao<K, T extends K> {
    * 
    * @return all persisted entities
    */
-  public List<K> getAll() {
-    return null;
-    //return ofy().load().type(entity).list();
+  public List<T> getAll() {
+    return ofy().load().type(entity).list();
   }
 
   /**
@@ -173,8 +172,8 @@ public class BaseOfyDao<K, T extends K> {
    * Delete All Entities.
    */
   public void deleteAll() {
-    //List<T> entities = getAll();
-    //ofy().delete().entities(entities);
+    List<T> entities = getAll();
+    ofy().delete().entities(entities);
   }
 
   /**

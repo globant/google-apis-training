@@ -18,6 +18,10 @@ public interface UserDao {
    */
   List<AppUser>  getAll();
   
-  //AppUser put(AppUser user);
+  /**
+   * @param user
+   * @return
+   */
+  AppUser put(AppUser user);
 
 }

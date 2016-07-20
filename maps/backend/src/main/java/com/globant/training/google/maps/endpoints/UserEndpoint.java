@@ -8,7 +8,6 @@ import javax.inject.Named;
 
 import com.globant.training.google.maps.configs.Constants;
 import com.globant.training.google.maps.entities.AppUser;
-import com.globant.training.google.maps.entities.objectify.AppUserOfyEntity;
 import com.globant.training.google.maps.services.UserService;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -77,7 +76,7 @@ public class UserEndpoint extends BaseEndpoint {
   private void createEntityUser(User user) {
 
     //TODO move to service
-    AppUser userToCreate = new AppUserOfyEntity();
+    AppUser userToCreate = new AppUser();
     userToCreate.setEmail(user.getEmail());
     userService.addUser(userToCreate);
   }
