@@ -2,8 +2,12 @@ package com.globant.training.google.maps.endpoints;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
+
+import javax.inject.Named;
+
 import com.globant.training.google.maps.configs.Constants;
-import com.globant.training.google.maps.entities.UserEntity;
+import com.globant.training.google.maps.entities.AppUser;
 import com.globant.training.google.maps.services.UserService;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -11,10 +15,6 @@ import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.users.User;
 import com.google.inject.Inject;
-
-import java.util.List;
-
-import javax.inject.Named;
 
 /**
  * API endpoints for {@link User} operations.
@@ -50,13 +50,13 @@ public class UserEndpoint extends BaseEndpoint {
    * @throws NotFoundException if none antenna found for provided id.
    */
   @ApiMethod(name = "findUsers", path = "users", httpMethod = HttpMethod.GET)
-  public List<UserEntity> findUsers(User user) throws NotFoundException {
+  public List<AppUser> findUsers(User user) throws NotFoundException {
 
     checkNotNull(user);
 
     isAdmin(user);
 
-    List<UserEntity> users = userService.getAllUsers();
+    List<AppUser> users = userService.getAllUsers();
 
     if (users.isEmpty()) {
       createEntityUser(user);
@@ -69,11 +69,14 @@ public class UserEndpoint extends BaseEndpoint {
   /**
    * Creates an {@link EntityUser} form a {@link User}
    * 
+   * 
+   * 
    * @param user a {@link User}
    */
   private void createEntityUser(User user) {
 
-    UserEntity userToCreate = new UserEntity();
+    //TODO move to service
+    AppUser userToCreate = new AppUser();
     userToCreate.setEmail(user.getEmail());
     userService.addUser(userToCreate);
   }

@@ -1,18 +1,27 @@
 package com.globant.training.google.maps.daos;
 
-import com.globant.training.google.maps.entities.UserEntity;
+import com.globant.training.google.maps.entities.AppUser;
+
+import java.util.List;
 
 /**
  * User DAO Class.
  * 
  * @author gabriel.sideri
  */
-public class UserDao extends BaseDao<UserEntity> {
+public interface UserDao {
 
-  public UserDao() {
-    super(UserEntity.class);
-  }
-
-
+  /**
+   * Get all users.
+   * 
+   * @return a list with all users
+   */
+  List<AppUser>  getAll();
+  
+  /**
+   * @param user
+   * @return
+   */
+  AppUser put(AppUser user);
 
 }

@@ -62,6 +62,6 @@ This in charge of organize your code and imports. There are located at
 ```
 Also you need to configure the organize imports orders as follows:
 
-![Organize Imports](/src/main/resources/organize-imports.png "Organize Imports")
+![Organize Imports](/maps/backend/src/main/resources/organize-imports.png "Organize Imports")
 
 
