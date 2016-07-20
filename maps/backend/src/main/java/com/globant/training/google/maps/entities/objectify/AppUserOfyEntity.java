@@ -2,8 +2,8 @@ package com.globant.training.google.maps.entities.objectify;
 
 import com.googlecode.objectify.annotation.Entity;
 
-import com.globant.training.google.maps.entities.BaseOfyEntity;
-import com.globant.training.google.maps.entities.MapsUser;
+import com.globant.training.google.maps.entities.BaseEntity;
+import com.globant.training.google.maps.entities.AppUser;
 
 import java.util.Date;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  *
  */
 @Entity(name = "Users")
-public class MapsUserOfyEntity extends BaseOfyEntity implements MapsUser {
+public class AppUserOfyEntity extends BaseEntity implements AppUser {
 
   private String name;
 

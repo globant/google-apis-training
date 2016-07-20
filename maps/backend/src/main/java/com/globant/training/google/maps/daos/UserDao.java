@@ -1,6 +1,6 @@
 package com.globant.training.google.maps.daos;
 
-import com.globant.training.google.maps.entities.MapsUser;
+import com.globant.training.google.maps.entities.AppUser;
 
 import java.util.List;
 
@@ -16,12 +16,8 @@ public interface UserDao {
    * 
    * @return a list with all users
    */
-  List<MapsUser> getAllUsers();
+  List<AppUser>  getAll();
+  
+  //AppUser put(AppUser user);
 
-  /**
-   * Adds a new user.
-   * 
-   * @param user the user to be added
-   */
-  void addUser(MapsUser user);
 }

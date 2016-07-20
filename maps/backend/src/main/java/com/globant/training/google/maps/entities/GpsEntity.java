@@ -7,7 +7,7 @@ import java.util.Date;
  * 
  * @author gabriel.sideri
  */
-public class GpsEntity extends BaseOfyEntity implements Device {
+public class GpsEntity extends BaseEntity implements Device {
 
   private String name;
 

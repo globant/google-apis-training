@@ -1,25 +1,19 @@
 package com.globant.training.google.maps.daos.objectify;
 
 import com.globant.training.google.maps.daos.UserDao;
-import com.globant.training.google.maps.entities.MapsUser;
-import com.globant.training.google.maps.entities.objectify.MapsUserOfyEntity;
+import com.globant.training.google.maps.entities.AppUser;
+import com.globant.training.google.maps.entities.objectify.AppUserOfyEntity;
 
-import java.util.List;
-
-public class UserOfyDao extends BaseOfyDao<MapsUserOfyEntity> implements UserDao {
+public class UserOfyDao extends BaseOfyDao<AppUser, AppUserOfyEntity> implements UserDao {
 
   public UserOfyDao() {
-    super(MapsUserOfyEntity.class);
+    super(AppUserOfyEntity.class);
   }
 
-  @Override
-  public List<MapsUser> getAllUsers() {
-    return null;
-  }
-
-  @Override
-  public void addUser(MapsUser user) {
-    // TODO Auto-generated method stub
-  }
+//  @Override
+//  public AppUser put(AppUser user) {
+//    // TODO Auto-generated method stub
+//    return null;
+//  }
 
 }

@@ -8,7 +8,7 @@ import java.util.Date;
  * @author gabriel.sideri
  *
  */
-public class TrackPointEntity extends BaseOfyEntity {
+public class TrackPointEntity extends BaseEntity {
 
   private Device device;
 

@@ -7,12 +7,12 @@ import com.googlecode.objectify.annotation.Id;
  * 
  * @author gabriel.sideri
  */
-public class BaseOfyEntity {
+public abstract class BaseEntity implements Entity{
 
   @Id
   protected Long id;
 
-  protected BaseOfyEntity() {}
+  protected BaseEntity() {}
 
   @Override
   public int hashCode() {
@@ -33,7 +33,7 @@ public class BaseOfyEntity {
     if (getClass() != obj.getClass()) {
       return false;
     }
-    BaseOfyEntity other = (BaseOfyEntity) obj;
+    BaseEntity other = (BaseEntity) obj;
     if (id == null) {
       if (other.id != null) {
         return false;

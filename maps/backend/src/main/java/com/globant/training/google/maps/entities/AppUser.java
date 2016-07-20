@@ -9,7 +9,7 @@ import java.util.List;
  * @author gabriel.sideri
  *
  */
-public interface MapsUser {
+public interface AppUser extends Entity{
 
   /**
    * Gets the user´s name.

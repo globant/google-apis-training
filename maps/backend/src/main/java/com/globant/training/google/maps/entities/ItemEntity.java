@@ -8,7 +8,7 @@ import java.util.List;
  * 
  * @author gabriel.sideri
  */
-public class ItemEntity extends BaseOfyEntity {
+public class ItemEntity extends BaseEntity {
 
   private String name;
 

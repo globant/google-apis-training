@@ -4,7 +4,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 
-import com.globant.training.google.maps.entities.objectify.MapsUserOfyEntity;
+import com.globant.training.google.maps.entities.objectify.AppUserOfyEntity;
 
 
 /**
@@ -17,7 +17,7 @@ public class OfyService {
 
   // Register all entities //
   static {
-    ObjectifyService.register(MapsUserOfyEntity.class);
+    ObjectifyService.register(AppUserOfyEntity.class);
   }
 
   /**

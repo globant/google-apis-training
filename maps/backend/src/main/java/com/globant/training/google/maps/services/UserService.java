@@ -1,6 +1,6 @@
 package com.globant.training.google.maps.services;
 
-import com.globant.training.google.maps.entities.MapsUser;
+import com.globant.training.google.maps.entities.AppUser;
 
 import java.util.List;
 
@@ -16,13 +16,15 @@ public interface UserService {
    * 
    * @return a list with all users
    */
-  public List<MapsUser> getAllUsers();
+  public List<AppUser> getAllUsers();
 
   /**
    * Adds a new user.
    * 
    * @param user the user to be added
    */
-  public void addUser(MapsUser user);
+  public void addUser(AppUser user);
+
+
 
 }
