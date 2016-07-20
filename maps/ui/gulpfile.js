@@ -12,8 +12,6 @@ var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var merge = require('merge-stream');
 var path = require('path');
-var fs = require('fs');
-var glob = require('glob-all');
 var historyApiFallback = require('connect-history-api-fallback');
 var ensureFiles = require('./tasks/ensure-files.js');
 var javaProperties = require('java-properties');
@@ -148,6 +146,21 @@ gulp.task('copy:elements', function() {
     .pipe($.size({title: 'Copy elements'}));
 });
 
+gulp.task('lint', function () {
+  return gulp.src([
+      'app/scripts/**/*.js',
+      'app/elements/**/*.html',
+      'gulpfile.js'
+    ])
+    .pipe(reload({
+      stream: true,
+      once: true
+    }))
+    .pipe($.eslint())
+    .pipe($.eslint.format())
+    .pipe($.eslint.failAfterError());
+});
+
 // Clean output directory
 gulp.task('clean', function() {
   return del(['.tmp', dist()]);
@@ -206,6 +219,7 @@ gulp.task('serve:dist', ['default'], function() {
 // Build production files, the default task
 gulp.task('build', ['clean'], function(cb) {
   runSequence(
+    'lint',
     ['ensureFiles', 'copy', 'styles'],
     ['images', 'html'],
     'copy:elements',
