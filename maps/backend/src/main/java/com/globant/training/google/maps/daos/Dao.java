@@ -6,8 +6,13 @@ import java.util.Map;
 
 import com.googlecode.objectify.Key;
 
+/**
+ * Generic Dao Interface.
+ * 
+ * @author gabriel.sideri
+ * @param <T> the Class of Entity to be used
+ */
 public interface Dao<T> {
-  
 
   /**
    * Gets all entities.

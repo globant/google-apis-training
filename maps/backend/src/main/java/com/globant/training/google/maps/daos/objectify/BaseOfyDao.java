@@ -15,7 +15,6 @@ import com.googlecode.objectify.cmd.LoadType;
  * Generic Dao Class for access to Google Data Store.
  * 
  * @author gabriel.sideri
- * @param <T> the Inteface (Type) of Entity to be used
  * @param <T> the Class of Entity to be used
  */
 public class BaseOfyDao<T> {

@@ -14,7 +14,9 @@ import com.googlecode.objectify.ObjectifyService;
  */
 public class OfyService {
 
-  // Register all entities //
+  /**
+   * Register all entities
+   */
   static {
     ObjectifyService.register(AppUser.class);
   }
