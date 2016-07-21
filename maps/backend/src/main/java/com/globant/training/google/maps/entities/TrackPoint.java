@@ -1,6 +1,7 @@
 package com.globant.training.google.maps.entities;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Class to represents the track points sent it by the devices
@@ -19,6 +20,8 @@ public class TrackPoint extends BaseEntity {
   private Date measuredDate;
 
   private Date savedDate;
+  
+  private Map<String, String> context;
 
   /**
    * Get the Device associated with the Tack Point.
@@ -108,6 +111,24 @@ public class TrackPoint extends BaseEntity {
    */
   public void setSavedDate(Date savedDate) {
     this.savedDate = savedDate;
+  }
+
+  /**
+   * Gets the context information.
+   * 
+   * @return Map with context information
+   */
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  /**
+   * Sets the context information.
+   * 
+   * @param context Map with context information
+   */
+  public void setContext(Map<String, String> context) {
+    this.context = context;
   }
 
 }

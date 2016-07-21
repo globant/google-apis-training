@@ -10,7 +10,9 @@ import java.util.Date;
  */
 public class Antenna extends BaseEntity {
 
-  private Rfid rfidDevice;
+  private String name;
+
+  private String serialNumber;
 
   private Double latitude;
 
@@ -22,23 +24,7 @@ public class Antenna extends BaseEntity {
 
   private Date lastUpdated;
 
-  /**
-   * Gets the RFID Device registered.
-   * 
-   * @return the RFID Device
-   */
-  public Rfid getRfidDevice() {
-    return rfidDevice;
-  }
-
-  /**
-   * Sets the RFID Device.
-   * 
-   * @param rfidDevice the RFID Device
-   */
-  public void setRfidDevice(Rfid rfidDevice) {
-    this.rfidDevice = rfidDevice;
-  }
+  private Double rangeLimit;
 
   /**
    * Gets the Latitude where the Antenna is Located.
@@ -128,6 +114,60 @@ public class Antenna extends BaseEntity {
    */
   public void setLastUpdated(Date lastUpdated) {
     this.lastUpdated = lastUpdated;
+  }
+
+  /**
+   * Gets antenna name.
+   * 
+   * @return the antenna name
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Sets the antenna name.
+   * 
+   * @param name the antenna name
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
+   * Gets antenna serial number.
+   * 
+   * @return the antenna serial number
+   */
+  public String getSerialNumber() {
+    return serialNumber;
+  }
+
+  /**
+   * Sets the antenna serial number.
+   * 
+   * @param serialNumber the serial number
+   */
+  public void setSerialNumber(String serialNumber) {
+    this.serialNumber = serialNumber;
+  }
+
+  /**
+   * Gets the antenna range limit.
+   * 
+   * @return the antenna range limit
+   */
+  public Double getRangeLimit() {
+    return rangeLimit;
+  }
+
+  /**
+   * Sets the antenna range limit.
+   * 
+   * @param rangeLimit the range limit
+   */
+  public void setRangeLimit(Double rangeLimit) {
+    this.rangeLimit = rangeLimit;
   }
 
 }

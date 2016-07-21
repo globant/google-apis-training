@@ -15,6 +15,7 @@ import com.globant.training.google.maps.daos.UserDao;
 import com.globant.training.google.maps.daos.objectify.AntennaOfyDao;
 import com.globant.training.google.maps.daos.objectify.OfyService;
 import com.globant.training.google.maps.daos.objectify.UserOfyDao;
+import com.globant.training.google.maps.endpoints.AntennaEndpoint;
 import com.globant.training.google.maps.endpoints.UserEndpoint;
 import com.globant.training.google.maps.services.AntennaService;
 import com.globant.training.google.maps.services.AntennaServiceImpl;
@@ -52,7 +53,8 @@ public class GuiceConfig extends GuiceServletContextListener {
 
       Set<Class<?>> serviceClasses = new HashSet<Class<?>>();
       serviceClasses.add(UserEndpoint.class);
-
+      serviceClasses.add(AntennaEndpoint.class);
+      
       this.serveGuiceSystemServiceServlet("/_ah/spi/*", serviceClasses);
       
     }

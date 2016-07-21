@@ -35,7 +35,9 @@ dependencies {
     compile 'com.google.guava:guava:19.0'
     compile 'com.googlecode.objectify:objectify:5.1.13'
     compile 'javax.jdo:jdo-api:3.0.1'
-
+    compile 'org.apache.bval:bval-guice:0.5'
+    compile 'javax.validation:validation-api:1.1.0.Final'
+    
     testCompile 'com.google.appengine:appengine-testing:1.9.38'
     testCompile 'com.google.appengine:appengine-api-stubs:1.9.38'
     testCompile 'junit:junit:4.11'
