@@ -1,6 +1,6 @@
 package com.globant.training.google.maps.endpoints.validation;
 
-import com.globant.training.google.maps.endpoints.dtos.BaseDto;
+import com.globant.training.google.maps.endpoints.dtos.Dto;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,18 +21,18 @@ public class DtoValidator {
   /**
    * Validates Dto information. It will throw a RuntimeException with messages if an error is found.
    * 
-   * @param dto a {@link BaseDto}
+   * @param dto a {@link Dto}
    */
-  public static void validate(final BaseDto dto) {
+  public static void validate(final Dto dto) {
 
     validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    Set<ConstraintViolation<BaseDto>> constraintViolations = validator.validate(dto);
+    Set<ConstraintViolation<Dto>> constraintViolations = validator.validate(dto);
 
     if (!constraintViolations.isEmpty()) {
       Set<String> errorMessages = new HashSet<String>();
 
-      for (ConstraintViolation<BaseDto> constraintViolation : constraintViolations) {
+      for (ConstraintViolation<Dto> constraintViolation : constraintViolations) {
         errorMessages
             .add(constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage());
       }

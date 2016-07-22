@@ -15,24 +15,14 @@ public interface Device {
   Long getId();
 
   /**
-   * Sets device´s id.
-   * 
-   * @param id the device id
-   */
-  void setId(Long id);
-
-  /**
    * Gets Device´s Name.
    * 
    * @return the device name
    */
   String getName();
-
+  
   /**
-   * Sets the device´s name.
-   * 
-   * @param name the device name
+   * @return the {DeviceType} of instance.
    */
-  void setName(String name);
-
+  DeviceType getType();
 }

@@ -1,14 +1,10 @@
 package com.globant.training.google.maps.configs;
 
-import com.google.api.server.spi.guice.GuiceSystemServiceServletModule;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Logger;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Singleton;
-import com.google.inject.name.Names;
-import com.google.inject.servlet.GuiceServletContextListener;
-import com.googlecode.objectify.ObjectifyFilter;
+import javax.servlet.ServletContextEvent;
 
 import com.globant.training.google.maps.daos.AntennaDao;
 import com.globant.training.google.maps.daos.UserDao;
@@ -21,12 +17,14 @@ import com.globant.training.google.maps.services.AntennaService;
 import com.globant.training.google.maps.services.AntennaServiceImpl;
 import com.globant.training.google.maps.services.UserService;
 import com.globant.training.google.maps.services.UserServiceImpl;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletContextEvent;
+import com.google.api.server.spi.guice.GuiceSystemServiceServletModule;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Singleton;
+import com.google.inject.name.Names;
+import com.google.inject.servlet.GuiceServletContextListener;
+import com.googlecode.objectify.ObjectifyFilter;
 
 
 /**

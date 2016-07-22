@@ -4,12 +4,15 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import com.globant.training.google.maps.endpoints.validation.DtoValidator;
+import com.globant.training.google.maps.entities.Antenna;
+
 /**
  * Antenna DTO.
  * 
  * @author gabriel.sideri
  */
-public class AntennaDto implements BaseDto {
+public class AntennaDto implements Dto<Antenna> {
  
   @NotNull
   private String name;
@@ -21,14 +24,13 @@ public class AntennaDto implements BaseDto {
 
   private Double longitude;
 
-  private boolean active;
-
   private Date created;
 
   private Date lastUpdated;
 
   private Double rangeLimit;
 
+  
   /**
    * Gets the Latitude where the Antenna is Located.
    * 
@@ -43,8 +45,9 @@ public class AntennaDto implements BaseDto {
    * 
    * @param latitude the Latitude
    */
-  public void setLatitude(Double latitude) {
+  public AntennaDto setLatitude(Double latitude) {
     this.latitude = latitude;
+    return this;
   }
 
   /**
@@ -61,27 +64,11 @@ public class AntennaDto implements BaseDto {
    * 
    * @param longitude the longitude
    */
-  public void setLongitude(Double longitude) {
+  public AntennaDto setLongitude(Double longitude) {
     this.longitude = longitude;
+    return this;
   }
 
-  /**
-   * Returns <b>true</b> if the Antenna is active, otherwise <b>false</b>
-   * 
-   * @return if the Antenna is active or not.
-   */
-  public boolean isActive() {
-    return active;
-  }
-
-  /**
-   * Sets flag to indicate if the Antenna is active or not.
-   * 
-   * @param active true or false
-   */
-  public void setActive(boolean active) {
-    this.active = active;
-  }
 
   /**
    * Gets the date where the Antenna´s information was created
@@ -97,8 +84,9 @@ public class AntennaDto implements BaseDto {
    * 
    * @param created the date
    */
-  public void setCreated(Date created) {
+  public AntennaDto setCreated(Date created) {
     this.created = created;
+    return this;
   }
 
   /**
@@ -115,31 +103,60 @@ public class AntennaDto implements BaseDto {
    * 
    * @param lastUpdated the last updated
    */
-  public void setLastUpdated(Date lastUpdated) {
+  public AntennaDto setLastUpdated(Date lastUpdated) {
     this.lastUpdated = lastUpdated;
+    return this;
   }
 
   public String getName() {
     return name;
   }
 
-  public void setName(String name) {
+  public AntennaDto setName(String name) {
     this.name = name;
+    return this;
   }
 
   public String getSerialNumber() {
     return serialNumber;
   }
 
-  public void setSerialNumber(String serialNumber) {
+  public AntennaDto setSerialNumber(String serialNumber) {
     this.serialNumber = serialNumber;
+    return this;
   }
 
   public Double getRangeLimit() {
     return rangeLimit;
   }
 
-  public void setRangeLimit(Double rangeLimit) {
+  public AntennaDto setRangeLimit(Double rangeLimit) {
     this.rangeLimit = rangeLimit;
+    return this;
+  }
+
+  @Override
+  public Antenna toEntity() {
+    DtoValidator.validate(this);
+    
+    Antenna antenna = new Antenna()
+           .setName(name)
+           .setLatitude(latitude)
+           .setLongitude(longitude)
+           .setRangeLimit(rangeLimit)
+           .setSerialNumber(serialNumber);
+    
+    return antenna;
+  }
+  
+  @Override
+  public void fromEntity(Antenna antenna) {
+    this.name = antenna.getName();
+    this.serialNumber = antenna.getSerialNumber();
+    this.latitude = antenna.getLatitude();
+    this.longitude = antenna.getLongitude();
+    this.created = antenna.getCreated();
+    this.lastUpdated = antenna.getLastUpdated();
+    this.rangeLimit = antenna.getRangeLimit();
   }
 }

@@ -40,8 +40,9 @@ public class Antenna extends BaseEntity {
    * 
    * @param latitude the Latitude
    */
-  public void setLatitude(Double latitude) {
+  public Antenna setLatitude(Double latitude) {
     this.latitude = latitude;
+    return this;
   }
 
   /**
@@ -58,8 +59,9 @@ public class Antenna extends BaseEntity {
    * 
    * @param longitude the longitude
    */
-  public void setLongitude(Double longitude) {
+  public Antenna setLongitude(Double longitude) {
     this.longitude = longitude;
+    return this;
   }
 
   /**
@@ -76,8 +78,9 @@ public class Antenna extends BaseEntity {
    * 
    * @param active true or false
    */
-  public void setActive(boolean active) {
+  public Antenna setActive(boolean active) {
     this.active = active;
+    return this;
   }
 
   /**
@@ -94,8 +97,9 @@ public class Antenna extends BaseEntity {
    * 
    * @param created the date
    */
-  public void setCreated(Date created) {
+  public Antenna setCreated(Date created) {
     this.created = created;
+    return this;
   }
 
   /**
@@ -112,8 +116,9 @@ public class Antenna extends BaseEntity {
    * 
    * @param lastUpdated the last updated
    */
-  public void setLastUpdated(Date lastUpdated) {
+  public Antenna setLastUpdated(Date lastUpdated) {
     this.lastUpdated = lastUpdated;
+    return this;
   }
 
   /**
@@ -130,8 +135,9 @@ public class Antenna extends BaseEntity {
    * 
    * @param name the antenna name
    */
-  public void setName(String name) {
+  public Antenna setName(String name) {
     this.name = name;
+    return this;
   }
 
   /**
@@ -148,8 +154,9 @@ public class Antenna extends BaseEntity {
    * 
    * @param serialNumber the serial number
    */
-  public void setSerialNumber(String serialNumber) {
+  public Antenna setSerialNumber(String serialNumber) {
     this.serialNumber = serialNumber;
+    return this;
   }
 
   /**
@@ -166,8 +173,9 @@ public class Antenna extends BaseEntity {
    * 
    * @param rangeLimit the range limit
    */
-  public void setRangeLimit(Double rangeLimit) {
+  public Antenna setRangeLimit(Double rangeLimit) {
     this.rangeLimit = rangeLimit;
+    return this;
   }
 
 }

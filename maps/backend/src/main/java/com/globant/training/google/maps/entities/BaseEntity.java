@@ -44,10 +44,20 @@ public abstract class BaseEntity {
     return true;
   }
 
+  /**
+   * Set id.
+   * 
+   * @param id the device id
+   */
   public Long getId() {
     return id;
   }
 
+  /**
+   * Get id.
+   * 
+   * @param id the device id
+   */
   public void setId(Long id) {
     this.id = id;
   }

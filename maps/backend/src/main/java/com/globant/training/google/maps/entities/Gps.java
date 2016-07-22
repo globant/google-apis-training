@@ -13,8 +13,6 @@ public class Gps extends BaseEntity implements Device {
 
   private String serialNumber;
 
-  private DeviceType type;
-
   private boolean active;
 
   private Date created;
@@ -31,12 +29,11 @@ public class Gps extends BaseEntity implements Device {
     return name;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * Sets the device´s name.
    * 
-   * @see com.example.helloendpoints.entities.Device#setName(java.lang.String)
+   * @param name the device name
    */
-  @Override
   public void setName(String name) {
     this.name = name;
   }
@@ -65,16 +62,7 @@ public class Gps extends BaseEntity implements Device {
    * @return the Device Type
    */
   public DeviceType getType() {
-    return type;
-  }
-
-  /**
-   * Set the {@link DeviceType}.
-   * 
-   * @param type the Device Type
-   */
-  public void setType(DeviceType type) {
-    this.type = type;
+    return DeviceType.GPS;
   }
 
   /**

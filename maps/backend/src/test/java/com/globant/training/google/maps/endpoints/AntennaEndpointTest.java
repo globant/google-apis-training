@@ -21,7 +21,9 @@ import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
+import com.globant.training.google.maps.services.AntennaService;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
 
@@ -32,6 +34,9 @@ import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
 public class AntennaEndpointTest {
 
   private AntennaEndpoint endpoint;
+  
+  @Mock
+  private AntennaService antennaService;
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalUserServiceTestConfig())
@@ -42,7 +47,7 @@ public class AntennaEndpointTest {
   @Before
   public void setupGuestBookServlet() {
     helper.setUp();
-    endpoint = new AntennaEndpoint();
+    endpoint = new AntennaEndpoint(antennaService);
   }
 
   @After
