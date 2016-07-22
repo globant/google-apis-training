@@ -32,4 +32,11 @@ public interface AntennaService {
    * @return the {@link Antenna}
    */
   Antenna findById(Long id);
+  
+  /**
+   * Delete antenna by id.
+   * 
+   * @param id the antenna id
+   */
+  void deleteById(Long id);
 }

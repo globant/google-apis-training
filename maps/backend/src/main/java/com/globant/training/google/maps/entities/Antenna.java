@@ -1,5 +1,7 @@
 package com.globant.training.google.maps.entities;
 
+import com.googlecode.objectify.annotation.Entity;
+
 import java.util.Date;
 
 /**
@@ -8,6 +10,7 @@ import java.util.Date;
  * @author gabriel.sideri
  *
  */
+@Entity(name = "Antenna")
 public class Antenna extends BaseEntity {
 
   private String name;

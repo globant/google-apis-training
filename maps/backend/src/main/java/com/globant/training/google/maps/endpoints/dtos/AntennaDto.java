@@ -1,11 +1,11 @@
 package com.globant.training.google.maps.endpoints.dtos;
 
+import com.globant.training.google.maps.endpoints.validation.DtoValidator;
+import com.globant.training.google.maps.entities.Antenna;
+
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
-
-import com.globant.training.google.maps.endpoints.validation.DtoValidator;
-import com.globant.training.google.maps.entities.Antenna;
 
 /**
  * Antenna DTO.
@@ -13,7 +13,9 @@ import com.globant.training.google.maps.entities.Antenna;
  * @author gabriel.sideri
  */
 public class AntennaDto implements Dto<Antenna> {
- 
+
+  private Long id;
+
   @NotNull
   private String name;
 
@@ -30,7 +32,24 @@ public class AntennaDto implements Dto<Antenna> {
 
   private Double rangeLimit;
 
-  
+  /**
+   * Gets antenna id.
+   * 
+   * @return the antenna id
+   */
+  public Long getId() {
+    return id;
+  }
+
+  /**
+   * Sets antenna id.
+   * 
+   * @param id the antenna id
+   */
+  public void setAntennaId(Long id) {
+    this.id = id;
+  }
+
   /**
    * Gets the Latitude where the Antenna is Located.
    * 
@@ -135,28 +154,46 @@ public class AntennaDto implements Dto<Antenna> {
     return this;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.globant.training.google.maps.endpoints.dtos.Dto#toEntity()
+   */
   @Override
   public Antenna toEntity() {
+    
     DtoValidator.validate(this);
-    
-    Antenna antenna = new Antenna()
-           .setName(name)
-           .setLatitude(latitude)
-           .setLongitude(longitude)
-           .setRangeLimit(rangeLimit)
-           .setSerialNumber(serialNumber);
-    
+
+    Antenna antenna = new Antenna().setName(name).setLatitude(latitude).setLongitude(longitude)
+        .setRangeLimit(rangeLimit).setSerialNumber(serialNumber).setLastUpdated(new Date());
+
+    if (this.getId() == null) {
+      antenna.setCreated(new Date());
+    } else {
+      antenna.setId(id);
+      antenna.setCreated(getCreated());
+    }
+
     return antenna;
   }
-  
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.globant.training.google.maps.endpoints.dtos.Dto#fromEntity(java.lang.Object)
+   */
   @Override
   public void fromEntity(Antenna antenna) {
-    this.name = antenna.getName();
-    this.serialNumber = antenna.getSerialNumber();
-    this.latitude = antenna.getLatitude();
-    this.longitude = antenna.getLongitude();
-    this.created = antenna.getCreated();
-    this.lastUpdated = antenna.getLastUpdated();
-    this.rangeLimit = antenna.getRangeLimit();
+    if (antenna != null) {
+      this.id = antenna.getId();
+      this.name = antenna.getName();
+      this.serialNumber = antenna.getSerialNumber();
+      this.latitude = antenna.getLatitude();
+      this.longitude = antenna.getLongitude();
+      this.created = antenna.getCreated();
+      this.lastUpdated = antenna.getLastUpdated();
+      this.rangeLimit = antenna.getRangeLimit();
+    }
   }
+
 }

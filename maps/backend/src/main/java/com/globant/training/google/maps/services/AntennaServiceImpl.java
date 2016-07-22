@@ -54,4 +54,12 @@ public class AntennaServiceImpl implements AntennaService {
     return antennaDao.get(id);
   }
 
+  /* (non-Javadoc)
+   * @see com.globant.training.google.maps.services.AntennaService#deleteById(java.lang.Long)
+   */
+  @Override
+  public void deleteById(Long id) {
+    antennaDao.delete(id);
+  }
+
 }

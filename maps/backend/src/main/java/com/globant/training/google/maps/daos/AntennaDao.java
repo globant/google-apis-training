@@ -33,4 +33,12 @@ public interface AntennaDao {
    * @return the {@link Antenna}
    */
   Antenna get(Long id);
+  
+  /**
+   * Delete antenna by id.
+   * 
+   * @param id the antenna id
+   */
+  void delete(Long id);
+  
 }
