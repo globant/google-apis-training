@@ -1,11 +1,11 @@
 package com.globant.training.google.maps.endpoints.dtos;
 
+import com.globant.training.google.maps.endpoints.validation.DtoValidator;
+import com.globant.training.google.maps.entities.Antenna;
+
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
-
-import com.globant.training.google.maps.endpoints.validation.DtoValidator;
-import com.globant.training.google.maps.entities.Antenna;
 
 /**
  * Antenna DTO.
@@ -13,7 +13,9 @@ import com.globant.training.google.maps.entities.Antenna;
  * @author gabriel.sideri
  */
 public class AntennaDto implements Dto<Antenna> {
- 
+
+  private Long id;
+  
   @NotNull
   private String name;
 
@@ -30,7 +32,7 @@ public class AntennaDto implements Dto<Antenna> {
 
   private Double rangeLimit;
 
-  
+
   /**
    * Gets the Latitude where the Antenna is Located.
    * 
@@ -134,23 +136,30 @@ public class AntennaDto implements Dto<Antenna> {
     this.rangeLimit = rangeLimit;
     return this;
   }
+  
+  public Long getId() {
+    return id;
+  }
 
+  /* (non-Javadoc)
+   * @see com.globant.training.google.maps.endpoints.dtos.Dto#toEntity()
+   */
   @Override
   public Antenna toEntity() {
     DtoValidator.validate(this);
-    
-    Antenna antenna = new Antenna()
-           .setName(name)
-           .setLatitude(latitude)
-           .setLongitude(longitude)
-           .setRangeLimit(rangeLimit)
-           .setSerialNumber(serialNumber);
-    
+
+    Antenna antenna = new Antenna().setName(name).setLatitude(latitude).setLongitude(longitude)
+        .setRangeLimit(rangeLimit).setSerialNumber(serialNumber);
+
     return antenna;
   }
-  
+
+  /* (non-Javadoc)
+   * @see com.globant.training.google.maps.endpoints.dtos.Dto#fromEntity(java.lang.Object)
+   */
   @Override
   public void fromEntity(Antenna antenna) {
+    this.id = antenna.getId();
     this.name = antenna.getName();
     this.serialNumber = antenna.getSerialNumber();
     this.latitude = antenna.getLatitude();
@@ -159,4 +168,5 @@ public class AntennaDto implements Dto<Antenna> {
     this.lastUpdated = antenna.getLastUpdated();
     this.rangeLimit = antenna.getRangeLimit();
   }
+
 }

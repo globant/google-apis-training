@@ -4,6 +4,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 
+import com.globant.training.google.maps.entities.Antenna;
 import com.globant.training.google.maps.entities.AppUser;
 
 
@@ -20,6 +21,7 @@ public class OfyService {
    */
   static {
     ObjectifyService.register(AppUser.class);
+    ObjectifyService.register(Antenna.class);
   }
 
   /**

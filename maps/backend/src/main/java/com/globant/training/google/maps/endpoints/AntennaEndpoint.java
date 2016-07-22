@@ -1,16 +1,17 @@
 package com.globant.training.google.maps.endpoints;
 
-import javax.inject.Named;
-
-import com.globant.training.google.maps.configs.Constants;
-import com.globant.training.google.maps.endpoints.dtos.AntennaDto;
-import com.globant.training.google.maps.entities.Antenna;
-import com.globant.training.google.maps.services.AntennaService;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.inject.Inject;
+
+import com.globant.training.google.maps.configs.Constants;
+import com.globant.training.google.maps.endpoints.dtos.AntennaDto;
+import com.globant.training.google.maps.entities.Antenna;
+import com.globant.training.google.maps.services.AntennaService;
+
+import javax.inject.Named;
 
 /**
  * API endpoints for {@link Antenna} operations.
@@ -37,7 +38,7 @@ public class AntennaEndpoint {
 
   /**
    * Get an Antenna by id.
-   *  
+   * 
    * @param antennaId the id to be found
    * @return {@link Antenna}
    * @throws NotFoundException if none antenna found for provided id
@@ -56,8 +57,9 @@ public class AntennaEndpoint {
   @ApiMethod(name = "antenna.add", path = "antenna", httpMethod = HttpMethod.POST)
   public AntennaDto addAntenna(AntennaDto antennaDto) {
 
-    antennaService.save(antennaDto.toEntity());
-    
+    Antenna antenna = antennaService.save(antennaDto.toEntity());
+    antennaDto.fromEntity(antenna);
+
     return antennaDto;
   }
 
