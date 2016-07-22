@@ -24,6 +24,7 @@ public class GpsFactory implements DeviceFactory {
     validate(attributtes);
 
     GpsDevice gps = new GpsDevice();
+    gps.setActive(true);
     gps.setName(name);
     gps.setSerialNumber(String.valueOf(attributtes.get(SERIAL_NUMBER_KEY)));
 
@@ -36,6 +37,7 @@ public class GpsFactory implements DeviceFactory {
    * @param attributtes the map of attributes.
    */
   private void validate(Map<String, String> attributtes) {
+    
     if (!attributtes.containsKey(SERIAL_NUMBER_KEY)) {
       throwError("serialNumber is required");
     }

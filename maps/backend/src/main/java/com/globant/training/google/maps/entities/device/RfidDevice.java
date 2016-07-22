@@ -2,6 +2,8 @@ package com.globant.training.google.maps.entities.device;
 
 import java.util.Map;
 
+import javax.jdo.annotations.Embedded;
+
 import com.globant.training.google.maps.entities.DeviceType;
 import com.googlecode.objectify.annotation.Subclass;
 
@@ -17,6 +19,7 @@ public class RfidDevice extends Device {
 
   private String manufacturer;
 
+  @Embedded
   private Map<String, String> data;
 
   /**

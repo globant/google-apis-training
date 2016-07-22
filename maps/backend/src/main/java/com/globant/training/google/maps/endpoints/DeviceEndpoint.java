@@ -20,7 +20,7 @@ import com.google.inject.Inject;
 
 @Api(name = "maps", version = "v1", scopes = {Constants.EMAIL_SCOPE},
     clientIds = {Constants.WEB_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID},
-    description = "API for maps poc - Devices.")
+    description = "API for maps poc.")
 public class DeviceEndpoint {
 
   private DeviceService deviceService;
@@ -31,7 +31,7 @@ public class DeviceEndpoint {
    * @param deviceService the device service.
    */
   @Inject
-  public DeviceEndpoint(DeviceService deviceService) {
+  public DeviceEndpoint(@Named("deviceService") DeviceService deviceService) {
     this.deviceService = deviceService;
   }
 
@@ -42,7 +42,7 @@ public class DeviceEndpoint {
    * @return {@link device}
    * @throws NotFoundException if none device found for provided id
    */
-  @ApiMethod(name = "device.get", path = "device/{deviceId}", httpMethod = HttpMethod.GET)
+  @ApiMethod(name = "device.get", path = "devices/{deviceId}", httpMethod = HttpMethod.GET)
   public Device getdevice(@Named("deviceId") final Long deviceId) throws NotFoundException {
     return deviceService.findById(deviceId);
   }
@@ -53,12 +53,14 @@ public class DeviceEndpoint {
    * @param deviceDto the device request
    * @return deviceDto the device persisted with id
    */
-  @ApiMethod(name = "device.add", path = "device", httpMethod = HttpMethod.POST)
+  @ApiMethod(name = "device.add", path = "devices", httpMethod = HttpMethod.POST)
   public DeviceDto addDevice(DeviceDto deviceDto) {
 
-    deviceService.save(deviceDto.toEntity());
+    Device savedDEvice = deviceService.save(deviceDto.toEntity());
     
-    return deviceDto;
+    DeviceDto createdDto = new DeviceDto();
+    
+    return createdDto.fromEntity(savedDEvice);
   }
 
 }

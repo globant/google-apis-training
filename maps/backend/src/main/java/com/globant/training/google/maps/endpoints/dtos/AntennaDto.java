@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  * 
  * @author gabriel.sideri
  */
-public class AntennaDto implements Dto<Antenna> {
+public class AntennaDto implements Dto<Antenna, AntennaDto> {
 
   private Long id;
 
@@ -183,7 +183,7 @@ public class AntennaDto implements Dto<Antenna> {
    * @see com.globant.training.google.maps.endpoints.dtos.Dto#fromEntity(java.lang.Object)
    */
   @Override
-  public void fromEntity(Antenna antenna) {
+  public AntennaDto fromEntity(Antenna antenna) {
     if (antenna != null) {
       this.id = antenna.getId();
       this.name = antenna.getName();
@@ -194,6 +194,7 @@ public class AntennaDto implements Dto<Antenna> {
       this.lastUpdated = antenna.getLastUpdated();
       this.rangeLimit = antenna.getRangeLimit();
     }
+    return this;
   }
 
 }

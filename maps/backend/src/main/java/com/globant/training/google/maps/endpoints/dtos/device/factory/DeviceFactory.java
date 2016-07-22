@@ -22,5 +22,4 @@ public interface DeviceFactory {
    * @return the created Device.
    */
   Device makeDevice(String name, Map<String, String> attributtes);
-
 }

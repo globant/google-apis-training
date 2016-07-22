@@ -5,7 +5,7 @@ package com.globant.training.google.maps.endpoints.dtos;
  * 
  * @author gabriel.sideri
  */
-public interface Dto<E> {
+public interface Dto<E, D> {
 
   /**
    * Convert Dto to Entity.
@@ -19,8 +19,5 @@ public interface Dto<E> {
    * 
    * @param entity the entity source to fill the dto
    */
-  void fromEntity(E entity);
-
-
-
+  D fromEntity(E entity);
 }

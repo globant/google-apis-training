@@ -24,7 +24,7 @@ import javax.inject.Named;
  */
 @Api(name = "maps", version = "v1", scopes = {Constants.EMAIL_SCOPE},
     clientIds = {Constants.WEB_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID},
-    description = "API for maps poc - users.")
+    description = "API for maps poc.")
 public class UserEndpoint extends BaseEndpoint {
 
   private final UserService userService;
