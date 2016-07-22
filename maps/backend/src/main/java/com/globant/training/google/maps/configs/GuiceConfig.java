@@ -7,14 +7,19 @@ import java.util.logging.Logger;
 import javax.servlet.ServletContextEvent;
 
 import com.globant.training.google.maps.daos.AntennaDao;
+import com.globant.training.google.maps.daos.DeviceDao;
 import com.globant.training.google.maps.daos.UserDao;
 import com.globant.training.google.maps.daos.objectify.AntennaOfyDao;
+import com.globant.training.google.maps.daos.objectify.DeviceOfyDao;
 import com.globant.training.google.maps.daos.objectify.OfyService;
 import com.globant.training.google.maps.daos.objectify.UserOfyDao;
 import com.globant.training.google.maps.endpoints.AntennaEndpoint;
+import com.globant.training.google.maps.endpoints.DeviceEndpoint;
 import com.globant.training.google.maps.endpoints.UserEndpoint;
 import com.globant.training.google.maps.services.AntennaService;
 import com.globant.training.google.maps.services.AntennaServiceImpl;
+import com.globant.training.google.maps.services.DeviceService;
+import com.globant.training.google.maps.services.DeviceServiceImpl;
 import com.globant.training.google.maps.services.UserService;
 import com.globant.training.google.maps.services.UserServiceImpl;
 import com.google.api.server.spi.guice.GuiceSystemServiceServletModule;
@@ -52,6 +57,7 @@ public class GuiceConfig extends GuiceServletContextListener {
       Set<Class<?>> serviceClasses = new HashSet<Class<?>>();
       serviceClasses.add(UserEndpoint.class);
       serviceClasses.add(AntennaEndpoint.class);
+      serviceClasses.add(DeviceEndpoint.class);
       
       this.serveGuiceSystemServiceServlet("/_ah/spi/*", serviceClasses);
       
@@ -73,10 +79,14 @@ public class GuiceConfig extends GuiceServletContextListener {
       bind(ObjectifyFilter.class).in(Singleton.class);
       bind(UserDao.class).to(UserOfyDao.class);
       bind(AntennaDao.class).to(AntennaOfyDao.class);
+      bind(DeviceDao.class).to(DeviceOfyDao.class);
       
       //Service Definitions
       bind(UserService.class).annotatedWith(Names.named("userService")).to(UserServiceImpl.class);
       bind(AntennaService.class).to(AntennaServiceImpl.class);
+      bind(DeviceService.class).annotatedWith(Names.named("deviceService")).to(DeviceServiceImpl.class);
+
+      
     }
     
   }

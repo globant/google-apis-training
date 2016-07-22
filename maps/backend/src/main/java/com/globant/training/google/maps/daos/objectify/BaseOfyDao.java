@@ -25,6 +25,16 @@ public class BaseOfyDao<T> implements Dao<T> {
   private final Class<T> entity;
 
   /**
+   * Constructor to work with generics.
+   * 
+   * @param entity the entity to use into the DAO
+   */
+  protected BaseOfyDao(Class<T> entity) {
+    this.entity = entity;
+  }
+  
+  
+  /**
    * Gets the {@link Objectify} service.
    * 
    * @return {@link Objectify} access
@@ -40,15 +50,6 @@ public class BaseOfyDao<T> implements Dao<T> {
    */
   protected LoadType<T> query() {
     return ofy().load().type(entity);
-  }
-
-  /**
-   * Constructor to work with generics.
-   * 
-   * @param entity the entity to use into the DAO
-   */
-  protected BaseOfyDao(Class<T> entity) {
-    this.entity = entity;
   }
 
   /**
@@ -197,5 +198,7 @@ public class BaseOfyDao<T> implements Dao<T> {
   public List<T> getAllEntitiesPaginated(Integer offset, Integer limit) {
     return ofy().load().type(entity).offset(offset).limit(limit).list();
   }
+  
+  
 
 }

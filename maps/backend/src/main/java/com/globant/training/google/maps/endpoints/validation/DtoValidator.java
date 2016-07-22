@@ -23,6 +23,7 @@ public class DtoValidator {
    * 
    * @param dto a {@link Dto}
    */
+  @SuppressWarnings("rawtypes")
   public static void validate(final Dto dto) {
 
     validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -37,9 +38,38 @@ public class DtoValidator {
             .add(constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage());
       }
 
-      throw new RuntimeException("API Errors: " + errorMessages);
+      throwErrors(errorMessages);
     }
 
+  }
+
+  /**
+   * Throw a validation errors.
+   * 
+   * @param errorMessages Set of validation error messages.
+   */
+  public static void throwErrors(Set<String> errorMessages) {
+    throw new RuntimeException("API Errors: " + errorMessages);
+  }
+
+  /**
+   * Throw a validation error.
+   * 
+   * @param errorMessagesvalidation error message.
+   */
+  public static void throwError(String errorMessage) {
+    throw new RuntimeException("API Error: " + errorMessage);
+  }
+  
+  /**
+   * Validates the provided errors if errors are present the a validation error is thrown.
+   * 
+   * @param errorMessagesvalidation error message.
+   */
+  public static void validateForErrors(Set<String> errorMessages) {
+    if(!errorMessages.isEmpty()){
+      throwErrors(errorMessages);
+    }
   }
 
 }

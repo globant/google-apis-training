@@ -3,6 +3,8 @@ package com.globant.training.google.maps.entities;
 import java.util.Date;
 import java.util.Map;
 
+import com.globant.training.google.maps.entities.device.Device;
+
 /**
  * Class to represents the track points sent it by the devices
  * 

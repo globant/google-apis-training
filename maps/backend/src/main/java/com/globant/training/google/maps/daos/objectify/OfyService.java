@@ -1,10 +1,12 @@
 package com.globant.training.google.maps.daos.objectify;
 
+import com.globant.training.google.maps.entities.AppUser;
+import com.globant.training.google.maps.entities.device.Device;
+import com.globant.training.google.maps.entities.device.GpsDevice;
+import com.globant.training.google.maps.entities.device.RfidDevice;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
-
-import com.globant.training.google.maps.entities.AppUser;
 
 
 /**
@@ -20,6 +22,11 @@ public class OfyService {
    */
   static {
     ObjectifyService.register(AppUser.class);
+    
+    ObjectifyService.register(Device.class);
+    ObjectifyService.register(RfidDevice.class);
+    ObjectifyService.register(GpsDevice.class);
+    
   }
 
   /**

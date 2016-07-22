@@ -3,6 +3,8 @@ package com.globant.training.google.maps.entities;
 import java.util.Date;
 import java.util.List;
 
+import com.globant.training.google.maps.entities.device.Device;
+
 /**
  * Class to represent the Item to be Tracked by the Devices.
  * 
