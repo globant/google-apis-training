@@ -45,16 +45,16 @@ public abstract class BaseEntity {
   }
 
   /**
-   * Set id.
+   * Get id.
    * 
-   * @param id the device id
+   * @return id the device id
    */
   public Long getId() {
     return id;
   }
 
   /**
-   * Get id.
+   * Set id.
    * 
    * @param id the device id
    */

@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import com.globant.training.google.maps.daos.AntennaDao;
 import com.globant.training.google.maps.entities.Antenna;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,13 +41,6 @@ public class AntennaServiceImpl implements AntennaService {
    */
   @Override
   public Antenna save(Antenna antenna) {
-
-    if (antenna.getId() == null) {
-      antenna.setCreated(new Date());
-    }
-
-    antenna.setLastUpdated(new Date());
-
     return antennaDao.put(antenna);
   }
 
@@ -60,6 +52,14 @@ public class AntennaServiceImpl implements AntennaService {
   @Override
   public Antenna findById(Long id) {
     return antennaDao.get(id);
+  }
+
+  /* (non-Javadoc)
+   * @see com.globant.training.google.maps.services.AntennaService#deleteById(java.lang.Long)
+   */
+  @Override
+  public void deleteById(Long id) {
+    antennaDao.delete(id);
   }
 
 }
