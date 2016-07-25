@@ -61,10 +61,11 @@
       },
 
       _generateAuthorization: function (user) {
-        if(user) {
+        if(user && typeof(user) === 'object') {
           var authR = user.getAuthResponse();
           return {
-            Authorization: authR['token_type'] + ' ' + authR['access_token']
+            Authorization: authR['token_type'] + ' ' + authR['access_token'],
+            'Content-Type': 'application/json'
           };
         }
         return '';

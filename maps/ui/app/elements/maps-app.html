@@ -1,12 +1,4 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
+//Polymer components
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
@@ -19,9 +11,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="maps-icons.html">
-<link rel="import" href="maps-home.html">
+
+//Login components
+<link rel="import" href="maps-shade.html">
+<link rel="import" href="maps-login.html">
 <link rel="import" href="maps-login-button.html">
+
+<link rel="import" href="maps-icons.html">
+
+//View components
+<link rel="import" href="maps-home.html">
+<link rel="import" href="maps-antennas.html">
+<link rel="import" href="maps-antenna.html">
 
 <dom-module id="maps-app">
 
@@ -64,7 +65,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 
-    <app-location route="{{route}}"></app-location>
+    <app-location route="{{route}}" use-hash-as-path></app-location>
     <app-route
         route="{{route}}"
         pattern="/:page"
@@ -78,7 +79,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-drawer>
           <app-toolbar>Menu</app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a name="home" href="/home">Home</a>
+            <a name="home" href="/#/home">Home</a>
+            <a name="antennas" href="/#/antennas">Antennas</a>
           </iron-selector>
         </app-drawer>
 
@@ -88,13 +90,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-header condenses reveals effects="waterfall">
             <app-toolbar>
               <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-              <div title>Google Maps POC</div>
-              <maps-login-button user="{{user}}"></maps-login-button>
+              <div main-title>{{pageTitle}}</div>
+              <maps-login-button user="{{user}}" ></maps-login-button>
             </app-toolbar>
           </app-header>
 
-          <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
+          <iron-pages role="main"
+                      selected="[[page]]"
+                      attr-for-selected="name"
+                      on-iron-selected="changePage"
+                      selected-item="{{view}}">
             <maps-home name="home" user="[[user]]"></maps-home>
+            <maps-antennas name="antennas" user="[[user]]"></maps-antennas>
+            <maps-antenna name="antenna" user="[[user]]" route="{{subroute}}"></maps-antenna>
           </iron-pages>
 
         </app-header-layout>
@@ -102,8 +110,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </app-drawer-layout>
     </template>
 
-    <maps-shade id="loginShade" active="[[!user]]">
-      <maps-login id="login" title="Login" user="{{user}}"></maps-login>
+    <maps-shade active="[[!user]]">
+      <maps-login title="Login" user="{{user}}"></maps-login>
     </maps-shade>
 
   </template>
@@ -124,9 +132,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         user: {
           type: Object,
-          value: null
+          value: null,
+          observer: '_userChanged'
         }
-
       },
 
       observers: [
@@ -137,10 +145,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.page = page || 'home';
       },
 
-      _pageChanged: function(page) {
+      _pageChanged: function(newPage, oldPage) {
         // load page import on demand.
-        this.importHref(
-          this.resolveUrl('maps-' + page + '.html'), null, null, true);
+        /*this.importHref(
+          this.resolveUrl('maps-' + page + '.html'), null, null, true);*/
+        if(this.user) {
+          Polymer.dom(this.root).querySelector('maps-' + newPage).setAttribute('active-view', 'true');
+          Polymer.dom(this.root).querySelector('maps-' + oldPage).removeAttribute('active-view');
+        }
+        this.$$('iron-pages');
+      },
+
+      _userChanged: function () {
+        if(this.user) {
+          Polymer.dom(this.root).querySelector('maps-' + this.routeData.page).setAttribute('active-view', 'true');
+        }
       },
 
       singOut: function () {

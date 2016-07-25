@@ -1,0 +1,25 @@
+<script>
+  var MapsBehaviors = MapsBehaviors || {};
+  MapsBehaviors.ViewBehavior = {
+    properties: {
+      name: {
+        type: String,
+        value: ''
+      },
+      activeView: {
+        type: Boolean,
+        observer: '_activeViewChanged'
+      }
+    },
+
+    _activeViewChanged: function () {
+      if(this.activeView) {
+        Polymer.dom(this.root)
+          .querySelectorAll('maps-request[load-with-view]')
+          .map(function (request) {
+            request.generateRequest();
+          });
+      }
+    }
+  };
+</script>

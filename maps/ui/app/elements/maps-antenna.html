@@ -1,0 +1,139 @@
+//Polymer components
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+
+<link rel="import" href="maps-request.html">
+
+<dom-module id="maps-antenna">
+  <style>
+    .container {
+      margin: 10px;
+    }
+
+    paper-material {
+      padding: 10px;
+      background: white;
+    }
+
+    paper-button.primary {
+      background-color: var(--paper-pink-a200);
+      color: white;
+    }
+
+    .flex-end-justified {
+      @apply(--layout-horizontal);
+      @apply(--layout-end-justified);
+    }
+  </style>
+
+  <app-route
+    route="{{route}}"
+    pattern="/:action"
+    data="{{routeData}}"
+    tail="{{viewData}}"></app-route>
+
+  <template>
+    <iron-location hash="{{hash}}"></iron-location>
+
+    <maps-request id="antennaInfo"
+      user="[[user]]"
+      endpoint="_ah/api/maps/v1/antennas"
+      method="POST"
+      body="{{body}}"
+      data="{{users}}"
+      on-response="handleResponse"></maps-request>
+
+    <div class="container">
+      <paper-material elevation="2">
+        <form is="iron-form">
+          <h2>New Antenna</h2>
+
+          <paper-input
+            label="Name"
+            type="text"
+            required
+            auto-validate
+            error-message="This field is required"
+            value="{{antenna.name}}"></paper-input>
+
+          <paper-input
+            label="Serial Number"
+            type="text"
+            required
+            auto-validate
+            error-message="This field is required"
+            value="{{antenna.serialNumber}}"></paper-input>
+
+          <paper-input
+            label="Latitude"
+            required
+            auto-validate
+            pattern="[-+]?[0-9]*\.?[0-9]*"
+            error-message="This field only allow numbers"
+            value="{{antenna.latitude}}"></paper-input>
+
+          <paper-input
+            label="Longitude"
+            required
+            auto-validate
+            pattern="[-+]?[0-9]*\.?[0-9]*"
+            error-message="This field only allow numbers"
+            value="{{antenna.longitude}}"></paper-input>
+
+          <paper-input
+            label="Range (Meters)"
+            required
+            auto-validate
+            pattern="[-+]?[0-9]*\.?[0-9]*"
+            error-message="This field only allow numbers"
+            value="{{antenna.rangeLimit}}"></paper-input>
+
+          <div class="container flex-end-justified">
+            <paper-button class="primary" raised on-tap="_submit">Submit</paper-button>
+            <paper-button raised on-tap="_cancel">Cancel</paper-button>
+          </div>
+        </form>
+      </paper-material>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'maps-antenna',
+
+      properties: {
+        user: {
+          type: Object,
+          value: null
+        },
+
+        antenna: {
+          type: Object,
+          value: {}
+        },
+
+        body: {
+          type: String,
+          value: ''
+        }
+      },
+
+      _submit: function () {
+        this.body = JSON.stringify(this.antenna);
+        this.$.antennaInfo.generateRequest();
+      },
+
+      _cancel: function () {
+        this.hash = '/antennas';
+      },
+
+      handleResponse: function () {
+        this.hash = '/antennas';
+      }
+    });
+  </script>
+</dom-module>
