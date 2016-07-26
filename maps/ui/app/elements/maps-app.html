@@ -66,6 +66,7 @@
     </style>
 
     <app-location route="{{route}}" use-hash-as-path></app-location>
+
     <app-route
         route="{{route}}"
         pattern="/:page"
@@ -96,7 +97,7 @@
           </app-header>
 
           <iron-pages id="mainPages"
-                      ole="main"
+                      role="main"
                       selected="[[page]]"
                       attr-for-selected="name"
                       on-iron-selected="changePage"
@@ -147,7 +148,11 @@
       ],
 
       _routePageChanged: function(page) {
-        this.page = page || 'home';
+        if(page) {
+          this.page = page;
+        } else {
+          window.location = '/#/home';
+        }
       },
 
       _pageChanged: function() {

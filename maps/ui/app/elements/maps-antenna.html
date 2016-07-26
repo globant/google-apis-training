@@ -5,38 +5,39 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/iron-input/iron-input.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/iron-location/iron-location.html">
 
 <link rel="import" href="maps-request.html">
 
 <dom-module id="maps-antenna">
-  <style>
-    .container {
-      margin: 10px;
-    }
-
-    paper-material {
-      padding: 10px;
-      background: white;
-    }
-
-    paper-button.primary {
-      background-color: var(--paper-pink-a200);
-      color: white;
-    }
-
-    .flex-end-justified {
-      @apply(--layout-horizontal);
-      @apply(--layout-end-justified);
-    }
-  </style>
-
-  <app-route
-    route="{{route}}"
-    pattern="/:action"
-    data="{{routeData}}"
-    tail="{{viewData}}"></app-route>
-
   <template>
+    <style>
+      .container {
+        margin: 10px;
+      }
+
+      paper-material {
+        padding: 10px;
+        background: white;
+      }
+
+      paper-button.primary {
+        background-color: var(--paper-pink-a200);
+        color: white;
+      }
+
+      .flex-end-justified {
+        @apply(--layout-horizontal);
+        @apply(--layout-end-justified);
+      }
+    </style>
+
+    <app-route
+      route="{{route}}"
+      pattern="/:action"
+      data="{{routeData}}"
+      tail="{{viewData}}"></app-route>
+
     <iron-location hash="{{hash}}"></iron-location>
 
     <maps-request id="antennaInfo"

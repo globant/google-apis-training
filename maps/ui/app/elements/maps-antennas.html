@@ -13,19 +13,19 @@
 <link rel="import" href="behaviors/view-behavior.html">
 
 <dom-module id="maps-antennas">
-  <style>
-    .container {
-      padding: 10px;
-    }
-
-    paper-fab {
-      position: fixed;
-      right: 25px;
-      bottom: 30px;
-    }
-  </style>
-
   <template>
+    <style>
+      .container {
+        padding: 10px;
+      }
+
+      paper-fab {
+        position: fixed;
+        right: 25px;
+        bottom: 30px;
+      }
+    </style>
+
     <iron-location hash="{{hash}}"></iron-location>
 
     <maps-request id="antennas"
