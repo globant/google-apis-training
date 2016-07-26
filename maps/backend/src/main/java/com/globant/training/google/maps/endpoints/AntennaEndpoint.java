@@ -47,7 +47,7 @@ public class AntennaEndpoint {
    * @throws NotFoundException if none antenna found for provided id
    */
   @ApiMethod(name = "antennas.get", path = "antennas/{antennaId}", httpMethod = HttpMethod.GET)
-  public AntennaDto getAntenna(@Named("antennaId") final Long antennaId) throws NotFoundException {
+  public AntennaDto getAntenna(@Named("antennaId") final Long antennaId) {
 
     Antenna antenna = antennaService.findById(antennaId);
 
