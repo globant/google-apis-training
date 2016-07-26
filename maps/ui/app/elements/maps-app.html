@@ -95,11 +95,13 @@
             </app-toolbar>
           </app-header>
 
-          <iron-pages role="main"
+          <iron-pages id="mainPages"
+                      ole="main"
                       selected="[[page]]"
                       attr-for-selected="name"
                       on-iron-selected="changePage"
-                      selected-item="{{view}}">
+                      selected-item="{{view}}"
+                      on-iron-select="_handleIronSelect">
             <maps-home name="home" user="[[user]]"></maps-home>
             <maps-antennas name="antennas" user="[[user]]"></maps-antennas>
             <maps-antenna name="antenna" user="[[user]]" route="{{subroute}}"></maps-antenna>
@@ -126,14 +128,17 @@
 
         page: {
           type: String,
-          reflectToAttribute: true,
-          observer: '_pageChanged'
+          reflectToAttribute: true
+        },
+
+        prevPage: {
+          type: String,
+          value: 'home'
         },
 
         user: {
           type: Object,
-          value: null,
-          observer: '_userChanged'
+          value: null
         }
       },
 
@@ -145,20 +150,17 @@
         this.page = page || 'home';
       },
 
-      _pageChanged: function(newPage, oldPage) {
+      _pageChanged: function() {
         // load page import on demand.
         /*this.importHref(
           this.resolveUrl('maps-' + page + '.html'), null, null, true);*/
-        if(this.user) {
-          Polymer.dom(this.root).querySelector('maps-' + newPage).setAttribute('active-view', 'true');
-          Polymer.dom(this.root).querySelector('maps-' + oldPage).removeAttribute('active-view');
-        }
-        this.$$('iron-pages');
       },
 
-      _userChanged: function () {
+      _handleIronSelect: function () {
         if(this.user) {
-          Polymer.dom(this.root).querySelector('maps-' + this.routeData.page).setAttribute('active-view', 'true');
+          this.$$('maps-' + this.prevPage).removeAttribute('active-view');
+          this.$$('maps-' + this.routeData.page).setAttribute('active-view', 'true');
+          this.prevPage = this.routeData.page;
         }
       },
 
