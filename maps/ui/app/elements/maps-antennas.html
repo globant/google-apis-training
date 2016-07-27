@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 
@@ -10,7 +11,7 @@
 <link rel="import" href="maps-request.html">
 
 //Maps behaviours
-<link rel="import" href="behaviors/view-behavior.html">
+<link rel="import" href="behaviors/maps-view-behavior.html">
 
 <dom-module id="maps-antennas">
   <template>
@@ -30,16 +31,17 @@
 
     <maps-request id="antennas"
       user="[[user]]"
-      endpoint="_ah/api/maps/v1/antennas"
+      endpoint="/antennas"
       method="GET"
       data="{{antennas}}"
       load-with-view></maps-request>
 
     <div class="container">
       <paper-material elevation="2">
-        <vaadin-grid>
+        <vaadin-grid selection-mode="disabled">
           <table>
             <colgroup>
+              <col>
               <col>
               <col>
               <col>
@@ -53,16 +55,18 @@
                 <th>Latitude</th>
                 <th>Longitude</th>
                 <th>Range</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              <template is="dom-repeat" items="{{antennas}}">
+              <template is="dom-repeat" items="[[antennas.items]]">
                 <tr>
                   <td>{{item.name}}</td>
                   <td>{{item.serialNumber}}</td>
                   <td>{{item.latitude}}</td>
                   <td>{{item.longitude}}</td>
                   <td>{{item.rangeLimit}}</td>
+                  <td>{{item.id}}</td>
                 </tr>
               </template>
             </tbody>
@@ -78,10 +82,54 @@
     Polymer({
       is: 'maps-antennas',
 
+      properties: {
+        antennas: {
+          type: Object,
+          observer: '_antennasChanged'
+        }
+      },
+
       behaviors: [MapsBehaviors.ViewBehavior],
+
+      ready: function () {
+        console.log('The component is ready');
+      },
+
+      _antennasChanged: function () {
+        var grid = this.$$('vaadin-grid');
+        var selfComponent = this;
+
+        if(grid.columns.length !== 0) {
+          grid.columns[5].renderer = function (cell) {
+            var first = !cell.element.hasChildNodes();
+
+            if (first) {
+              cell.element.innerHTML = "<paper-icon-button icon='chevron-right' on-tap='editAntenna'></paper-icon-button>";
+            }
+            var elem = cell.element.querySelector("paper-icon-button");
+            if (first) {
+              elem.addEventListener('tap', function(ev){
+                ev.stopPropagation();
+                selfComponent.editAntenna(elem.cell);
+              });
+            }
+
+            elem.cell = {
+              index: cell.index,
+              columnName: cell.columnName,
+              data: cell.data,
+              row: {index: cell.row.index, data: cell.row.data}
+            };
+          }
+        }
+      },
 
       addNewAntenna: function () {
         this.hash = '/antenna/create';
+      },
+
+      editAntenna: function (cell) {
+        this.hash = '/antenna/edit/' + cell.data;
       }
     });
   </script>

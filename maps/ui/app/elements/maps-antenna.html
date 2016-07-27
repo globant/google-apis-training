@@ -7,7 +7,12 @@
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/iron-location/iron-location.html">
 
+//Maps components
 <link rel="import" href="maps-request.html">
+
+//Maps behaviors
+<link rel="import" href="behaviors/maps-view-behavior.html">
+
 
 <dom-module id="maps-antenna">
   <template>
@@ -40,13 +45,20 @@
 
     <iron-location hash="{{hash}}"></iron-location>
 
-    <maps-request id="antennaInfo"
+    <maps-request id="antennaFind"
       user="[[user]]"
-      endpoint="_ah/api/maps/v1/antennas"
+      endpoint="/antennas{{viewData.path}}"
+      method="GET"
+      data="{{antenna}}"
+      load-with-view></maps-request>
+
+    <maps-request id="antennaCreate"
+      user="[[user]]"
+      endpoint="/antennas"
       method="POST"
       body="{{body}}"
       data="{{users}}"
-      on-response="handleResponse"></maps-request>
+      on-response="handleCreateResponse"></maps-request>
 
     <div class="container">
       <paper-material elevation="2">
@@ -123,16 +135,22 @@
         }
       },
 
+      behaviors: [MapsBehaviors.ViewBehavior],
+
+      _chanedAntenna: function (antenna) {
+        console.log(this.antenna);
+      },
+
       _submit: function () {
         this.body = JSON.stringify(this.antenna);
-        this.$.antennaInfo.generateRequest();
+        this.$.antennaCreate.generateRequest();
       },
 
       _cancel: function () {
         this.hash = '/antennas';
       },
 
-      handleResponse: function () {
+      handleCreateResponse: function () {
         this.hash = '/antennas';
       }
     });

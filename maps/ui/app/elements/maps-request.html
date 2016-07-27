@@ -49,9 +49,14 @@
           value: {}
         },
 
+        _apiUrl: {
+          type: String,
+          value: '_ah/api/maps/v1'
+        },
+
         _url: {
           type: String,
-          computed: '_getUrl(endpoint)'
+          computed: '_getUrl(_apiUrl, endpoint)'
         },
 
         _authorization: {
@@ -71,13 +76,13 @@
         return '';
       },
 
-      _getUrl: function(endpoint) {
-        return 'http://localhost:8080/' + endpoint;
+      _getUrl: function(apiUrl, endpoint) {
+        return 'http://localhost:8080/' + apiUrl + endpoint;
       },
 
       _handleResponse: function (e, response) {
         var res = response.parseResponse();
-        this.data = res.items;
+        this.data = res;
 
         this.fire('response', this.data);
       },

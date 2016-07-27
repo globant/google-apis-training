@@ -5,7 +5,7 @@
 <link rel="import" href="maps-request.html">
 
 //Maps behaviors
-<link rel="import" href="behaviors/view-behavior.html">
+<link rel="import" href="behaviors/maps-view-behavior.html">
 
 <dom-module id="maps-home">
 
@@ -25,12 +25,12 @@
 
     <maps-request id="userInfo"
       user="[[user]]"
-      endpoint="_ah/api/maps/v1/users"
+      endpoint="/users"
       data="{{users}}"
       load-with-view
       ></maps-request>
 
-    <template is="dom-repeat" items="{{users}}">
+    <template is="dom-repeat" items="{{users.items}}">
       <p>ID: {{item.id}}</p>
       <p>User: {{item.email}}</p>
       <p>Active: {{item.active}}</p>
