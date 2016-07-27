@@ -12,6 +12,10 @@
       }
     },
 
+    listeners: {
+      'view-changed': '_activeViewChanged'
+    },
+
     _activeViewChanged: function () {
       if(this.activeView) {
         Polymer.dom(this.root)

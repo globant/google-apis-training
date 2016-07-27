@@ -73,7 +73,7 @@
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <template is="dom-if" if="{{user}}"  restamp="true">
+    <template is="dom-if" if="[[user]]" restamp="true">
       <app-drawer-layout fullbleed>
 
         <!-- Drawer content -->
@@ -100,12 +100,11 @@
                       role="main"
                       selected="[[page]]"
                       attr-for-selected="name"
-                      on-iron-selected="changePage"
-                      selected-item="{{view}}"
-                      on-iron-select="_handleIronSelect">
+                      on-iron-select="_handleIronSelect"
+                      on-iron-deselect="_handleIronDeselect">
             <maps-home name="home" user="[[user]]"></maps-home>
             <maps-antennas name="antennas" user="[[user]]"></maps-antennas>
-            <maps-antenna name="antenna" user="[[user]]" route="{{subroute}}"></maps-antenna>
+            <maps-antenna name="antenna" user="[[user]]" route="[[subroute]]"></maps-antenna>
           </iron-pages>
 
         </app-header-layout>
@@ -132,11 +131,6 @@
           reflectToAttribute: true
         },
 
-        prevPage: {
-          type: String,
-          value: 'home'
-        },
-
         user: {
           type: Object,
           value: null
@@ -144,12 +138,12 @@
       },
 
       observers: [
-        '_routePageChanged(routeData.page)'
+        '_handleSubRouteChanged(subroute.path)'
       ],
 
-      _routePageChanged: function(page) {
-        if(page) {
-          this.page = page;
+      _handleSubRouteChanged: function () {
+        if(this.routeData.page) {
+          this.page = this.routeData.page;
         } else {
           window.location = '/#/home';
         }
@@ -161,11 +155,15 @@
           this.resolveUrl('maps-' + page + '.html'), null, null, true);*/
       },
 
-      _handleIronSelect: function () {
+      _handleIronSelect: function (e, selectedPage) {
         if(this.user) {
-          this.$$('maps-' + this.prevPage).removeAttribute('active-view');
-          this.$$('maps-' + this.routeData.page).setAttribute('active-view', 'true');
-          this.prevPage = this.routeData.page;
+          selectedPage.item.setAttribute('active-view', 'true');
+        }
+      },
+
+      _handleIronDeselect: function (e, deselectedPage) {
+        if(this.user) {
+          deselectedPage.item.removeAttribute('active-view');
         }
       },
 

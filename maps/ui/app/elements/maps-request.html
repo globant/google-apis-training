@@ -14,6 +14,8 @@
   </template>
 
   <script>
+    var apiUrl = '_ah/api/maps/v1';
+
     Polymer({
       is: 'maps-request',
 
@@ -49,21 +51,15 @@
           value: {}
         },
 
-        _apiUrl: {
-          type: String,
-          value: '_ah/api/maps/v1'
-        },
-
-        _url: {
-          type: String,
-          computed: '_getUrl(_apiUrl, endpoint)'
-        },
-
         _authorization: {
           type: Object,
           computed: '_generateAuthorization(user)'
         }
       },
+
+      observers: [
+        '_getUrl(endpoint)'
+      ],
 
       _generateAuthorization: function (user) {
         if(user && typeof(user) === 'object') {
@@ -76,8 +72,8 @@
         return '';
       },
 
-      _getUrl: function(apiUrl, endpoint) {
-        return 'http://localhost:8080/' + apiUrl + endpoint;
+      _getUrl: function(endpoint) {
+        this._url = 'http://localhost:8080/' + apiUrl + endpoint;
       },
 
       _handleResponse: function (e, response) {

@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 
@@ -15,7 +16,7 @@
 
 <dom-module id="maps-antennas">
   <template>
-    <style>
+    <style include="iron-flex iron-flex-alignment">
       .container {
         padding: 10px;
       }
@@ -36,8 +37,8 @@
       data="{{antennas}}"
       load-with-view></maps-request>
 
-    <div class="container">
-      <paper-material elevation="2">
+    <div class="container layout horizontal start">
+      <paper-material elevation="2" class="flex" >
         <vaadin-grid selection-mode="disabled">
           <table>
             <colgroup>
@@ -74,6 +75,9 @@
         </vaadin-grid>
       </paper-material>
 
+      <paper-material>
+        HOla pinches culeros matados
+      </paper-material>
       <paper-fab icon="add" on-tap="addNewAntenna"></paper-fab>
     </div>
   </template>
@@ -90,10 +94,6 @@
       },
 
       behaviors: [MapsBehaviors.ViewBehavior],
-
-      ready: function () {
-        console.log('The component is ready');
-      },
 
       _antennasChanged: function () {
         var grid = this.$$('vaadin-grid');
