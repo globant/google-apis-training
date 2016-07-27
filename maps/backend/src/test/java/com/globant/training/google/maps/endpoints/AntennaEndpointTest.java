@@ -21,9 +21,12 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.appengine.api.oauth.OAuthRequestException;
+
 import com.globant.training.google.maps.endpoints.dtos.AntennaDto;
 import com.globant.training.google.maps.entities.Antenna;
 import com.globant.training.google.maps.services.AntennaService;
+import com.globant.training.google.maps.services.UserService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -65,13 +68,16 @@ public class AntennaEndpointTest {
 
   @Mock
   private AntennaService antennaServiceMock;
+  
+  @Mock
+  private UserService userServiceMock;
 
   /**
    * Setup tests.
    */
   @Before
   public void setup() {
-    antennaEndpoint = new AntennaEndpoint(antennaServiceMock);
+    antennaEndpoint = new AntennaEndpoint(antennaServiceMock, userServiceMock);
 
     validAntenna = new Antenna();
     validAntenna.setId(VALID_ANTENNA_ID);
@@ -272,7 +278,7 @@ public class AntennaEndpointTest {
    * </pre>
    */
   @Test(expected = RuntimeException.class)
-  public void testGetAntennaWithInvalidAntennaId() {
+  public void testGetAntennaWithInvalidAntennaId() throws OAuthRequestException {
     when(antennaServiceMock.findById(INVALID_ANTENNA_ID)).thenReturn(null);
 
     antennaEndpoint.getAntenna(INVALID_ANTENNA_ID);
@@ -293,7 +299,7 @@ public class AntennaEndpointTest {
    * </pre>
    */
   @Test
-  public void testGetAntennaWithValidAntennaId() {
+  public void testGetAntennaWithValidAntennaId() throws OAuthRequestException {
     when(antennaServiceMock.findById(VALID_ANTENNA_ID)).thenReturn(validAntenna);
 
     AntennaDto response = antennaEndpoint.getAntenna(VALID_ANTENNA_ID);

@@ -1,25 +1,56 @@
 package com.globant.training.google.maps.endpoints;
 
-import com.google.appengine.api.users.User;
+import com.google.api.server.spi.auth.common.User;
+import com.google.appengine.api.oauth.OAuthRequestException;
+
+import com.globant.training.google.maps.entities.AppUser;
+import com.globant.training.google.maps.services.UserService;
 
 /**
- * BaseEndPoint Class. All the endpoints must be extend it.   
+ * BaseEndPoint Class. All the endpoints must be extend it.
  * 
  * @author gabriel.sideri
  */
-public class BaseEndpoint {
+public abstract class BaseEndpoint {
+
+  protected final UserService userService;
 
   /**
-   * Checks if an user is admin.
+   * Constructor.
    * 
-   * @param user the user
-   * @return <b>true</b> true if the user is admin, otherwise <b>false</b>
+   * @param userService the user service.
    */
-  protected boolean isAdmin(User user) {
-    if (user.getEmail().equals("example@example.com")) {
-      return true;
-    }
-    return true;
+  public BaseEndpoint(UserService userService) {
+    this.userService = userService;
   }
 
+  /**
+   * Login user into the APP. If the user does not exists, it will be created it.
+   * 
+   * @param the {@link User} authenticated by google.
+   * @return the {@link AppUser}
+   * @throws OAuthRequestException if the {@link User} is not authenticated.
+   * 
+   */
+  protected AppUser loginUser(User user) throws OAuthRequestException {
+
+    AppUser applicationUser = null;
+
+    if (user == null) {
+      throw new OAuthRequestException("User not Authenticated");
+    }
+
+    applicationUser = userService.findUserByGoogleId(user.getId());
+
+    if (applicationUser == null) {
+
+      applicationUser = new AppUser(user.getId(), user.getEmail());
+      applicationUser.setActive(true);
+      userService.addUser(applicationUser);
+
+    }
+
+    return applicationUser;
+
+  }
 }

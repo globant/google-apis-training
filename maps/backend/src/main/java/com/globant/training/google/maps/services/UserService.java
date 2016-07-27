@@ -1,5 +1,6 @@
 package com.globant.training.google.maps.services;
 
+import com.globant.training.google.maps.entities.Antenna;
 import com.globant.training.google.maps.entities.AppUser;
 
 import java.util.List;
@@ -24,6 +25,13 @@ public interface UserService {
    * @param user the user to be added
    */
   void addUser(AppUser user);
-
-
+  
+  /**
+   * Find User by google id.
+   * 
+   * @param id the google id
+   * @return the {@link Antenna}
+   */
+  AppUser findUserByGoogleId(String id);
+  
 }

@@ -14,4 +14,9 @@ public class UserOfyDao extends BaseOfyDao<AppUser> implements UserDao {
     super(AppUser.class);
   }
 
+  @Override
+  public AppUser findByGoogleId(String googleId) {
+    return this.query().filter(AppUser.GOOGLE_ID_FIELD, googleId).first().now();
+  }
+
 }

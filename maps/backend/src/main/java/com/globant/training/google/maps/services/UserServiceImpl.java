@@ -23,7 +23,6 @@ public class UserServiceImpl implements UserService {
     this.userDao = userDao;
   }
 
-
   /*
    * (non-Javadoc)
    * 
@@ -46,5 +45,12 @@ public class UserServiceImpl implements UserService {
     userDao.put(user);
   }
 
+  /* (non-Javadoc)
+   * @see com.globant.training.google.maps.services.UserService#findUserByGoogleId(java.lang.String)
+   */
+  @Override
+  public AppUser findUserByGoogleId(String id) {
+    return userDao.findByGoogleId(id);
+  }
 
 }

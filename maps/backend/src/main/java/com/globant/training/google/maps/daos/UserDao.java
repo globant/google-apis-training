@@ -25,5 +25,13 @@ public interface UserDao {
    * @return the user persisted
    */
   AppUser put(AppUser user);
+  
+  /**
+   * Find User by google id.
+   * 
+   * @param id the google id
+   * @return the {@link AppUser}
+   */
+  AppUser findByGoogleId(String id);
 
 }

@@ -1,15 +1,19 @@
 package com.globant.training.google.maps.endpoints;
 
+import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.response.NotFoundException;
+import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.inject.Inject;
 
 import com.globant.training.google.maps.configs.Constants;
 import com.globant.training.google.maps.endpoints.dtos.AntennaDto;
 import com.globant.training.google.maps.entities.Antenna;
+import com.globant.training.google.maps.entities.AppUser;
 import com.globant.training.google.maps.services.AntennaService;
+import com.globant.training.google.maps.services.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +29,7 @@ import javax.inject.Named;
 @Api(name = "maps", version = "v1", scopes = {Constants.EMAIL_SCOPE},
     clientIds = {Constants.WEB_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID},
     description = "API for maps poc.")
-public class AntennaEndpoint {
+public class AntennaEndpoint extends BaseEndpoint {
 
   private AntennaService antennaService;
 
@@ -35,7 +39,9 @@ public class AntennaEndpoint {
    * @param antennaService the antenna service.
    */
   @Inject
-  public AntennaEndpoint(AntennaService antennaService) {
+  public AntennaEndpoint(AntennaService antennaService,
+      @Named("userService") UserService userService) {
+    super(userService);
     this.antennaService = antennaService;
   }
 
@@ -44,6 +50,7 @@ public class AntennaEndpoint {
    * 
    * @param antennaId the id to be found
    * @return {@link Antenna}
+   * @throws OAuthRequestException return a exception if the user is not authenticated
    * @throws NotFoundException if none antenna found for provided id
    */
   @ApiMethod(name = "antennas.get", path = "antennas/{antennaId}", httpMethod = HttpMethod.GET)
@@ -76,7 +83,6 @@ public class AntennaEndpoint {
     return antennaDto;
   }
 
-
   /**
    * Modify Antenna.
    * 
@@ -98,7 +104,6 @@ public class AntennaEndpoint {
 
     return antennaDto;
   }
-
 
   /**
    * Find antennas.
@@ -122,7 +127,6 @@ public class AntennaEndpoint {
     return antennasDto;
 
   }
-
 
   /**
    * Delete Antenna by id.

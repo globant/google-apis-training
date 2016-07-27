@@ -1,16 +1,17 @@
 package com.globant.training.google.maps.endpoints;
 
-import javax.inject.Named;
-
-import com.globant.training.google.maps.configs.Constants;
-import com.globant.training.google.maps.endpoints.dtos.device.DeviceDto;
-import com.globant.training.google.maps.entities.device.Device;
-import com.globant.training.google.maps.services.DeviceService;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.inject.Inject;
+
+import com.globant.training.google.maps.configs.Constants;
+import com.globant.training.google.maps.endpoints.dtos.device.DeviceDto;
+import com.globant.training.google.maps.entities.device.Device;
+import com.globant.training.google.maps.services.DeviceService;
+
+import javax.inject.Named;
 
 /**
  * API endpoints for {@link device} operations.
@@ -18,7 +19,7 @@ import com.google.inject.Inject;
  * @author gaston.aguilera
  */
 
-@Api(name = "maps", version = "v1", scopes = {Constants.EMAIL_SCOPE},
+@Api(name = "device", version = "v1", scopes = {Constants.EMAIL_SCOPE},
     clientIds = {Constants.WEB_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID},
     description = "API for maps poc.")
 public class DeviceEndpoint {
