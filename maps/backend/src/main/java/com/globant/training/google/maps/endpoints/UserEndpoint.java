@@ -1,12 +1,11 @@
 package com.globant.training.google.maps.endpoints;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
+import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.response.NotFoundException;
-import com.google.appengine.api.users.User;
+import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.inject.Inject;
 
 import com.globant.training.google.maps.configs.Constants;
@@ -27,8 +26,6 @@ import javax.inject.Named;
     description = "API for maps poc.")
 public class UserEndpoint extends BaseEndpoint {
 
-  private final UserService userService;
-
   /**
    * Constructor.
    * 
@@ -36,7 +33,7 @@ public class UserEndpoint extends BaseEndpoint {
    */
   @Inject
   public UserEndpoint(@Named("userService") UserService userService) {
-    this.userService = userService;
+    super(userService);
   }
 
   /**
@@ -45,13 +42,10 @@ public class UserEndpoint extends BaseEndpoint {
    * @param user currently authenticated {@link User}
    * @return {@link EntityUser}
    * @throws NotFoundException if none antenna found for provided id.
+   * @throws OAuthRequestException return the exception if the user is not authenticated
    */
   @ApiMethod(name = "findUsers", path = "users", httpMethod = HttpMethod.GET)
-  public List<AppUser> findUsers(User user) throws NotFoundException {
-
-    checkNotNull(user);
-
-    isAdmin(user);
+  public List<AppUser> findUsers(User user) throws NotFoundException, OAuthRequestException {
 
     List<AppUser> users = userService.getAllUsers();
 
@@ -71,8 +65,8 @@ public class UserEndpoint extends BaseEndpoint {
   private void createEntityUser(User user) {
 
     // TODO move to service
-    AppUser userToCreate = new AppUser();
-    userToCreate.setEmail(user.getEmail());
-    userService.addUser(userToCreate);
+    // AppUser userToCreate = new AppUser();
+    // userToCreate.setEmail(user.getEmail());
+    // userService.addUser(userToCreate);
   }
 }

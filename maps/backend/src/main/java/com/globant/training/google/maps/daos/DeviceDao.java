@@ -1,8 +1,8 @@
 package com.globant.training.google.maps.daos;
 
-import java.util.List;
-
 import com.globant.training.google.maps.entities.device.Device;
+
+import java.util.List;
 
 /**
  * Antenna DAO Interface.
