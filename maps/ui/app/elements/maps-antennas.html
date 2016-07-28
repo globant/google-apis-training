@@ -5,6 +5,8 @@
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/google-map/google-map.html">
+<link rel="import" href="../bower_components/google-map/google-map-marker.html">
 
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 
@@ -26,6 +28,16 @@
         right: 25px;
         bottom: 30px;
       }
+
+      google-map {
+        height: 600px;
+      }
+
+      .map-container {
+        background-color: white;
+        padding: 5px;
+        margin-left: 10px;
+      }
     </style>
 
     <iron-location hash="{{hash}}"></iron-location>
@@ -38,7 +50,7 @@
       load-with-view></maps-request>
 
     <div class="container layout horizontal start">
-      <paper-material elevation="2" class="flex" >
+      <paper-material elevation="2" class="flex">
         <vaadin-grid selection-mode="disabled">
           <table>
             <colgroup>
@@ -75,9 +87,18 @@
         </vaadin-grid>
       </paper-material>
 
-      <paper-material>
-        HOla pinches culeros matados
+      <paper-material elevation="2" class="flex map-container">
+        <google-map latitude="37.77493" longitude="-122.41942">
+          <template is="dom-repeat" items="[[antennas.items]]">
+            <google-map-marker
+              latitude="[[item.latitude]]"
+              longitude="[[item.longitude]]"
+              title="[[item.name]]"
+              draggable="false"></google-map-marker>
+          </template>
+        </google-map>
       </paper-material>
+
       <paper-fab icon="add" on-tap="addNewAntenna"></paper-fab>
     </div>
   </template>
