@@ -55,6 +55,7 @@ public class DeviceDto implements Dto<Device, DeviceDto>, Serializable {
     this.id = device.getId();
     this.name = device.getName();
     this.type = device.getType();
+    this.attributtes = device.getAttributes();
     return this;
   }
 
@@ -89,4 +90,5 @@ public class DeviceDto implements Dto<Device, DeviceDto>, Serializable {
   public void setType(DeviceType type) {
     this.type = type;
   }
+  
 }

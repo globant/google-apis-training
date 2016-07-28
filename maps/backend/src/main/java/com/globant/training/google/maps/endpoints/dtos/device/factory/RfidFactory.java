@@ -19,9 +19,9 @@ import com.globant.training.google.maps.entities.device.RfidDevice;
 public class RfidFactory implements DeviceFactory {
 
   private static final String IS_REQUIRED = " is required";
-  private static final String MANUFACTURER_KEY = "manufacturer";
-  private static final String RFID_ID_KEY = "rfidId";
-  private static final String DATA_KEY = "data";
+  private static final String ATTRIBUTES = "attributtes.";
+  
+
 
   @Override
   public Device makeDevice(String name, Map<String, String> attributtes) {
@@ -31,14 +31,11 @@ public class RfidFactory implements DeviceFactory {
     RfidDevice rfid = new RfidDevice();
     rfid.setActive(true);
     rfid.setName(name);
-    rfid.setManufacturer(attributtes.get(MANUFACTURER_KEY));
-    rfid.setRfidId(attributtes.get(MANUFACTURER_KEY));
+    rfid.setManufacturer(attributtes.get(RfidDevice.MANUFACTURER_KEY));
+    rfid.setRfidId(attributtes.get(RfidDevice.RFID_ID_KEY));
 
-    if (attributtes.containsKey(DATA_KEY)) {
-      Map<String, String> data = extractData(attributtes);
-      rfid.setData(data);
-    }
-    
+    rfid.setData(extractAdditionalData(attributtes));
+
     return rfid;
   }
 
@@ -48,10 +45,14 @@ public class RfidFactory implements DeviceFactory {
    * @param attributtes
    * @return the extracted Map<String, String>
    */
-  private Map<String, String> extractData(Map<String, String> attributtes) {
+  private Map<String, String> extractAdditionalData(Map<String, String> attributtes) {
 
+    
+    attributtes.remove(RfidDevice.MANUFACTURER_KEY);
+    attributtes.get(RfidDevice.RFID_ID_KEY);
+    
     Map<String, String> data = new HashMap<String, String>();
-    // TODO convert from attributtes to Map<String, String>
+    data.putAll(attributtes);
 
     return data;
   }
@@ -63,11 +64,11 @@ public class RfidFactory implements DeviceFactory {
    */
   private void validate(Map<String, String> attributtes) {
     Set<String> errors = new HashSet<String>();
-    if (!attributtes.containsKey(MANUFACTURER_KEY)) {
-      errors.add(MANUFACTURER_KEY + IS_REQUIRED);
+    if (!attributtes.containsKey(RfidDevice.MANUFACTURER_KEY)) {
+      errors.add(ATTRIBUTES + RfidDevice.MANUFACTURER_KEY + IS_REQUIRED);
     }
-    if (!attributtes.containsKey(RFID_ID_KEY)) {
-      errors.add(RFID_ID_KEY + IS_REQUIRED);
+    if (!attributtes.containsKey(RfidDevice.RFID_ID_KEY)) {
+      errors.add(ATTRIBUTES + RfidDevice.RFID_ID_KEY + IS_REQUIRED);
     }
     validateForErrors(errors);
   }

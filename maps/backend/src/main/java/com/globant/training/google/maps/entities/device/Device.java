@@ -1,6 +1,7 @@
 package com.globant.training.google.maps.entities.device;
 
 import java.util.Date;
+import java.util.Map;
 
 import com.globant.training.google.maps.entities.BaseEntity;
 import com.globant.training.google.maps.entities.DeviceType;
@@ -13,18 +14,47 @@ import com.googlecode.objectify.annotation.Entity;
 @Entity(name = "Device")
 public abstract class Device extends BaseEntity {
 
+  /**
+   * Device name.
+   */
   protected String name;
-  
+
+  /**
+   * Active flag, true if active.
+   */
   protected boolean active;
 
+  /**
+   * Date of creation.
+   */
   protected Date created;
 
+  /**
+   * Date of last update.
+   */
   protected Date lastUpdated;
-  
+
+  /**
+   * Return the device Type.
+   * 
+   * @return the {@link DeviceType}
+   */
   public abstract DeviceType getType();
 
-  //public abstract void fill(Map<String, Object>);
-  
+  /**
+   * Provide a Map of particular values for device.
+   * 
+   * @return a {@link Map<String, String>}
+   */
+  public abstract Map<String, String> getAttributes();
+
+  /**
+   * Provide a Map of particular values for device.
+   * 
+   * @return a {@link Map<String, String>}
+   */
+  public abstract void update(Device device);
+
   /**
    * Get device name.
    * 
@@ -42,7 +72,7 @@ public abstract class Device extends BaseEntity {
   public void setName(final String name) {
     this.name = name;
   }
-  
+
   /**
    * Returns <b>true</b> if RFID is active, otherwise <b>false</b>
    * 
@@ -96,5 +126,7 @@ public abstract class Device extends BaseEntity {
   public void setLastUpdated(Date lastUpdated) {
     this.lastUpdated = lastUpdated;
   }
+  
+  
 
 }

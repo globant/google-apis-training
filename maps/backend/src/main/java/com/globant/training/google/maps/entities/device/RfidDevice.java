@@ -1,10 +1,12 @@
 package com.globant.training.google.maps.entities.device;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.jdo.annotations.Embedded;
 
 import com.globant.training.google.maps.entities.DeviceType;
+import com.google.appengine.repackaged.com.google.gson.Gson;
 import com.googlecode.objectify.annotation.Subclass;
 
 /**
@@ -14,6 +16,9 @@ import com.googlecode.objectify.annotation.Subclass;
  */
 @Subclass(name = "Rfid", index = true)
 public class RfidDevice extends Device {
+  
+  public static final String MANUFACTURER_KEY = "manufacturer";
+  public static final String RFID_ID_KEY = "rfidId";
 
   private String rfidId;
 
@@ -21,6 +26,21 @@ public class RfidDevice extends Device {
 
   @Embedded
   private Map<String, String> data;
+  
+  @Override
+  public Map<String, String> getAttributes() {
+    
+    Map<String, String> attributtes = new HashMap<String, String>();
+    
+    attributtes.put(MANUFACTURER_KEY, this.manufacturer);
+    attributtes.put(RFID_ID_KEY, this.rfidId);
+    
+    if(data != null){
+      attributtes.putAll(data);
+    }
+    
+    return attributtes;
+  }
 
   /**
    * Gets the RFID ID.
@@ -83,5 +103,11 @@ public class RfidDevice extends Device {
    */
   public void setData(Map<String, String> data) {
     this.data = data;
+  }
+
+  @Override
+  public void update(Device device) {
+    // TODO Auto-generated method stub
+    
   }
 }

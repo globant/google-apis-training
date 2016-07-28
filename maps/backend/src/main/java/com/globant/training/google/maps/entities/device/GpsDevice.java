@@ -1,5 +1,10 @@
 package com.globant.training.google.maps.entities.device;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.jdo.annotations.Embedded;
+
 import com.globant.training.google.maps.entities.DeviceType;
 import com.googlecode.objectify.annotation.Subclass;
 
@@ -11,7 +16,24 @@ import com.googlecode.objectify.annotation.Subclass;
 @Subclass(name = "Gps", index = true)
 public class GpsDevice extends Device {
 
+  public static final String SERIAL_NUMBER_KEY = "serialNumber";
+
   private String serialNumber;
+
+  @Embedded
+  private Map<String, String> data;
+
+  @Override
+  public Map<String, String> getAttributes() {
+
+    Map<String, String> attributtes = new HashMap<String, String>();
+    attributtes.put(SERIAL_NUMBER_KEY, this.serialNumber);
+
+    if (data != null) {
+      attributtes.putAll(data);
+    }
+    return attributtes;
+  }
 
   /**
    * Gets GPS serial number.
@@ -38,5 +60,29 @@ public class GpsDevice extends Device {
    */
   public DeviceType getType() {
     return DeviceType.GPS;
+  }
+
+  /**
+   * Gets additional data for device {@link Map<String, String>}.
+   * 
+   * @return the Map<String, String> 
+   */
+  public Map<String, String> getData() {
+    return data;
+  }
+
+  /**
+   * Sets additional data for device {@link Map<String, String>}.
+   * 
+   * @param a  {@link Map<String, String> }
+   */
+  public void setData(Map<String, String> data) {
+    this.data = data;
+  }
+
+  @Override
+  public void update(Device device) {
+    // TODO Auto-generated method stub
+    
   }
 }

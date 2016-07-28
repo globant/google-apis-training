@@ -27,10 +27,17 @@ public interface DeviceDao {
   Device put(Device device);
   
   /**
-   * Get Device by id.
+   * Get device by id.
    * 
    * @param id the device id
    * @return the {@link Device}
    */
   Device get(Long id);
+  
+  /**
+   * Delete device by id.
+   * 
+   * @param id the device id
+   */
+  void delete(Long id);
 }

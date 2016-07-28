@@ -1,17 +1,17 @@
 package com.globant.training.google.maps.endpoints;
 
+import javax.inject.Named;
+
+import com.globant.training.google.maps.configs.Constants;
+import com.globant.training.google.maps.endpoints.dtos.device.DeviceDto;
+import com.globant.training.google.maps.entities.Antenna;
+import com.globant.training.google.maps.entities.device.Device;
+import com.globant.training.google.maps.services.DeviceService;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.inject.Inject;
-
-import com.globant.training.google.maps.configs.Constants;
-import com.globant.training.google.maps.endpoints.dtos.device.DeviceDto;
-import com.globant.training.google.maps.entities.device.Device;
-import com.globant.training.google.maps.services.DeviceService;
-
-import javax.inject.Named;
 
 /**
  * API endpoints for {@link device} operations.
@@ -37,31 +37,65 @@ public class DeviceEndpoint {
   }
 
   /**
-   * Get an device by id.
-   *  
-   * @param deviceId the id to be found
-   * @return {@link device}
-   * @throws NotFoundException if none device found for provided id
-   */
-  @ApiMethod(name = "device.get", path = "devices/{deviceId}", httpMethod = HttpMethod.GET)
-  public Device getdevice(@Named("deviceId") final Long deviceId) throws NotFoundException {
-    return deviceService.findById(deviceId);
-  }
-
-  /**
    * Add device.
    * 
    * @param deviceDto the device request
    * @return deviceDto the device persisted with id
    */
-  @ApiMethod(name = "device.add", path = "devices", httpMethod = HttpMethod.POST)
-  public DeviceDto addDevice(DeviceDto deviceDto) {
+  @ApiMethod(name = "devices.add", path = "devices", httpMethod = HttpMethod.POST)
+  public DeviceDto add(DeviceDto deviceDto) {
 
-    Device savedDEvice = deviceService.save(deviceDto.toEntity());
-    
+    Device savedDevice = deviceService.create(deviceDto.toEntity());
+
     DeviceDto createdDto = new DeviceDto();
-    
-    return createdDto.fromEntity(savedDEvice);
+
+    return createdDto.fromEntity(savedDevice);
+  }
+
+  /**
+   * Modify Device by id.
+   * 
+   * @param deviceId the id of device to be modified.
+   * @param deviceDto the dto request to update.
+   * 
+   * @return deviceDto the device persisted with id
+   */
+  @ApiMethod(name = "devices.put", path = "devices/{deviceId}", httpMethod = HttpMethod.PUT)
+  public DeviceDto update(@Named("deviceId") final Long deviceId, DeviceDto deviceDto) {
+
+    Device savedDevice = deviceService.update(deviceId, deviceDto.toEntity());
+
+    DeviceDto updatedDto = new DeviceDto();
+
+    return updatedDto.fromEntity(savedDevice);
+  }
+  
+  /**
+   * Get an device by id.
+   * 
+   * @param deviceId the id to be found
+   * @return {@link device}
+   * @throws NotFoundException if none device found for provided id
+   */
+  @ApiMethod(name = "devices.get", path = "devices/{deviceId}", httpMethod = HttpMethod.GET)
+  public DeviceDto getDevice(@Named("deviceId") final Long deviceId) throws NotFoundException {
+
+    Device device = deviceService.findById(deviceId);
+
+    DeviceDto dto = new DeviceDto();
+
+    return dto.fromEntity(device);
+  }
+  
+  /**
+   * Delete Device by id.
+   */
+  @ApiMethod(name = "devices.delete", path = "devices/{deviceId}",
+      httpMethod = HttpMethod.DELETE)
+  public void deleteAntenna(@Named("deviceId") final Long deviceId) {
+
+    deviceService.deleteById(deviceId);
+
   }
 
 }

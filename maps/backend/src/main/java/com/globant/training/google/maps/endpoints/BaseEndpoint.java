@@ -1,10 +1,9 @@
 package com.globant.training.google.maps.endpoints;
 
-import com.google.api.server.spi.auth.common.User;
-import com.google.appengine.api.oauth.OAuthRequestException;
-
 import com.globant.training.google.maps.entities.AppUser;
 import com.globant.training.google.maps.services.UserService;
+import com.google.api.server.spi.auth.common.User;
+import com.google.appengine.api.oauth.OAuthRequestException;
 
 /**
  * BaseEndPoint Class. All the endpoints must be extend it.
