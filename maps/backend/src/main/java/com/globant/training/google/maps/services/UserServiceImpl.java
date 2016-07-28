@@ -33,19 +33,22 @@ public class UserServiceImpl implements UserService {
     return userDao.getAll();
   }
 
+
   /*
    * (non-Javadoc)
    * 
    * @see
-   * com.globant.training.google.maps.services.UserService#addUser(com.globant.training.google.maps.
-   * entities.MapsUser)
+   * com.globant.training.google.maps.services.UserService#save(com.globant.training.google.maps.
+   * entities.AppUser)
    */
   @Override
-  public void addUser(AppUser user) {
-    userDao.put(user);
+  public AppUser save(AppUser user) {
+    return userDao.put(user);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.globant.training.google.maps.services.UserService#findUserByGoogleId(java.lang.String)
    */
   @Override
