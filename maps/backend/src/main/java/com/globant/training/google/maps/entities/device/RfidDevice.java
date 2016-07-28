@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.jdo.annotations.Embedded;
 
 import com.globant.training.google.maps.entities.DeviceType;
-import com.google.appengine.repackaged.com.google.gson.Gson;
 import com.googlecode.objectify.annotation.Subclass;
 
 /**

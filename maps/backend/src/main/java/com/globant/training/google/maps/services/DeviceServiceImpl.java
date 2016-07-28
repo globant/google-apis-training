@@ -39,14 +39,19 @@ public class DeviceServiceImpl implements DeviceService {
   }
 
   @Override
-  public Device update(Long id, Device device) {
+  public Device update(Long id, Device updateDevice) {
 
     // validate that exists
-    findById(id);
+    Device existingDevice = findById(id);
 
+    if (existingDevice.getType() != updateDevice.getType()) {
+      // Todo move to a custom exception.
+      throw new RuntimeException("Device type cannot be changed.");
+    }
+    
     //overwrite fully
-    device.setId(id);
-    Device savedDevice = deviceDao.put(device);
+    updateDevice.setId(id);
+    Device savedDevice = deviceDao.put(updateDevice);
 
     return savedDevice;
   }
