@@ -50,11 +50,18 @@ public class AntennaEndpoint extends BaseEndpoint {
    * 
    * @param antennaId the id to be found
    * @return {@link Antenna}
-   * @throws OAuthRequestException return a exception if the user is not authenticated
+   * @throws OAuthRequestException returns a exception if the user is not authenticated
    * @throws NotFoundException if none antenna found for provided id
    */
   @ApiMethod(name = "antennas.get", path = "antennas/{antennaId}", httpMethod = HttpMethod.GET)
-  public AntennaDto getAntenna(@Named("antennaId") final Long antennaId) {
+  public AntennaDto getAntenna(@Named("antennaId") final Long antennaId, User user)
+      throws OAuthRequestException {
+
+    AppUser loggedUser = loginUser(user);
+
+    if (!loggedUser.isAdmin()) {
+      throw new RuntimeException("User not authorized");
+    }
 
     Antenna antenna = antennaService.findById(antennaId);
 
@@ -73,9 +80,16 @@ public class AntennaEndpoint extends BaseEndpoint {
    * 
    * @param antennaDto the antenna request
    * @return antennaDto the antenna persisted with id
+   * @throws OAuthRequestException returns a exception if the user is not authenticated
    */
   @ApiMethod(name = "antennas.add", path = "antennas", httpMethod = HttpMethod.POST)
-  public AntennaDto addAntenna(AntennaDto antennaDto) {
+  public AntennaDto addAntenna(AntennaDto antennaDto, User user) throws OAuthRequestException {
+
+    AppUser loggedUser = loginUser(user);
+
+    if (!loggedUser.isAdmin()) {
+      throw new RuntimeException("User not authorized");
+    }
 
     Antenna antenna = antennaService.save(antennaDto.toEntity());
     antennaDto.fromEntity(antenna);
@@ -88,9 +102,17 @@ public class AntennaEndpoint extends BaseEndpoint {
    * 
    * @param antennaDto the antenna request
    * @return antennaDto the antenna dto
+   * @throws OAuthRequestException returns a exception if the user is not authenticated
    */
   @ApiMethod(name = "antennas.put", path = "antennas/{antennaId}", httpMethod = HttpMethod.PUT)
-  public AntennaDto modify(@Named("antennaId") final Long antennaId, AntennaDto antennaDto) {
+  public AntennaDto modify(@Named("antennaId") final Long antennaId, AntennaDto antennaDto,
+      User user) throws OAuthRequestException {
+
+    AppUser loggedUser = loginUser(user);
+
+    if (!loggedUser.isAdmin()) {
+      throw new RuntimeException("User not authorized");
+    }
 
     Antenna antenna = antennaService.findById(antennaId);
 
@@ -109,9 +131,16 @@ public class AntennaEndpoint extends BaseEndpoint {
    * Find antennas.
    * 
    * @return List of {@link AntennaDto}
+   * @throws OAuthRequestException returns a exception if the user is not authenticated
    */
   @ApiMethod(name = "antennas.find", path = "antennas", httpMethod = HttpMethod.GET)
-  public List<AntennaDto> findAntennas() {
+  public List<AntennaDto> findAntennas(User user) throws OAuthRequestException {
+
+    AppUser loggedUser = loginUser(user);
+
+    if (!loggedUser.isAdmin()) {
+      throw new RuntimeException("User not authorized");
+    }
 
     List<Antenna> antennas = antennaService.getAll();
     List<AntennaDto> antennasDto = new ArrayList<>();
@@ -131,10 +160,19 @@ public class AntennaEndpoint extends BaseEndpoint {
   /**
    * Delete Antenna by id.
    * 
+   * @throws OAuthRequestException
+   * 
    */
   @ApiMethod(name = "antennas.delete", path = "antennas/{antennaId}",
       httpMethod = HttpMethod.DELETE)
-  public void deleteAntenna(@Named("antennaId") final Long antennaId) {
+  public void deleteAntenna(@Named("antennaId") final Long antennaId, User user)
+      throws OAuthRequestException {
+
+    AppUser loggedUser = loginUser(user);
+
+    if (!loggedUser.isAdmin()) {
+      throw new RuntimeException("User not authorized");
+    }
 
     Antenna antenna = antennaService.findById(antennaId);
 
