@@ -16,7 +16,7 @@ var historyApiFallback = require('connect-history-api-fallback');
 var ensureFiles = require('./tasks/ensure-files.js');
 var javaProperties = require('java-properties');
 
-var googleClientId = javaProperties.of('../gradle.properties').get('clientId');
+var googleProperties = javaProperties.of('../gradle.properties');
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -141,7 +141,8 @@ gulp.task('html', function() {
 // Copy bower components
 gulp.task('copy:elements', function() {
   return gulp.src('app/elements/**/*.html')
-    .pipe($.replace('@Client ID@', googleClientId))
+    .pipe($.replace('@Client ID@', googleProperties.get('clientId')))
+    .pipe($.replace('@ApiKey@', googleProperties.get('apiKey')))
     .pipe(gulp.dest(dist('elements')))
     .pipe($.size({title: 'Copy elements'}));
 });

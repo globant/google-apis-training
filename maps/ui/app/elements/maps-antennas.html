@@ -49,9 +49,14 @@
       data="{{antennas}}"
       load-with-view></maps-request>
 
+    <maps-request id="antennaDelete"
+      user="[[user]]"
+      endpoint="/antennas/[[antennaToDelete]]"
+      method="DELETE"></maps-request>
+
     <div class="container layout horizontal start">
       <paper-material elevation="2" class="flex">
-        <vaadin-grid selection-mode="disabled">
+        <vaadin-grid selection-mode="single">
           <table>
             <colgroup>
               <col>
@@ -88,14 +93,17 @@
       </paper-material>
 
       <paper-material elevation="2" class="flex map-container">
-        <google-map latitude="37.77493" longitude="-122.41942">
-          <template is="dom-repeat" items="[[antennas.items]]">
-            <google-map-marker
-              latitude="[[item.latitude]]"
-              longitude="[[item.longitude]]"
-              title="[[item.name]]"
-              draggable="false"></google-map-marker>
-          </template>
+        <google-map
+          latitude="[[selectedAntenna.latitude]]"
+          longitude="[[selectedAntenna.longitude]]"
+          api-key="@ApiKey@">
+            <template is="dom-repeat" items="[[antennas.items]]">
+              <google-map-marker
+                latitude="[[item.latitude]]"
+                longitude="[[item.longitude]]"
+                title="[[item.name]]"
+                draggable="false"></google-map-marker>
+            </template>
         </google-map>
       </paper-material>
 
@@ -111,10 +119,33 @@
         antennas: {
           type: Object,
           observer: '_antennasChanged'
+        },
+
+        selectedAntenna: {
+          type: Object,
+          computed: '_getSelectedAntenna(antennas)'
+        },
+
+        antennaToDelete: {
+          type: String,
+          value: ''
         }
       },
 
       behaviors: [MapsBehaviors.ViewBehavior],
+
+      _getSelectedAntenna: function (antennas) {
+        var selected = {};
+
+        if(antennas && antennas.items.length) {
+          selected.latitude = this.antennas.items[0].latitude;
+          selected.longitude = this.antennas.items[0].longitude;
+        } else {
+          selected.latitude = 0;
+          selected.longitude = 0;
+        }
+        return selected;
+      },
 
       _antennasChanged: function () {
         var grid = this.$$('vaadin-grid');
@@ -125,13 +156,23 @@
             var first = !cell.element.hasChildNodes();
 
             if (first) {
-              cell.element.innerHTML = "<paper-icon-button icon='chevron-right' on-tap='editAntenna'></paper-icon-button>";
+              cell.element.innerHTML = "" +
+                "<div class='actions'>" +
+                "<paper-icon-button id='removeAntenna' icon='close'></paper-icon-button>" +
+                "<paper-icon-button id='editAntenna' icon='chevron-right'></paper-icon-button>" +
+                "</div>";
             }
-            var elem = cell.element.querySelector("paper-icon-button");
+            var elem = cell.element.querySelector('.actions')
+            var elemRemove = elem.querySelector("#removeAntenna");
+            var elemAdd = elem.querySelector("#editAntenna");
             if (first) {
-              elem.addEventListener('tap', function(ev){
+              elemAdd.addEventListener('tap', function(ev){
                 ev.stopPropagation();
                 selfComponent.editAntenna(elem.cell);
+              });
+              elemRemove.addEventListener('tap', function(ev){
+                ev.stopPropagation();
+                selfComponent.removeAntenna(elem.cell);
               });
             }
 
@@ -151,6 +192,12 @@
 
       editAntenna: function (cell) {
         this.hash = '/antenna/edit/' + cell.data;
+      },
+
+      removeAntenna: function (cell) {
+        this.antennaToDelete = cell.data;
+        this.$.antennaDelete.generateRequest();
+        this.$.antennas.generateRequest();
       }
     });
   </script>

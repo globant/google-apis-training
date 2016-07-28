@@ -63,13 +63,19 @@
       data="{{antenna}}"
       load-with-view></maps-request>
 
+    <maps-request id="antennaEdit"
+      user="[[user]]"
+      endpoint="/antennas{{viewData.path}}"
+      method="PUT"
+      body="{{body}}"
+      on-response="handleSuccessfulResponse"></maps-request>
+
     <maps-request id="antennaCreate"
       user="[[user]]"
       endpoint="/antennas"
       method="POST"
       body="{{body}}"
-      data="{{users}}"
-      on-response="handleCreateResponse"></maps-request>
+      on-response="handleSuccessfulResponse"></maps-request>
 
     <div class="container">
       <paper-material elevation="2" class="layout vertical">
@@ -119,7 +125,7 @@
           </div>
 
           <div class="flex map-container">
-            <google-map latitude="[[antenna.latitude]]" longitude="[[antenna.longitude]]">
+            <google-map latitude="[[antenna.latitude]]" longitude="[[antenna.longitude]]" api-key="@ApiKey@">
               <google-map-marker
                 latitude="{{antenna.latitude}}"
                 longitude="{{antenna.longitude}}"
@@ -149,7 +155,10 @@
 
         antenna: {
           type: Object,
-          value: {}
+          value: {
+            latitude: "0",
+            longitude: "0"
+          }
         },
 
         body: {
@@ -162,14 +171,18 @@
 
       _submit: function () {
         this.body = JSON.stringify(this.antenna);
-        this.$.antennaCreate.generateRequest();
+        if(this.routeData.action === 'create') {
+          this.$.antennaCreate.generateRequest();
+        } else {
+          this.$.antennaEdit.generateRequest();
+        }
       },
 
       _cancel: function () {
         this.hash = '/antennas';
       },
 
-      handleCreateResponse: function () {
+      handleSuccessfulResponse: function () {
         this.hash = '/antennas';
       }
     });
