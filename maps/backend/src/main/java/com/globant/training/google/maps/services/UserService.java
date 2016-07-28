@@ -20,12 +20,13 @@ public interface UserService {
   List<AppUser> getAllUsers();
 
   /**
-   * Adds a new user.
+   * Save or update user.
    * 
-   * @param user the user to be added
+   * @param user the user to be persisted
+   * @return the user persisted
    */
-  void addUser(AppUser user);
-  
+  AppUser save(AppUser user);
+
   /**
    * Find User by google id.
    * 
@@ -33,5 +34,5 @@ public interface UserService {
    * @return the {@link Antenna}
    */
   AppUser findUserByGoogleId(String id);
-  
+
 }

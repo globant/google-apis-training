@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 
 import com.globant.training.google.maps.configs.Constants;
 import com.globant.training.google.maps.entities.AppUser;
+import com.globant.training.google.maps.entities.UserRole;
 import com.globant.training.google.maps.services.UserService;
 
 import java.util.List;
@@ -57,6 +58,32 @@ public class UserEndpoint extends BaseEndpoint {
     return users;
   }
 
+
+  /**
+   * Sets admin role for a specific user. The user must be registered into the application.
+   * 
+   * @param googleId the google id.
+   */
+  @ApiMethod(name = "user.admin", path = "users/admin/role/{googleId}", httpMethod = HttpMethod.PUT)
+  public void setAdminRole(@Named("googleId") final String googleId) {
+
+    AppUser user = userService.findUserByGoogleId(googleId);
+
+    if (user == null) {
+      throw new RuntimeException("User not found");
+    }
+
+    if (user.isAdmin()) {
+      throw new RuntimeException("User is already admin");
+
+    }
+
+    user.getRoles().add(UserRole.ADMIN);
+    userService.save(user);
+
+  }
+
+
   /**
    * Creates an {@link EntityUser} form a {@link User}.
    * 
@@ -65,8 +92,8 @@ public class UserEndpoint extends BaseEndpoint {
   private void createEntityUser(User user) {
 
     // TODO move to service
-    // AppUser userToCreate = new AppUser();
-    // userToCreate.setEmail(user.getEmail());
-    // userService.addUser(userToCreate);
+    AppUser userToCreate = new AppUser();
+    userToCreate.setEmail(user.getEmail());
+    userService.save(userToCreate);
   }
 }
