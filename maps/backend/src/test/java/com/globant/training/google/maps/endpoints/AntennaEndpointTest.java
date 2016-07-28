@@ -23,13 +23,13 @@ import static org.mockito.Mockito.when;
 
 import com.google.api.server.spi.auth.common.User;
 import com.google.appengine.api.oauth.OAuthRequestException;
-
-import com.globant.training.google.maps.endpoints.dtos.AntennaDto;
-import com.globant.training.google.maps.entities.Antenna;
-import com.globant.training.google.maps.entities.AppUser;
-import com.globant.training.google.maps.entities.UserRole;
-import com.globant.training.google.maps.services.AntennaService;
-import com.globant.training.google.maps.services.UserService;
+import com.globant.training.google.maps.antenna.endpoint.AntennaEndpoint;
+import com.globant.training.google.maps.antenna.endpoint.dtos.AntennaDto;
+import com.globant.training.google.maps.antenna.entity.Antenna;
+import com.globant.training.google.maps.antenna.service.AntennaService;
+import com.globant.training.google.maps.user.entity.AppUser;
+import com.globant.training.google.maps.user.entity.UserRole;
+import com.globant.training.google.maps.user.service.UserService;
 
 import org.junit.Before;
 import org.junit.Test;

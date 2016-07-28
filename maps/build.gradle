@@ -17,11 +17,17 @@ task config << {
 		throw new GradleException('You must provide -PapiKey property')
 	}
 	
+	if(!project.hasProperty('backendApiUrl')){
+		backendApiUrl = 'http://localhost:8080'
+	}
+	
 	Properties props = new Properties()
 	File propsFile = new File('./gradle.properties')
 	
 	props.setProperty('appengineId', appengineId)
 	props.setProperty('clientId', clientId)
 	props.setProperty('apiKey', apiKey)
+	props.setProperty('backendApiUrl', backendApiUrl)
+	
 	props.store(propsFile.newWriter(), null)
 }

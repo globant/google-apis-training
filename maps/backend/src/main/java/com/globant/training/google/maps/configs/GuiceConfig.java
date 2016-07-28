@@ -1,5 +1,27 @@
 package com.globant.training.google.maps.configs;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import javax.servlet.ServletContextEvent;
+
+import com.globant.training.google.maps.antenna.dao.AntennaDao;
+import com.globant.training.google.maps.antenna.dao.objectify.AntennaOfyDao;
+import com.globant.training.google.maps.antenna.endpoint.AntennaEndpoint;
+import com.globant.training.google.maps.antenna.service.AntennaService;
+import com.globant.training.google.maps.antenna.service.AntennaServiceImpl;
+import com.globant.training.google.maps.core.dao.objectify.OfyService;
+import com.globant.training.google.maps.device.daos.DeviceDao;
+import com.globant.training.google.maps.device.daos.objectify.DeviceOfyDao;
+import com.globant.training.google.maps.device.endpoint.DeviceEndpoint;
+import com.globant.training.google.maps.device.service.DeviceService;
+import com.globant.training.google.maps.device.service.DeviceServiceImpl;
+import com.globant.training.google.maps.user.dao.UserDao;
+import com.globant.training.google.maps.user.dao.objectify.UserOfyDao;
+import com.globant.training.google.maps.user.endpoint.UserEndpoint;
+import com.globant.training.google.maps.user.service.UserService;
+import com.globant.training.google.maps.user.service.UserServiceImpl;
 import com.google.api.server.spi.guice.GuiceSystemServiceServletModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -8,29 +30,6 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.googlecode.objectify.ObjectifyFilter;
-
-import com.globant.training.google.maps.daos.AntennaDao;
-import com.globant.training.google.maps.daos.DeviceDao;
-import com.globant.training.google.maps.daos.UserDao;
-import com.globant.training.google.maps.daos.objectify.AntennaOfyDao;
-import com.globant.training.google.maps.daos.objectify.DeviceOfyDao;
-import com.globant.training.google.maps.daos.objectify.OfyService;
-import com.globant.training.google.maps.daos.objectify.UserOfyDao;
-import com.globant.training.google.maps.endpoints.AntennaEndpoint;
-import com.globant.training.google.maps.endpoints.DeviceEndpoint;
-import com.globant.training.google.maps.endpoints.UserEndpoint;
-import com.globant.training.google.maps.services.AntennaService;
-import com.globant.training.google.maps.services.AntennaServiceImpl;
-import com.globant.training.google.maps.services.DeviceService;
-import com.globant.training.google.maps.services.DeviceServiceImpl;
-import com.globant.training.google.maps.services.UserService;
-import com.globant.training.google.maps.services.UserServiceImpl;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletContextEvent;
 
 
 /**
