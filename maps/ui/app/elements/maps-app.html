@@ -29,7 +29,6 @@
   <template>
 
     <style>
-
       :host {
         display: block;
         --app-primary-color: #4285f4;
@@ -40,13 +39,19 @@
         background-color: var(--app-primary-color);
         color: #fff;
       }
+
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
+      }
+
+      iron-pages {
+        height: 100%;
       }
 
       .drawer-list {
         margin: 0 20px;
       }
+
       .drawer-list a {
         display: block;
         padding: 0 16px;
@@ -54,15 +59,15 @@
         text-decoration: none;
         color: var(--app-secondary-color);
       }
+
       .drawer-list a.iron-selected {
         color: black;
         font-weight: bold;
       }
+
       .drawer-list a.subroute {
         padding-left: 32px;
       }
-
-
     </style>
 
     <app-location route="{{route}}" use-hash-as-path></app-location>

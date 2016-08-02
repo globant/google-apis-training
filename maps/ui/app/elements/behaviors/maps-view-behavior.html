@@ -23,6 +23,8 @@
           .map(function (request) {
             request.generateRequest();
           });
+
+        this.fire('view-activated');
       }
     }
   };

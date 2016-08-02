@@ -16,6 +16,7 @@
 
 <!--Maps behaviors-->
 <link rel="import" href="behaviors/maps-view-behavior.html">
+<link rel="import" href="behaviors/maps-constants-behavior.html">
 
 
 <dom-module id="maps-antenna">
@@ -128,12 +129,15 @@
           </div>
 
           <div class="flex map-container">
-            <google-map latitude="[[antenna.latitude]]" longitude="[[antenna.longitude]]" api-key="@ApiKey@">
-              <google-map-marker
-                latitude="{{antenna.latitude}}"
-                longitude="{{antenna.longitude}}"
-                title="[[antenna.name]]"
-                draggable="true"></google-map-marker>
+            <google-map
+              latitude="[[antenna.latitude]]"
+              longitude="[[antenna.longitude]]"
+              api-key="{{constants.apiKeys.mapsApiKey}}">
+                <google-map-marker
+                  latitude="{{antenna.latitude}}"
+                  longitude="{{antenna.longitude}}"
+                  title="[[antenna.name]]"
+                  draggable="true"></google-map-marker>
             </google-map>
           </div>
         </div>
@@ -158,7 +162,13 @@
 
         antenna: {
           type: Object,
-          value: {}
+          value: {
+            name: '',
+            serialNumber: '',
+            latitude: 0,
+            longitude: 0,
+            rangeLimit: 0
+          }
         },
 
         body: {
@@ -167,24 +177,13 @@
         }
       },
 
-      behaviors: [MapsBehaviors.ViewBehavior],
-
-      observers: [
-        '_handleEditView(viewData.path)'
+      behaviors: [
+        MapsBehaviors.ViewBehavior,
+        MapsBehaviors.ConstantsBehavior
       ],
 
-      _handleEditView: function (idAntenna) {
-        if(idAntenna) {
-          this.$.antennaFind.generateRequest();
-        } else {
-          this.antenna = {
-            name: ' ',
-            serialNumber: ' ',
-            latitude: 0,
-            longitude: 0,
-            rangeLimit: 0
-          };
-        }
+      listeners: {
+        'view-activated': '_handleViewActivated'
       },
 
       _submit: function () {
@@ -202,6 +201,14 @@
 
       _handleSuccessfulResponse: function () {
         this.hash = '/antennas';
+      },
+
+      _handleViewActivated: function () {
+        if(this.routeData.action === 'edit') {
+          this.$.antennaFind.generateRequest();
+        }
+
+        this.$$('form').reset();
       }
     });
   </script>

@@ -1,4 +1,8 @@
+<!--Polymer components-->
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<!--Maps behaviors-->
+<link rel="import" href="behaviors/maps-constants-behavior.html">
 
 <dom-module id="maps-request">
   <template>
@@ -14,8 +18,6 @@
   </template>
 
   <script>
-    var apiUrl = '_ah/api/maps/v1';
-
     Polymer({
       is: 'maps-request',
 
@@ -61,6 +63,8 @@
         '_getUrl(endpoint)'
       ],
 
+      behaviors: [ MapsBehaviors.ConstantsBehavior ],
+
       _generateAuthorization: function (user) {
         if(user && typeof(user) === 'object') {
           var authR = user.getAuthResponse();
@@ -73,7 +77,7 @@
       },
 
       _getUrl: function(endpoint) {
-        this._url = 'http://localhost:8080/' + apiUrl + endpoint;
+        this._url = this.constants.routes.host + this.constants.routes.apiPath + endpoint;
       },
 
       _handleResponse: function (e, response) {

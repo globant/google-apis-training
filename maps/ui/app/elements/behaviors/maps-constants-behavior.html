@@ -1,0 +1,21 @@
+<script>
+  var MapsBehaviors = MapsBehaviors || {};
+  MapsBehaviors.ConstantsBehavior = {
+    properties: {
+      constants: {
+        type: Object,
+        value: {
+          apiKeys: {
+            googleClientId: '@GoogleClientID@',
+            mapsApiKey: '@MapsApiKey@'
+          },
+
+          routes: {
+            host: '@Host@',
+            apiPath: '/_ah/api/maps/v1'
+          }
+        }
+      }
+    }
+  };
+</script>

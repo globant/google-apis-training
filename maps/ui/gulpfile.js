@@ -141,8 +141,9 @@ gulp.task('html', function() {
 // Copy bower components
 gulp.task('copy:elements', function() {
   return gulp.src('app/elements/**/*.html')
-    .pipe($.replace('@Client ID@', googleProperties.get('clientId')))
-    .pipe($.replace('@ApiKey@', googleProperties.get('apiKey')))
+    .pipe($.replace('@GoogleClientID@', googleProperties.get('clientId')))
+    .pipe($.replace('@MapsApiKey@', googleProperties.get('apiKey')))
+    .pipe($.replace('@Host@', googleProperties.get('backendApiUrl', 'http://localhost:8080')))
     .pipe(gulp.dest(dist('elements')))
     .pipe($.size({title: 'Copy elements'}));
 });

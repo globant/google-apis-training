@@ -15,12 +15,13 @@
 
 //Maps behaviours
 <link rel="import" href="behaviors/maps-view-behavior.html">
+<link rel="import" href="behaviors/maps-constants-behavior.html">
 
 <dom-module id="maps-antennas">
   <template>
-    <style include="iron-flex iron-flex-alignment">
-      .container {
-        padding: 10px;
+    <style include="iron-flex iron-positioning iron-flex-factors">
+      :host {
+        height: 100%;
       }
 
       paper-fab {
@@ -29,14 +30,20 @@
         bottom: 30px;
       }
 
-      google-map {
-        height: 600px;
+      paper-material {
+        position: fixed;
+        right: 25px;
+        top: 90px;
+        width: 400px;
+        max-height: 400px;
       }
 
-      .map-container {
-        background-color: white;
-        padding: 5px;
-        margin-left: 10px;
+      vaadin-grid {
+        height: 100%;
+      }
+
+      google-map {
+        height: 100%;
       }
     </style>
 
@@ -54,8 +61,20 @@
       endpoint="/antennas/[[antennaToDelete]]"
       method="DELETE"></maps-request>
 
-    <div class="container layout horizontal start">
-      <paper-material elevation="2" class="flex">
+      <google-map
+        latitude="[[selectedAntenna.latitude]]"
+        longitude="[[selectedAntenna.longitude]]"
+        api-key="{{constants.apiKeys.mapsApiKey}}">
+        <template is="dom-repeat" items="[[antennas.items]]">
+          <google-map-marker
+            latitude="[[item.latitude]]"
+            longitude="[[item.longitude]]"
+            title="[[item.name]]"
+            draggable="false"></google-map-marker>
+        </template>
+      </google-map>
+
+      <paper-material elevation="2" class="antennas-list flex flex-4">
         <vaadin-grid selection-mode="single">
           <table>
             <colgroup>
@@ -91,24 +110,7 @@
           </table>
         </vaadin-grid>
       </paper-material>
-
-      <paper-material elevation="2" class="flex map-container">
-        <google-map
-          latitude="[[selectedAntenna.latitude]]"
-          longitude="[[selectedAntenna.longitude]]"
-          api-key="@ApiKey@">
-            <template is="dom-repeat" items="[[antennas.items]]">
-              <google-map-marker
-                latitude="[[item.latitude]]"
-                longitude="[[item.longitude]]"
-                title="[[item.name]]"
-                draggable="false"></google-map-marker>
-            </template>
-        </google-map>
-      </paper-material>
-
       <paper-fab icon="add" on-tap="addNewAntenna"></paper-fab>
-    </div>
   </template>
 
   <script>
@@ -132,7 +134,10 @@
         }
       },
 
-      behaviors: [MapsBehaviors.ViewBehavior],
+      behaviors: [
+        MapsBehaviors.ViewBehavior,
+        MapsBehaviors.ConstantsBehavior
+      ],
 
       _getSelectedAntenna: function (antennas) {
         var selected = {};

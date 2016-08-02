@@ -1,14 +1,16 @@
-//Bower dependencies
+<!--Polymer Components-->
 <link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
-//Local dependencies
+<!--Maps Components-->
 
+<!--Maps behaviors-->
+<link rel="import" href="behaviors/maps-constants-behavior.html">
 
 <dom-module id="maps-login-button">
   <template>
     <google-signin
-      client-id="@Client ID@"
+      client-id="{{constants.apiKeys.googleClientId}}"
       scopes="profile email openid"
       on-google-signin-success="_handleSignIn"
       on-google-signed-out="_handleSignOut"
@@ -24,6 +26,8 @@
           notify: true
         }
       },
+
+      behaviors: [ MapsBehaviors.ConstantsBehavior ],
 
       _handleSignIn: function () {
         this.user = gapi.auth2.getAuthInstance()['currentUser'].get();
