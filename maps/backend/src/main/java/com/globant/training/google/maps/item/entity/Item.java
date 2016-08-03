@@ -3,6 +3,8 @@ package com.globant.training.google.maps.item.entity;
 import java.util.Date;
 import java.util.List;
 
+import com.googlecode.objectify.annotation.Entity;
+
 import com.globant.training.google.maps.core.entity.BaseEntity;
 import com.globant.training.google.maps.device.entity.Device;
 
@@ -11,6 +13,7 @@ import com.globant.training.google.maps.device.entity.Device;
  * 
  * @author gabriel.sideri
  */
+@Entity(name = "Item")
 public class Item extends BaseEntity {
 
   private String name;

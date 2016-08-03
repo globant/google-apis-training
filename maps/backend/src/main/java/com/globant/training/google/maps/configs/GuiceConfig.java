@@ -1,10 +1,14 @@
 package com.globant.training.google.maps.configs;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Logger;
+import com.google.api.server.spi.guice.GuiceSystemServiceServletModule;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Singleton;
+import com.google.inject.name.Names;
+import com.google.inject.servlet.GuiceServletContextListener;
 
-import javax.servlet.ServletContextEvent;
+import com.googlecode.objectify.ObjectifyFilter;
 
 import com.globant.training.google.maps.antenna.dao.AntennaDao;
 import com.globant.training.google.maps.antenna.dao.objectify.AntennaOfyDao;
@@ -17,19 +21,22 @@ import com.globant.training.google.maps.device.daos.objectify.DeviceOfyDao;
 import com.globant.training.google.maps.device.endpoint.DeviceEndpoint;
 import com.globant.training.google.maps.device.service.DeviceService;
 import com.globant.training.google.maps.device.service.DeviceServiceImpl;
+import com.globant.training.google.maps.item.dao.ItemDao;
+import com.globant.training.google.maps.item.dao.objectify.ItemOfyDao;
+import com.globant.training.google.maps.item.endpoint.ItemEndpoint;
+import com.globant.training.google.maps.item.service.ItemService;
+import com.globant.training.google.maps.item.service.ItemServiceImpl;
 import com.globant.training.google.maps.user.dao.UserDao;
 import com.globant.training.google.maps.user.dao.objectify.UserOfyDao;
 import com.globant.training.google.maps.user.endpoint.UserEndpoint;
 import com.globant.training.google.maps.user.service.UserService;
 import com.globant.training.google.maps.user.service.UserServiceImpl;
-import com.google.api.server.spi.guice.GuiceSystemServiceServletModule;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Singleton;
-import com.google.inject.name.Names;
-import com.google.inject.servlet.GuiceServletContextListener;
-import com.googlecode.objectify.ObjectifyFilter;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import javax.servlet.ServletContextEvent;
 
 
 /**
@@ -58,6 +65,7 @@ public class GuiceConfig extends GuiceServletContextListener {
       serviceClasses.add(UserEndpoint.class);
       serviceClasses.add(AntennaEndpoint.class);
       serviceClasses.add(DeviceEndpoint.class);
+      serviceClasses.add(ItemEndpoint.class);
 
       this.serveGuiceSystemServiceServlet("/_ah/spi/*", serviceClasses);
 
@@ -79,10 +87,12 @@ public class GuiceConfig extends GuiceServletContextListener {
       bind(UserDao.class).to(UserOfyDao.class);
       bind(AntennaDao.class).to(AntennaOfyDao.class);
       bind(DeviceDao.class).to(DeviceOfyDao.class);
+      bind(ItemDao.class).to(ItemOfyDao.class);
 
       // Service Definitions
       bind(UserService.class).annotatedWith(Names.named("userService")).to(UserServiceImpl.class);
       bind(AntennaService.class).to(AntennaServiceImpl.class);
+      bind(ItemService.class).to(ItemServiceImpl.class);
       bind(DeviceService.class).annotatedWith(Names.named("deviceService"))
           .to(DeviceServiceImpl.class);
 
