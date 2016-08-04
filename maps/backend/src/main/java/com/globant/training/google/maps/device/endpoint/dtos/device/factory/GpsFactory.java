@@ -21,12 +21,12 @@ public class GpsFactory implements DeviceFactory {
 
 
   @Override
-  public Device makeDevice(String name, Map<String, String> attributtes) {
+  public Device makeDevice(String name, boolean active, Map<String, String> attributtes) {
 
     validate(attributtes);
 
     GpsDevice gps = new GpsDevice();
-    gps.setActive(true);
+    gps.setActive(active);
     gps.setName(name);
     gps.setSerialNumber(String.valueOf(attributtes.get(GpsDevice.SERIAL_NUMBER_KEY)));
     

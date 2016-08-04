@@ -24,12 +24,12 @@ public class RfidFactory implements DeviceFactory {
 
 
   @Override
-  public Device makeDevice(String name, Map<String, String> attributtes) {
+  public Device makeDevice(String name, boolean active, Map<String, String> attributtes) {
 
     validate(attributtes);
 
     RfidDevice rfid = new RfidDevice();
-    rfid.setActive(true);
+    rfid.setActive(active);
     rfid.setName(name);
     rfid.setManufacturer(attributtes.get(RfidDevice.MANUFACTURER_KEY));
     rfid.setRfidId(attributtes.get(RfidDevice.RFID_ID_KEY));
