@@ -1,0 +1,74 @@
+//Polymer components
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+
+<dom-module id="maps-devices">
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+      .container {
+        padding: 10px;
+      }
+
+      paper-fab {
+        position: fixed;
+        right: 25px;
+        bottom: 30px;
+      }
+    </style>
+
+    <div class="container">
+      <paper-material elevation="2" class="flex">
+        <vaadin-grid selection-mode="single">
+          <table>
+            <colgroup>
+              <col>
+              <col>
+              <col>
+              <col>
+              <col>
+              <col>
+            </colgroup>
+            <thead>
+            <tr>
+              <th>Antenna ID</th>
+              <th>Serial Number</th>
+              <th>Latitude</th>
+              <th>Longitude</th>
+              <th>Range</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <template is="dom-repeat" items="[[antennas.items]]">
+              <tr>
+                <td>{{item.name}}</td>
+                <td>{{item.serialNumber}}</td>
+                <td>{{item.latitude}}</td>
+                <td>{{item.longitude}}</td>
+                <td>{{item.rangeLimit}}</td>
+                <td>{{item.id}}</td>
+              </tr>
+            </template>
+            </tbody>
+          </table>
+        </vaadin-grid>
+      </paper-material>
+    </div>
+
+    <paper-fab icon="add" on-tap="addNewAntenna"></paper-fab>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'maps-devices',
+
+      behaviors: [
+        MapsBehaviors.ViewBehavior,
+        MapsBehaviors.ConstantsBehavior
+      ]
+    });
+  </script>
+</dom-module>
