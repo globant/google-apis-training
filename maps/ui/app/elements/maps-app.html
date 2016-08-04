@@ -102,14 +102,14 @@
           </app-header>
 
           <iron-pages id="mainPages"
-                      role="main"
-                      selected="[[page]]"
-                      attr-for-selected="name"
-                      on-iron-select="_handleIronSelect"
-                      on-iron-deselect="_handleIronDeselect">
-            <maps-home name="home" user="[[user]]"></maps-home>
-            <maps-antennas name="antennas" user="[[user]]"></maps-antennas>
-            <maps-antenna name="antenna" user="[[user]]" route="[[subroute]]"></maps-antenna>
+            role="main"
+            selected="[[page]]"
+            attr-for-selected="name"
+            on-iron-select="_handleIronSelect"
+            on-iron-deselect="_handleIronDeselect">
+              <maps-home name="home" user="[[user]]"></maps-home>
+              <maps-antennas name="antennas" user="[[user]]"></maps-antennas>
+              <maps-antenna name="antenna" user="[[user]]" route="[[subroute]]"></maps-antenna>
           </iron-pages>
 
         </app-header-layout>

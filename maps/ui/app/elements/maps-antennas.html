@@ -4,9 +4,12 @@
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/google-map/google-map.html">
 <link rel="import" href="../bower_components/google-map/google-map-marker.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
 
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 
@@ -19,31 +22,25 @@
 
 <dom-module id="maps-antennas">
   <template>
-    <style include="iron-flex iron-positioning iron-flex-factors">
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-flex-factors iron-positioning">
       :host {
+        @apply(--layout-block);
+        @apply(--layout-flex);
         height: 100%;
+        position: relative;
       }
+
+      /*paper-material {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        width: 45%;
+      }*/
 
       paper-fab {
         position: fixed;
         right: 25px;
         bottom: 30px;
-      }
-
-      paper-material {
-        position: fixed;
-        right: 25px;
-        top: 90px;
-        width: 400px;
-        max-height: 400px;
-      }
-
-      vaadin-grid {
-        height: 100%;
-      }
-
-      google-map {
-        height: 100%;
       }
     </style>
 
@@ -53,7 +50,7 @@
       user="[[user]]"
       endpoint="/antennas"
       method="GET"
-      data="{{antennas}}"
+      data="{{response}}"
       load-with-view></maps-request>
 
     <maps-request id="antennaDelete"
@@ -61,56 +58,92 @@
       endpoint="/antennas/[[antennaToDelete]]"
       method="DELETE"></maps-request>
 
-      <google-map
-        latitude="[[selectedAntenna.latitude]]"
-        longitude="[[selectedAntenna.longitude]]"
-        api-key="{{constants.apiKeys.mapsApiKey}}">
-        <template is="dom-repeat" items="[[antennas.items]]">
-          <google-map-marker
-            latitude="[[item.latitude]]"
-            longitude="[[item.longitude]]"
-            title="[[item.name]]"
-            draggable="false"></google-map-marker>
-        </template>
-      </google-map>
+    <google-map
+      map="{{map}}"
+      latitude="[[selectedAntenna.latitude]]"
+      longitude="[[selectedAntenna.longitude]]"
+      api-key="{{constants.apiKeys.mapsApiKey}}"></google-map>
 
-      <paper-material elevation="2" class="antennas-list flex flex-4">
-        <vaadin-grid selection-mode="single">
-          <table>
-            <colgroup>
-              <col>
-              <col>
-              <col>
-              <col>
-              <col>
-              <col>
-            </colgroup>
-            <thead>
+    <template is="dom-repeat" items="[[antennas]]">
+      <google-map-marker
+        map="{{map}}"
+        latitude="[[item.latitude]]"
+        longitude="[[item.longitude]]"
+        title="[[item.name]]"
+        draggable="false"
+        click-events="true"
+        data="[[item.id]]"
+        on-google-map-marker-dblclick="_handleDbClickMarker">
+          <paper-item data="[[item.name]]">
+            <paper-item-body two-line>
+              <div>Name</div>
+              <div secondary>{{item.name}}</div>
+            </paper-item-body>
+          </paper-item>
+          <paper-item>
+            <paper-item-body two-line>
+              <div>Serial Number</div>
+              <div secondary>{{item.serialNumber}}</div>
+            </paper-item-body>
+          </paper-item>
+          <paper-item>
+            <paper-item-body two-line>
+              <div>Latitude</div>
+              <div secondary>{{item.latitude}}</div>
+            </paper-item-body>
+          </paper-item>
+          <paper-item>
+            <paper-item-body two-line>
+              <div>Longitude</div>
+              <div secondary>{{item.longitude}}</div>
+            </paper-item-body>
+          </paper-item>
+          <paper-item>
+            <paper-item-body two-line>
+              <div>Range</div>
+              <div secondary>{{item.rangeLimit}}</div>
+            </paper-item-body>
+          </paper-item>
+      </google-map-marker>
+    </template>
+
+    <!--<paper-material elevation="2" class="">
+      <vaadin-grid selection-mode="single">
+        <table>
+          <colgroup>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Antenna ID</th>
+              <th>Serial Number</th>
+              <th>Latitude</th>
+              <th>Longitude</th>
+              <th>Range</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <template is="dom-repeat" items="[[antennas.items]]">
               <tr>
-                <th>Antenna ID</th>
-                <th>Serial Number</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>Range</th>
-                <th></th>
+                <td>{{item.name}}</td>
+                <td>{{item.serialNumber}}</td>
+                <td>{{item.latitude}}</td>
+                <td>{{item.longitude}}</td>
+                <td>{{item.rangeLimit}}</td>
+                <td>{{item.id}}</td>
               </tr>
-            </thead>
-            <tbody>
-              <template is="dom-repeat" items="[[antennas.items]]">
-                <tr>
-                  <td>{{item.name}}</td>
-                  <td>{{item.serialNumber}}</td>
-                  <td>{{item.latitude}}</td>
-                  <td>{{item.longitude}}</td>
-                  <td>{{item.rangeLimit}}</td>
-                  <td>{{item.id}}</td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
-        </vaadin-grid>
-      </paper-material>
-      <paper-fab icon="add" on-tap="addNewAntenna"></paper-fab>
+            </template>
+          </tbody>
+        </table>
+      </vaadin-grid>
+    </paper-material>-->
+    <paper-fab icon="add" on-tap="addNewAntenna"></paper-fab>
   </template>
 
   <script>
@@ -118,14 +151,19 @@
       is: 'maps-antennas',
 
       properties: {
+        response: {
+          type: Object,
+          value: {items:null}
+        },
+
         antennas: {
           type: Object,
-          observer: '_antennasChanged'
+          computed: '_getAntennas(response)'
         },
 
         selectedAntenna: {
           type: Object,
-          computed: '_getSelectedAntenna(antennas)'
+          computed: '_getSelectedAntenna(response)'
         },
 
         antennaToDelete: {
@@ -139,12 +177,20 @@
         MapsBehaviors.ConstantsBehavior
       ],
 
+      _getAntennas: function(response) {
+        return response.items;
+      },
+
+      _handleDbClickMarker: function (e, o) {
+        this.editAntenna(e.currentTarget.data);
+      },
+
       _getSelectedAntenna: function (antennas) {
         var selected = {};
 
-        if(antennas && antennas.items.length) {
-          selected.latitude = this.antennas.items[0].latitude;
-          selected.longitude = this.antennas.items[0].longitude;
+        if(antennas.items && antennas.items.length) {
+          selected.latitude = this.antennas[0].latitude;
+          selected.longitude = this.antennas[0].longitude;
         } else {
           selected.latitude = 0;
           selected.longitude = 0;
@@ -153,7 +199,7 @@
       },
 
       _antennasChanged: function () {
-        var grid = this.$$('vaadin-grid');
+        /*var grid = this.$$('vaadin-grid');
         var selfComponent = this;
 
         if(grid.columns.length !== 0) {
@@ -173,11 +219,11 @@
             if (first) {
               elemAdd.addEventListener('tap', function(ev){
                 ev.stopPropagation();
-                selfComponent.editAntenna(elem.cell);
+                selfComponent.editAntenna(elem.cell.data);
               });
               elemRemove.addEventListener('tap', function(ev){
                 ev.stopPropagation();
-                selfComponent.removeAntenna(elem.cell);
+                selfComponent.removeAntenna(elem.cell.data);
               });
             }
 
@@ -188,19 +234,19 @@
               row: {index: cell.row.index, data: cell.row.data}
             };
           }
-        }
+        }*/
       },
 
       addNewAntenna: function () {
         this.hash = '/antenna/create';
       },
 
-      editAntenna: function (cell) {
-        this.hash = '/antenna/edit/' + cell.data;
+      editAntenna: function (idAntenna) {
+        this.hash = '/antenna/edit/' + idAntenna;
       },
 
-      removeAntenna: function (cell) {
-        this.antennaToDelete = cell.data;
+      removeAntenna: function (idAntenna) {
+        this.antennaToDelete = idAntenna;
         this.$.antennaDelete.generateRequest();
         this.$.antennas.generateRequest();
       }
