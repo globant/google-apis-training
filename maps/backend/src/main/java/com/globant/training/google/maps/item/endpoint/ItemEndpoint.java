@@ -120,10 +120,13 @@ public class ItemEndpoint extends BaseEndpoint {
     if (item == null) {
       throw new RuntimeException("item Not Found");
     }
-
+        
     itemDto.setId(itemId);
+
+    item = itemService.save(itemDto.toEntity());
+
     itemDto.setCreated(item.getCreated());
-    itemService.save(itemDto.toEntity());
+    itemDto.setLastUpdated(item.getLastUpdated());
 
     return itemDto;
   }

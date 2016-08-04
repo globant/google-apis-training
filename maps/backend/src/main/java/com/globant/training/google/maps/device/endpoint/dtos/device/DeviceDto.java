@@ -38,6 +38,8 @@ public class DeviceDto implements Dto<Device, DeviceDto>, Serializable {
 
   @NotNull
   private DeviceType type;
+  
+  private boolean active;
 
   @NotNull
   private Map<String, String> attributtes;
@@ -47,7 +49,7 @@ public class DeviceDto implements Dto<Device, DeviceDto>, Serializable {
 
     validate(this);
 
-    return deviceFactoryMap.get(type).makeDevice(name, attributtes);
+    return deviceFactoryMap.get(type).makeDevice(name, active, attributtes);
   }
   
   @Override
@@ -55,6 +57,7 @@ public class DeviceDto implements Dto<Device, DeviceDto>, Serializable {
     this.id = device.getId();
     this.name = device.getName();
     this.type = device.getType();
+    this.active = device.isActive();
     this.attributtes = device.getAttributes();
     return this;
   }
@@ -89,6 +92,14 @@ public class DeviceDto implements Dto<Device, DeviceDto>, Serializable {
 
   public void setType(DeviceType type) {
     this.type = type;
+  }
+
+  public boolean isActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
   }
   
 }

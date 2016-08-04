@@ -2,10 +2,14 @@ package com.globant.training.google.maps.item.service;
 
 import com.google.inject.Inject;
 
+import com.globant.training.google.maps.device.entity.Device;
+import com.globant.training.google.maps.device.service.DeviceService;
 import com.globant.training.google.maps.item.dao.ItemDao;
 import com.globant.training.google.maps.item.entity.Item;
 
 import java.util.List;
+
+import javax.inject.Named;
 
 /**
  * {@link ItemService} Implementation
@@ -16,10 +20,19 @@ public class ItemServiceImpl implements ItemService {
 
   private final ItemDao itemDao;
 
+  private final DeviceService deviceService;
+
+  /**
+   * Injects the needed services.
+   * 
+   * @param itemDao the item DAO.
+   * @param deviceService the Device Service
+   */
   @Inject
-  public ItemServiceImpl(ItemDao itemDao) {
+  public ItemServiceImpl(ItemDao itemDao, @Named("deviceService") DeviceService deviceService) {
     super();
     this.itemDao = itemDao;
+    this.deviceService = deviceService;
   }
 
   /*
@@ -41,6 +54,18 @@ public class ItemServiceImpl implements ItemService {
    */
   @Override
   public Item save(Item item) {
+
+    if (item.getDeviceId() != null) {
+
+      Device device = deviceService.findById(item.getDeviceId());
+
+      if (!device.isActive()) {
+        throw new RuntimeException(
+            "Device is not active, you only can associate an active device.");
+      }
+
+    }
+
     return itemDao.put(item);
   }
 

@@ -1,12 +1,10 @@
 package com.globant.training.google.maps.item.entity;
 
-import java.util.Date;
-import java.util.List;
-
 import com.googlecode.objectify.annotation.Entity;
 
 import com.globant.training.google.maps.core.entity.BaseEntity;
-import com.globant.training.google.maps.device.entity.Device;
+
+import java.util.Date;
 
 /**
  * Class to represent the Item to be Tracked by the Devices.
@@ -18,7 +16,7 @@ public class Item extends BaseEntity {
 
   private String name;
 
-  private List<Device> devices;
+  private Long deviceId;
 
   private boolean active;
 
@@ -45,21 +43,21 @@ public class Item extends BaseEntity {
   }
 
   /**
-   * Gets a list of devices which tracks the item.
+   * Get device id associated with the item.
    * 
-   * @return a list of devices
+   * @return device id
    */
-  public List<Device> getDevices() {
-    return devices;
+  public Long getDeviceId() {
+    return deviceId;
   }
 
   /**
-   * Sets the list of devices to track the item.
+   * Associate device with the item.
    * 
-   * @param devices a list of devices
+   * @param deviceId the device id
    */
-  public void setDevices(List<Device> devices) {
-    this.devices = devices;
+  public void setDeviceId(Long deviceId) {
+    this.deviceId = deviceId;
   }
 
   /**

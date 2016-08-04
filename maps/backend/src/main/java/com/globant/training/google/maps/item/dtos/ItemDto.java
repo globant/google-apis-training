@@ -21,6 +21,8 @@ public class ItemDto implements Dto<Item, ItemDto> {
   @NotNull
   private String name;
 
+  private Long deviceId;
+  
   private boolean active;
 
   private Date created;
@@ -62,7 +64,7 @@ public class ItemDto implements Dto<Item, ItemDto> {
   public void setName(String name) {
     this.name = name;
   }
-  
+
   /**
    * Return <b>true</b> if the item is active, otherwise <b>false</b>.
    * 
@@ -98,7 +100,7 @@ public class ItemDto implements Dto<Item, ItemDto> {
   public Date getCreated() {
     return created;
   }
-  
+
   /**
    * Returns when the entity was modified.
    * 
@@ -117,6 +119,29 @@ public class ItemDto implements Dto<Item, ItemDto> {
     this.lastUpdated = lastUpdated;
   }
 
+  /**
+   * Get device id associated with the item.
+   * 
+   * @return device id
+   */
+  public Long getDeviceId() {
+    return deviceId;
+  }
+
+  /**
+   * Associate device with the item.
+   * 
+   * @param deviceId the device id
+   */
+  public void setDeviceId(Long deviceId) {
+    this.deviceId = deviceId;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.globant.training.google.maps.core.endpoint.dto.Dto#toEntity()
+   */
   @Override
   public Item toEntity() {
     validate(this);
@@ -125,6 +150,7 @@ public class ItemDto implements Dto<Item, ItemDto> {
     item.setName(name);
     item.setActive(active);
     item.setLastUpdated(new Date());
+    item.setDeviceId(deviceId);
 
     if (this.getId() == null) {
       item.setCreated(new Date());
@@ -136,6 +162,11 @@ public class ItemDto implements Dto<Item, ItemDto> {
     return item;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.globant.training.google.maps.core.endpoint.dto.Dto#fromEntity(java.lang.Object)
+   */
   @Override
   public ItemDto fromEntity(Item item) {
 
@@ -145,6 +176,7 @@ public class ItemDto implements Dto<Item, ItemDto> {
       this.active = item.isActive();
       this.created = item.getCreated();
       this.lastUpdated = item.getLastUpdated();
+      this.deviceId = item.getDeviceId();
     }
 
     return this;
