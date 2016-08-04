@@ -10,6 +10,8 @@
 <link rel="import" href="../bower_components/google-map/google-map-marker.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 
@@ -30,17 +32,31 @@
         position: relative;
       }
 
-      /*paper-material {
+      div[drawer] {
+        display: block;
+        position: relative;
+      }
+
+      paper-material {
         position: absolute;
-        top: 30px;
-        right: 30px;
-        width: 45%;
-      }*/
+        top: 0;
+        left: -40px;
+        background-color: white;
+        visibility: visible;
+      }
+
+      paper-item {
+        padding: 16px;
+      }
 
       paper-fab {
         position: fixed;
         right: 25px;
         bottom: 30px;
+      }
+
+      div[secondary]>p {
+        margin: 0;
       }
     </style>
 
@@ -58,54 +74,55 @@
       endpoint="/antennas/[[antennaToDelete]]"
       method="DELETE"></maps-request>
 
-    <google-map
-      map="{{map}}"
-      latitude="[[selectedAntenna.latitude]]"
-      longitude="[[selectedAntenna.longitude]]"
-      api-key="{{constants.apiKeys.mapsApiKey}}"></google-map>
+    <paper-drawer-panel right-drawer force-narrow drawer-width="400px">
+      <div drawer>
+        <paper-material elevation="2">
+          <paper-icon-button icon="chevron-right" paper-drawer-toggle></paper-icon-button>
+        </paper-material>
 
-    <template is="dom-repeat" items="[[antennas]]">
-      <google-map-marker
-        map="{{map}}"
-        latitude="[[item.latitude]]"
-        longitude="[[item.longitude]]"
-        title="[[item.name]]"
-        draggable="false"
-        click-events="true"
-        data="[[item.id]]"
-        on-google-map-marker-dblclick="_handleDbClickMarker">
-          <paper-item data="[[item.name]]">
-            <paper-item-body two-line>
-              <div>Name</div>
-              <div secondary>{{item.name}}</div>
-            </paper-item-body>
-          </paper-item>
-          <paper-item>
-            <paper-item-body two-line>
-              <div>Serial Number</div>
-              <div secondary>{{item.serialNumber}}</div>
-            </paper-item-body>
-          </paper-item>
-          <paper-item>
-            <paper-item-body two-line>
-              <div>Latitude</div>
-              <div secondary>{{item.latitude}}</div>
-            </paper-item-body>
-          </paper-item>
-          <paper-item>
-            <paper-item-body two-line>
-              <div>Longitude</div>
-              <div secondary>{{item.longitude}}</div>
-            </paper-item-body>
-          </paper-item>
-          <paper-item>
-            <paper-item-body two-line>
-              <div>Range</div>
-              <div secondary>{{item.rangeLimit}}</div>
-            </paper-item-body>
-          </paper-item>
-      </google-map-marker>
-    </template>
+        <paper-toolbar>
+          <span class="title">Antennas</span>
+        </paper-toolbar>
+
+        <div role="listbox">
+          <template is="dom-repeat" items="[[antennas]]">
+            <paper-item>
+              <paper-item-body two-line>
+                <div>{{item.name}}</div>
+                <div secondary>
+                  <p><em>Serial number:</em> {{item.serialNumber}}</p>
+                  <p><em>Latitude:</em> {{item.latitude}}</p>
+                  <p><em>Longitude:</em> {{item.longitude}}</p>
+                  <p><em>Range:</em> {{item.rangeLimit}}</p>
+                </div>
+              </paper-item-body>
+            </paper-item>
+          </template>
+        </div>
+      </div>
+
+      <div main>
+        <google-map
+          map="{{map}}"
+          latitude="[[selectedAntenna.latitude]]"
+          longitude="[[selectedAntenna.longitude]]"
+          api-key="{{constants.apiKeys.mapsApiKey}}"></google-map>
+
+        <template is="dom-repeat" items="[[antennas]]">
+          <google-map-marker
+            map="{{map}}"
+            latitude="[[item.latitude]]"
+            longitude="[[item.longitude]]"
+            title="[[item.name]]"
+            draggable="false"
+            click-events="true"
+            data="[[item.id]]"
+            on-google-map-marker-dblclick="_handleDbClickMarker"></google-map-marker>
+        </template>
+      </div>
+    </paper-drawer-panel>
+
+
 
     <!--<paper-material elevation="2" class="">
       <vaadin-grid selection-mode="single">
@@ -181,7 +198,7 @@
         return response.items;
       },
 
-      _handleDbClickMarker: function (e, o) {
+      _handleDbClickMarker: function (e) {
         this.editAntenna(e.currentTarget.data);
       },
 
