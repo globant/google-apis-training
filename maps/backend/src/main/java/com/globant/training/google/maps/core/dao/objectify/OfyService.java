@@ -9,6 +9,7 @@ import com.globant.training.google.maps.device.entity.Device;
 import com.globant.training.google.maps.device.entity.GpsDevice;
 import com.globant.training.google.maps.device.entity.RfidDevice;
 import com.globant.training.google.maps.item.entity.Item;
+import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
 import com.globant.training.google.maps.user.entity.AppUser;
 
 /**
@@ -31,6 +32,7 @@ public class OfyService {
     
     ObjectifyService.register(Antenna.class);
     ObjectifyService.register(Item.class);
+    ObjectifyService.register(TrackPoint.class);
   }
 
   /**
