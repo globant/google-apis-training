@@ -1,62 +1,121 @@
-//Polymer components
+<!--Polymer components-->
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/paper-material/paper-material.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-styles/color.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 
-<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<!--Maps components-->
+<link rel="import" href="maps-request.html">
 
 <dom-module id="maps-devices">
   <template>
     <style include="iron-flex iron-flex-alignment">
-      .container {
-        padding: 10px;
-      }
-
       paper-fab {
         position: fixed;
         right: 25px;
         bottom: 30px;
       }
+
+      paper-card {
+        width: 100%;
+      }
+
+      iron-list {
+        padding-top: 10px;
+        --iron-list-items-container: {
+          max-width: 800px;
+          margin: auto;
+          margin-top: 10px;
+          margin-bottom: 10px;
+        };
+      }
+
+      .card-actions {
+        @apply(--layout-horizontal);
+        @apply(--layout-end-justified);
+      }
+
+      .item {
+        @apply(--layout-horizontal);
+        padding: 20px;
+        background-color: white;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        margin-bottom: 10px;
+      }
+
+      .item.expanded {
+        background-color: transparent;
+        cursor: pointer;
+        padding: 10px 0;
+      }
+
+      .primary {
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .shortView {
+        width: 100%;
+        @apply(--layout-horizontal);
+        @apply(--layout-justified);
+      }
+
+      .longView {
+        color: gray;
+        display: none;
+      }
+
+      .item:hover .primary::after {
+        content: ' [+]';
+        color: gray;
+      }
+
+      .item.expanded:hover .primary::after {
+        content: ' [–]';
+      }
+
+      .item.expanded .longView {
+        display: block;
+      }
+
+      .item.expanded .shortView {
+        display: none;
+      }
     </style>
 
-    <div class="container">
-      <paper-material elevation="2" class="flex">
-        <vaadin-grid selection-mode="single">
-          <table>
-            <colgroup>
-              <col>
-              <col>
-              <col>
-              <col>
-              <col>
-              <col>
-            </colgroup>
-            <thead>
-            <tr>
-              <th>Antenna ID</th>
-              <th>Serial Number</th>
-              <th>Latitude</th>
-              <th>Longitude</th>
-              <th>Range</th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <template is="dom-repeat" items="[[antennas.items]]">
-              <tr>
-                <td>{{item.name}}</td>
-                <td>{{item.serialNumber}}</td>
-                <td>{{item.latitude}}</td>
-                <td>{{item.longitude}}</td>
-                <td>{{item.rangeLimit}}</td>
-                <td>{{item.id}}</td>
-              </tr>
-            </template>
-            </tbody>
-          </table>
-        </vaadin-grid>
-      </paper-material>
-    </div>
+    <maps-request id="devices"
+      user="[[user]]"
+      endpoint="/devices"
+      method="GET"
+      data="{{devices}}"
+      load-with-view></maps-request>
+
+
+    <iron-list id="list" items="[[devices.items]]" as="device" selection-enabled>
+      <template>
+        <div class$="item [[getClassForItem(device, selected)]]">
+          <div class="shortView" tabindex$="[[tabIndex]]">
+            <div class="primary">[[device.name]]</div>
+            <div>[[device.type]]</div>
+          </div>
+
+          <paper-card class="longView" heading="[[device.name]]">
+            <div class="card-content">Some content</div>
+            <div class="card-actions">
+              <paper-button> Action 1 </paper-button>
+              <paper-button> Action 2 </paper-button>
+            </div>
+          </paper-card>
+        </div>
+      </template>
+    </iron-list>
 
     <paper-fab icon="add" on-tap="addNewAntenna"></paper-fab>
   </template>
@@ -68,7 +127,18 @@
       behaviors: [
         MapsBehaviors.ViewBehavior,
         MapsBehaviors.ConstantsBehavior
-      ]
+      ],
+
+      attached: function() {
+        // Use the document element
+        this.$.list.scrollTarget = this.ownerDocument.documentElement;
+      },
+      iconForItem: function(item) {
+        return item ? (item.integer < 50 ? 'star-border' : 'star') : '';
+      },
+      getClassForItem: function(item, selected) {
+        return selected ? 'expanded' : '';
+      }
     });
   </script>
 </dom-module>
