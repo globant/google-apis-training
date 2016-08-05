@@ -36,6 +36,17 @@
         };
       }
 
+      paper-card {
+        --paper-card-header: {
+          border-bottom: 1px solid #e8e8e8;
+        }
+      }
+
+      .card-content {
+        @apply(--layout-horizontal);
+        @apply(--layout-around-justified);
+      }
+
       .card-actions {
         @apply(--layout-horizontal);
         @apply(--layout-end-justified);
@@ -72,15 +83,6 @@
         display: none;
       }
 
-      .item:hover .primary::after {
-        content: ' [+]';
-        color: gray;
-      }
-
-      .item.expanded:hover .primary::after {
-        content: ' [–]';
-      }
-
       .item.expanded .longView {
         display: block;
       }
@@ -88,7 +90,13 @@
       .item.expanded .shortView {
         display: none;
       }
+
+      div p {
+        margin: 0;
+      }
     </style>
+
+    <iron-location hash="{{hash}}"></iron-location>
 
     <maps-request id="devices"
       user="[[user]]"
@@ -96,6 +104,11 @@
       method="GET"
       data="{{devices}}"
       load-with-view></maps-request>
+
+    <maps-request id="deviceDelete"
+      user="[[user]]"
+      endpoint="/devices/[[deviceToDelete]]"
+      method="DELETE"></maps-request>
 
 
     <iron-list id="list" items="[[devices.items]]" as="device" selection-enabled>
@@ -106,18 +119,23 @@
             <div>[[device.type]]</div>
           </div>
 
-          <paper-card class="longView" heading="[[device.name]]">
-            <div class="card-content">Some content</div>
+          <paper-card class="longView" heading="[[device.name]]" elevation="2">
+            <div class="card-content">
+              <span><em>Name:</em> {{device.name}}</span>
+              <span><em>Type:</em> {{device.type}}</span>
+              <span><em>Serial number:</em> {{device.attributtes.serialNumber}}</span>
+              <span><em>Manufacturer:</em> {{device.attributtes.manufacturer}}</span>
+            </div>
             <div class="card-actions">
-              <paper-button> Action 1 </paper-button>
-              <paper-button> Action 2 </paper-button>
+              <paper-icon-button icon="chevron-right" device-id="[[device.id]]" on-tap="editDevice"></paper-icon-button>
+              <paper-icon-button icon="close" device-id="[[device.id]]" on-tap="removeDevice"></paper-icon-button>
             </div>
           </paper-card>
         </div>
       </template>
     </iron-list>
 
-    <paper-fab icon="add" on-tap="addNewAntenna"></paper-fab>
+    <paper-fab icon="add" on-tap="addDevice"></paper-fab>
   </template>
 
   <script>
@@ -130,14 +148,29 @@
       ],
 
       attached: function() {
-        // Use the document element
         this.$.list.scrollTarget = this.ownerDocument.documentElement;
       },
+
       iconForItem: function(item) {
         return item ? (item.integer < 50 ? 'star-border' : 'star') : '';
       },
+
       getClassForItem: function(item, selected) {
         return selected ? 'expanded' : '';
+      },
+
+      addDevice: function () {
+        this.hash = '/device/create';
+      },
+
+      editDevice: function (e) {
+        this.hash = '/device/edit/' + e.currentTarget.deviceId;
+      },
+
+      removeDevice: function (e) {
+        this.deviceToDelete = e.currentTarget.deviceId;
+        this.$.deviceDelete.generateRequest();
+        this.$.devices.generateRequest();
       }
     });
   </script>
