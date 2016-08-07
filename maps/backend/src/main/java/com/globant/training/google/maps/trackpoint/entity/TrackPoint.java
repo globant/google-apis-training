@@ -1,10 +1,13 @@
 package com.globant.training.google.maps.trackpoint.entity;
 
-import java.util.Date;
-import java.util.Map;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Ignore;
+import com.googlecode.objectify.annotation.Index;
 
 import com.globant.training.google.maps.core.entity.BaseEntity;
-import com.globant.training.google.maps.device.entity.Device;
+
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Class to represents the track points sent it by the devices
@@ -12,9 +15,11 @@ import com.globant.training.google.maps.device.entity.Device;
  * @author gabriel.sideri
  *
  */
+@Entity
 public class TrackPoint extends BaseEntity {
 
-  private Device device;
+  @Index
+  private Long deviceId;
 
   private Double latitude;
 
@@ -25,23 +30,26 @@ public class TrackPoint extends BaseEntity {
   private Date savedDate;
   
   private Map<String, String> context;
+  
+  @Ignore
+  public static final String DEVICE_ID_FIELD = "deviceId";
 
   /**
-   * Get the Device associated with the Tack Point.
+   * Gets the device id associated with the Tack Point.
    * 
-   * @return the Device
+   * @return the Device Id
    */
-  public Device getDevice() {
-    return device;
+  public Long getDeviceId() {
+    return deviceId;
   }
 
   /**
-   * Sets the Device associated with the Track Point.
+   * Sets the Device Id associated with the Track Point.
    * 
-   * @param device the device
+   * @param deviceId the device id
    */
-  public void setDevice(Device device) {
-    this.device = device;
+  public void setDeviceId(Long deviceId) {
+    this.deviceId = deviceId;
   }
 
   /**

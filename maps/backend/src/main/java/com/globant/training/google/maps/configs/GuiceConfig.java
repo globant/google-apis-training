@@ -26,6 +26,11 @@ import com.globant.training.google.maps.item.dao.objectify.ItemOfyDao;
 import com.globant.training.google.maps.item.endpoint.ItemEndpoint;
 import com.globant.training.google.maps.item.service.ItemService;
 import com.globant.training.google.maps.item.service.ItemServiceImpl;
+import com.globant.training.google.maps.trackpoint.dao.TrackPointDao;
+import com.globant.training.google.maps.trackpoint.dao.objectify.TrackPointOfyDao;
+import com.globant.training.google.maps.trackpoint.endpoint.TrackPointEndpoint;
+import com.globant.training.google.maps.trackpoint.service.TrackPointService;
+import com.globant.training.google.maps.trackpoint.service.TrackPointServiceImpl;
 import com.globant.training.google.maps.user.dao.UserDao;
 import com.globant.training.google.maps.user.dao.objectify.UserOfyDao;
 import com.globant.training.google.maps.user.endpoint.UserEndpoint;
@@ -66,6 +71,7 @@ public class GuiceConfig extends GuiceServletContextListener {
       serviceClasses.add(AntennaEndpoint.class);
       serviceClasses.add(DeviceEndpoint.class);
       serviceClasses.add(ItemEndpoint.class);
+      serviceClasses.add(TrackPointEndpoint.class);
 
       this.serveGuiceSystemServiceServlet("/_ah/spi/*", serviceClasses);
 
@@ -88,6 +94,7 @@ public class GuiceConfig extends GuiceServletContextListener {
       bind(AntennaDao.class).to(AntennaOfyDao.class);
       bind(DeviceDao.class).to(DeviceOfyDao.class);
       bind(ItemDao.class).to(ItemOfyDao.class);
+      bind(TrackPointDao.class).to(TrackPointOfyDao.class);
 
       // Service Definitions
       bind(UserService.class).annotatedWith(Names.named("userService")).to(UserServiceImpl.class);
@@ -95,6 +102,7 @@ public class GuiceConfig extends GuiceServletContextListener {
       bind(ItemService.class).to(ItemServiceImpl.class);
       bind(DeviceService.class).annotatedWith(Names.named("deviceService"))
           .to(DeviceServiceImpl.class);
+      bind(TrackPointService.class).to(TrackPointServiceImpl.class);
 
     }
 

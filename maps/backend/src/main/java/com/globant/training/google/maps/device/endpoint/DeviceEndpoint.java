@@ -5,10 +5,16 @@ import java.util.List;
 
 import javax.inject.Named;
 
+import com.globant.training.google.maps.antenna.endpoint.dtos.AntennaDto;
+import com.globant.training.google.maps.antenna.entity.Antenna;
 import com.globant.training.google.maps.configs.Constants;
 import com.globant.training.google.maps.device.endpoint.dtos.device.DeviceDto;
 import com.globant.training.google.maps.device.entity.Device;
 import com.globant.training.google.maps.device.service.DeviceService;
+import com.globant.training.google.maps.trackpoint.endpoint.dtos.TrackPointDto;
+import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
+import com.globant.training.google.maps.trackpoint.service.TrackPointService;
+
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
@@ -29,14 +35,18 @@ public class DeviceEndpoint {
 
   private DeviceService deviceService;
 
+  private TrackPointService trackPointService;
+
   /**
    * Constructor.
    * 
    * @param deviceService the device service.
    */
   @Inject
-  public DeviceEndpoint(@Named("deviceService") DeviceService deviceService) {
+  public DeviceEndpoint(@Named("deviceService") DeviceService deviceService,
+      TrackPointService trackPointService) {
     this.deviceService = deviceService;
+    this.trackPointService = trackPointService;
   }
 
   /**
@@ -72,7 +82,7 @@ public class DeviceEndpoint {
 
     return updatedDto.fromEntity(savedDevice);
   }
-  
+
   /**
    * Get an device by id.
    * 
@@ -89,7 +99,7 @@ public class DeviceEndpoint {
 
     return dto.fromEntity(device);
   }
-  
+
   /**
    * Find devices.
    * 
@@ -98,7 +108,7 @@ public class DeviceEndpoint {
   @ApiMethod(name = "devices.find", path = "devices", httpMethod = HttpMethod.GET)
   public List<DeviceDto> findAntennas() throws OAuthRequestException {
 
-    //TODO move to builder or helper.
+    // TODO move to builder or helper.
     List<Device> devices = deviceService.getAll();
     List<DeviceDto> deviceDtos = new ArrayList<>();
 
@@ -112,15 +122,43 @@ public class DeviceEndpoint {
     return deviceDtos;
 
   }
-  
+
   /**
    * Delete Device by id.
    */
-  @ApiMethod(name = "devices.delete", path = "devices/{deviceId}",
-      httpMethod = HttpMethod.DELETE)
+  @ApiMethod(name = "devices.delete", path = "devices/{deviceId}", httpMethod = HttpMethod.DELETE)
   public void deleteAntenna(@Named("deviceId") final Long deviceId) {
 
     deviceService.deleteById(deviceId);
+
+  }
+
+  /**
+   * Get track points by device id.
+   * 
+   * @param deviceId the id to be found
+   * @return List of {@link TrackPointDto}
+   * @throws NotFoundException if none device found for provided id
+   */
+  @ApiMethod(name = "trackpoint.get.by.device.id", path = "devices/{deviceId}/trackpoints",
+      httpMethod = HttpMethod.GET)
+  public List<TrackPointDto> getTrackPointsByDeviceIds(@Named("deviceId") final Long deviceId)
+      throws NotFoundException {
+
+    Device device = deviceService.findById(deviceId);
+
+    List<TrackPoint> trackPoints = trackPointService.findTrackPointsByDeviceId(device.getId());
+    List<TrackPointDto> trackPointsDto = new ArrayList<>();
+
+    for (TrackPoint trackPoint : trackPoints) {
+
+      TrackPointDto trackPointDto = new TrackPointDto();
+      trackPointDto.fromEntity(trackPoint);
+      trackPointsDto.add(trackPointDto);
+
+    }
+
+    return trackPointsDto;
 
   }
 
