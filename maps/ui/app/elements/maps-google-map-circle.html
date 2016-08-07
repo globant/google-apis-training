@@ -1,0 +1,103 @@
+//Polymer components
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/google-apis/google-maps-api.html">
+
+<dom-module id="maps-google-map-circle">
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'maps-google-map-circle',
+
+      properties: {
+        circle: {
+          type: Object,
+          notify: true
+        },
+
+        map: {
+          type: Object,
+          observer: '_mapChanged'
+        },
+
+        longitude: {
+          type: Number,
+          value: null,
+          notify: true
+        },
+
+        latitude: {
+          type: Number,
+          value: null,
+          notify: true
+        },
+
+        radius: {
+          type: Number,
+          value: null,
+          notify: true,
+          _observer: '_updateRadius'
+        }
+      },
+
+      observers: [
+        '_updatePosition(latitude, longitude)'
+      ],
+
+      detached: function() {
+        if (this.circle) {
+          this.circle.setMap(null);
+        }
+        if (this._contentObserver)
+          this._contentObserver.disconnect();
+      },
+
+      attached: function() {
+        // If element is added back to DOM, put it back on the map.
+        if (this.circle) {
+          this.circle.setMap(this.map);
+        }
+      },
+
+      _updatePosition: function() {
+        if (this.circle && this.latitude != null && this.longitude != null) {
+          this.circle.setPosition(new google.maps.LatLng(
+            parseFloat(this.latitude), parseFloat(this.longitude)));
+        }
+      },
+
+      _updateRadius: function () {
+        if (this.circle && this.radius != null) {
+          this.circle.setRadius(parseFloat(this.radius));
+        }
+      },
+
+      _mapChanged: function() {
+        if (this.circle) {
+          this.circle.setMap(null);
+        }
+        if (this.map && this.map instanceof google.maps.Map) {
+          this._mapReady();
+        }
+      },
+
+      _mapReady: function() {
+        this.circle = new google.maps.Circle({
+          map: this.map,
+          radius: parseFloat(this.radius),
+          center: {
+            lat: parseFloat(this.latitude),
+            lng: parseFloat(this.longitude)
+          },
+          fillColor: '#00AA00'
+        });
+      }
+    });
+  </script>
+</dom-module>

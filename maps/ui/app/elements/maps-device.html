@@ -96,10 +96,10 @@
                 error-message="This field is required"
                 value="{{device.name}}"></paper-input>
 
-              <paper-dropdown-menu label="Dinosaurs" required>
-                <paper-listbox class="dropdown-content" selected="{{device.type}}">
-                  <paper-item>GPS</paper-item>
-                  <paper-item>RFID</paper-item>
+              <paper-dropdown-menu label="Device type" required>
+                <paper-listbox class="dropdown-content" attr-for-selected="option" selected="{{device.type}}" selection-enabled>
+                  <paper-item option="GPS">GPS</paper-item>
+                  <paper-item option="RFID">RFID</paper-item>
                 </paper-listbox>
               </paper-dropdown-menu>
 
@@ -111,7 +111,7 @@
                 error-message="This field is required"
                 value="{{device.attributtes.serialNumber}}"></paper-input>
 
-              <paper-input
+              <paper-input id="manufacturer"
                 label="Manufacturer"
                 type="text"
                 required
@@ -144,7 +144,7 @@
           type: Object,
           value: {
             name: '',
-            type: 'GPS',
+            type: '',
             attributtes: {
               serialNumber: '',
               manufacturer: ''
@@ -163,12 +163,31 @@
         MapsBehaviors.ConstantsBehavior
       ],
 
+      observers: [
+        '_deviceSelected(device.type)'
+      ],
+
       listeners: {
         'view-activated': '_handleViewActivated'
       },
 
       _submit: function () {
-        this.body = JSON.stringify(this.device);
+        var requestBody = {};
+
+        requestBody.name = this.device.name;
+        requestBody.type = this.device.type;
+        if(this.device.type === 'GPS') {
+          requestBody.attributtes = {
+            serialNumber: this.device.attributtes.serialNumber
+          }
+        } else {
+          requestBody.attributtes = {
+            rfidId: this.device.attributtes.serialNumber,
+            manufacturer: this.device.attributtes.manufacturer
+          }
+        }
+
+        this.body = JSON.stringify(requestBody);
         if(this.routeData.action === 'create') {
           this.$.deviceCreate.generateRequest();
         } else {
@@ -187,9 +206,17 @@
       _handleViewActivated: function () {
         if(this.routeData.action === 'edit') {
           this.$.deviceFind.generateRequest();
+        } else {
+          this.$$('form').reset();
         }
+      },
 
-        this.$$('form').reset();
+      _deviceSelected: function (deviceType) {
+        if (deviceType === 'RFID') {
+          this.$.manufacturer.toggleAttribute('hidden', false);
+        } else {
+          this.$.manufacturer.toggleAttribute('hidden', true);
+        }
       }
     });
   </script>

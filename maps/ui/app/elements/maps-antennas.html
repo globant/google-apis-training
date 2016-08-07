@@ -16,6 +16,7 @@
 
 //Maps components
 <link rel="import" href="maps-request.html">
+<link rel="import" href="maps-google-map-circle.html">
 
 //Maps behaviours
 <link rel="import" href="behaviors/maps-view-behavior.html">
@@ -39,7 +40,7 @@
       paper-material {
         position: absolute;
         top: 0;
-        left: -40px;
+        left: -80px;
         background-color: white;
         visibility: visible;
       }
@@ -51,11 +52,11 @@
       paper-fab {
         position: fixed;
         right: 25px;
-        bottom: 30px;
+        top: 35px;
       }
 
       div[secondary] p {
-        margin: 0;
+        margin: 5px;
       }
     </style>
 
@@ -77,6 +78,7 @@
       <div drawer>
         <paper-material elevation="2">
           <paper-icon-button icon="{{_iconDrawer}}" paper-drawer-toggle></paper-icon-button>
+          <paper-icon-button icon="icons:settings-input-antenna" paper-drawer-toggle></paper-icon-button>
         </paper-material>
 
         <paper-toolbar>
@@ -95,15 +97,16 @@
                     <p><em>Longitude:</em> {{item.longitude}}</p>
                     <p><em>Range:</em> {{item.rangeLimit}}</p>
                   </div>
-                  <div class="layout vertical">
-                    <paper-icon-button icon='chevron-right' antenna-id="{{item.id}}" on-tap="editAntenna"></paper-icon-button>
-                    <paper-icon-button icon='close' antenna-id="{{item.id}}" on-tap="removeAntenna"></paper-icon-button>
+                  <div class="layout vertical justified">
+                    <paper-icon-button icon="create" antenna-id="{{item.id}}" on-tap="editAntenna"></paper-icon-button>
+                    <paper-icon-button icon="delete" antenna-id="{{item.id}}" on-tap="removeAntenna"></paper-icon-button>
                   </div>
                 </div>
               </paper-item-body>
             </paper-item>
           </template>
         </paper-listbox>
+        <paper-fab icon="add" on-tap="addAntenna"></paper-fab>
       </div>
 
       <div main>
@@ -123,10 +126,15 @@
             click-events="true"
             data="[[item.id]]"
             on-google-map-marker-dblclick="_handleDbClickMarker"></google-map-marker>
+
+          <maps-google-map-circle
+            map="{{map}}"
+            latitude="[[item.latitude]]"
+            longitude="[[item.longitude]]"
+            radius="[[item.rangeLimit]]"></maps-google-map-circle>
         </template>
       </div>
     </paper-drawer-panel>
-    <paper-fab icon="add" on-tap="addNewAntenna"></paper-fab>
   </template>
 
   <script>
@@ -192,7 +200,8 @@
         return selected;
       },
 
-      addNewAntenna: function () {
+      addAntenna: function () {
+        this.$.antennasList.closeDrawer();
         this.hash = '/antenna/create';
       },
 

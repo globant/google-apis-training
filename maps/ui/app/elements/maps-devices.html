@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-styles/shadow.html">
 
 <!--Maps components-->
 <link rel="import" href="maps-request.html">
@@ -61,10 +62,15 @@
         margin-bottom: 10px;
       }
 
+      .item:hover {
+        @apply(--shadow-transition);
+        @apply(--shadow-elevation-3dp);
+      }
+
       .item.expanded {
         background-color: transparent;
         cursor: pointer;
-        padding: 10px 0;
+        padding: 20px 0;
       }
 
       .primary {
@@ -119,12 +125,13 @@
             <div>[[device.type]]</div>
           </div>
 
-          <paper-card class="longView" heading="[[device.name]]" elevation="2">
+          <paper-card class="longView" heading="[[device.name]]" elevation="5">
             <div class="card-content">
               <span><em>Name:</em> {{device.name}}</span>
               <span><em>Type:</em> {{device.type}}</span>
-              <span><em>Serial number:</em> {{device.attributtes.serialNumber}}</span>
-              <span><em>Manufacturer:</em> {{device.attributtes.manufacturer}}</span>
+              <span hidden="[[!device.attributtes.serialNumber]]"><em>Serial number:</em> {{device.attributtes.serialNumber}}</span>
+              <span hidden="[[!device.attributtes.rfidId]]"><em>RFID ID:</em> {{device.attributtes.rfidId}}</span>
+              <span hidden="[[!device.attributtes.manufacturer]]"><em>Manufacturer:</em> {{device.attributtes.manufacturer}}</span>
             </div>
             <div class="card-actions">
               <paper-icon-button icon="chevron-right" device-id="[[device.id]]" on-tap="editDevice"></paper-icon-button>
@@ -141,6 +148,10 @@
   <script>
     Polymer({
       is: 'maps-devices',
+
+      properties: {
+        type: Object
+      },
 
       behaviors: [
         MapsBehaviors.ViewBehavior,
@@ -168,9 +179,11 @@
       },
 
       removeDevice: function (e) {
+        var self = this;
         this.deviceToDelete = e.currentTarget.deviceId;
-        this.$.deviceDelete.generateRequest();
-        this.$.devices.generateRequest();
+        this.$.deviceDelete.generateRequest().completes.then(function () {
+          self.$.devices.generateRequest();
+        });
       }
     });
   </script>
