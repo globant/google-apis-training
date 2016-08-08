@@ -89,4 +89,15 @@ public class ItemServiceImpl implements ItemService {
     itemDao.delete(id);
   }
 
+  @Override
+  public Item findItemByDeviceId(Long deviceId) {
+    Item item = itemDao.findItemByDeviceId(deviceId);
+
+    if (item == null) {
+      throw new RuntimeException("Item Not Found for the device id: " + deviceId);
+    }
+
+    return item;
+  }
+
 }

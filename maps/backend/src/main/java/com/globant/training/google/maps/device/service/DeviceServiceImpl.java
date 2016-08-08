@@ -1,10 +1,11 @@
 package com.globant.training.google.maps.device.service;
 
-import java.util.List;
+import com.google.inject.Inject;
 
 import com.globant.training.google.maps.device.daos.DeviceDao;
 import com.globant.training.google.maps.device.entity.Device;
-import com.google.inject.Inject;
+
+import java.util.List;
 
 /**
  * {@link DeviceService} Implementation
@@ -16,9 +17,9 @@ public class DeviceServiceImpl implements DeviceService {
   private final DeviceDao deviceDao;
 
   @Inject
-  public DeviceServiceImpl(DeviceDao DeviceDao) {
+  public DeviceServiceImpl(DeviceDao deviceDao) {
     super();
-    this.deviceDao = DeviceDao;
+    this.deviceDao = deviceDao;
   }
 
   @Override
@@ -57,8 +58,8 @@ public class DeviceServiceImpl implements DeviceService {
   }
 
   @Override
-  public Device create(Device Device) {
-    return deviceDao.put(Device);
+  public Device create(Device device) {
+    return deviceDao.put(device);
   }
 
   @Override

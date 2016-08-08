@@ -20,6 +20,9 @@ public class TrackPoint extends BaseEntity {
 
   @Index
   private Long deviceId;
+ 
+  @Index
+  private Long itemId;
 
   private Double latitude;
 
@@ -140,6 +143,24 @@ public class TrackPoint extends BaseEntity {
    */
   public void setContext(Map<String, String> context) {
     this.context = context;
+  }
+
+  /**
+   * Gets item id.
+   * 
+   * @return the item id
+   */
+  public Long getItemId() {
+    return itemId;
+  }
+
+  /**
+   * Sets the item id.
+   * 
+   * @param itemId the item id
+   */
+  public void setItemId(Long itemId) {
+    this.itemId = itemId;
   }
 
 }

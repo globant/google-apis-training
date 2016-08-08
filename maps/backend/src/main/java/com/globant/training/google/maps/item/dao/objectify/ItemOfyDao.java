@@ -16,4 +16,9 @@ public class ItemOfyDao extends BaseOfyDao<Item> implements ItemDao {
     super(Item.class);
   }
 
+  @Override
+  public Item findItemByDeviceId(Long deviceId) {
+    return this.query().filter(Item.DEVICE_ID_FIELD, deviceId).first().now();
+  }
+  
 }

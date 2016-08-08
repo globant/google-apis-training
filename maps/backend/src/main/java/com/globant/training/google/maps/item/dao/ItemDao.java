@@ -42,4 +42,12 @@ public interface ItemDao {
    */
   void delete(Long id);
   
+  /**
+   * Find item by device id.
+   * 
+   * @param deviceId the device id associated.
+   * @return the item
+   */
+  Item findItemByDeviceId(Long deviceId);
+  
 }
