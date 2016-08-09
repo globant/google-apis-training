@@ -1,8 +1,8 @@
 package com.globant.training.google.maps.device.service;
 
-import java.util.List;
-
 import com.globant.training.google.maps.device.entity.Device;
+
+import java.util.List;
 
 /**
  * Interface to expose {@link DeviceService} operations
@@ -31,18 +31,18 @@ public interface DeviceService {
   /** 
    * Updates a Device.
    * 
-   * @param Device the Device
+   * @param device the Device
    * @return the Device persisted
    */
-  Device update(Long id, Device Device);
+  Device update(Long id, Device device);
   
   /** 
    * Creates a device.
    * 
-   * @param Device the Device
+   * @param device the Device
    * @return the Device persisted
    */
-  Device create(Device Device);
+  Device create(Device device);
   
   /**
    * Delete device by id.

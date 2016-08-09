@@ -20,6 +20,8 @@ public class TrackPointDto implements Dto<TrackPoint, TrackPointDto> {
 
   @NotNull
   private Long deviceId;
+  
+  private Long itemId;
 
   @NotNull
   private Double latitude;

@@ -39,4 +39,12 @@ public interface ItemService {
    * @param id the Item id
    */
   void deleteById(Long id);
+  
+  /**
+   * Find item by device id.
+   * 
+   * @param id the device id associated.
+   * @return the item
+   */
+  Item findItemByDeviceId(Long id);
 }

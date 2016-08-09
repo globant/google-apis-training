@@ -1,6 +1,8 @@
 package com.globant.training.google.maps.item.entity;
 
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Ignore;
+import com.googlecode.objectify.annotation.Index;
 
 import com.globant.training.google.maps.core.entity.BaseEntity;
 
@@ -16,6 +18,7 @@ public class Item extends BaseEntity {
 
   private String name;
 
+  @Index
   private Long deviceId;
 
   private boolean active;
@@ -24,6 +27,9 @@ public class Item extends BaseEntity {
 
   private Date lastUpdated;
 
+  @Ignore
+  public static final String DEVICE_ID_FIELD = "deviceId";
+  
   /**
    * Gets item´s name.
    * 
