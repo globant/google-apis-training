@@ -10,13 +10,12 @@ import com.google.inject.Inject;
 
 import com.globant.training.google.maps.configs.Constants;
 import com.globant.training.google.maps.core.endpoint.BaseEndpoint;
-import com.globant.training.google.maps.item.dtos.ItemDto;
+import com.globant.training.google.maps.item.endpoint.dtos.ItemDto;
 import com.globant.training.google.maps.item.entity.Item;
 import com.globant.training.google.maps.item.service.ItemService;
 import com.globant.training.google.maps.user.entity.AppUser;
 import com.globant.training.google.maps.user.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Named;
@@ -55,7 +54,7 @@ public class ItemEndpoint extends BaseEndpoint {
    * @throws NotFoundException if none item found for provided id
    */
   @ApiMethod(name = "items.get", path = "items/{itemId}", httpMethod = HttpMethod.GET)
-  public ItemDto getItem(@Named("itemId") final Long itemId, User user)
+  public Item getItem(@Named("itemId") final Long itemId, User user)
       throws OAuthRequestException {
 
     AppUser loggedUser = loginUser(user);
@@ -70,65 +69,45 @@ public class ItemEndpoint extends BaseEndpoint {
       throw new RuntimeException("Item Not Found");
     }
 
-    ItemDto response = new ItemDto();
-    response.fromEntity(item);
-
-    return response;
+    return item;
   }
 
   /**
    * Add Item.
-   * 
-   * @param itemDto the item request
-   * @return itemDto the item persisted with id
+   *
+   * @param user provided user.
+   * @param itemToSave the item request
+   * @return item the item persisted with id
    * @throws OAuthRequestException returns a exception if the user is not authenticated
    */
   @ApiMethod(name = "items.add", path = "items", httpMethod = HttpMethod.POST)
-  public ItemDto addItem(ItemDto itemDto, User user) throws OAuthRequestException {
+  public Item addItem(User user, Item itemToSave) throws OAuthRequestException {
 
-    AppUser loggedUser = loginUser(user);
+    validateAdmin(user);
 
-    if (!loggedUser.isAdmin()) {
-      throw new RuntimeException("User not authorized");
-    }
+    Item item = itemService.create(itemToSave);
 
-    Item item = itemService.save(itemDto.toEntity());
-    itemDto.fromEntity(item);
-
-    return itemDto;
+    return item;
   }
 
   /**
    * Modify Item.
    * 
-   * @param itemDto the item request
-   * @return itemDto the item dto
+   * @param user provided user.
+   * @param itemId item to update.
+   * @param itemToUpdate the item request
+   * @return item the item
    * @throws OAuthRequestException returns a exception if the user is not authenticated
    */
   @ApiMethod(name = "items.put", path = "items/{itemId}", httpMethod = HttpMethod.PUT)
-  public ItemDto modifyItem(@Named("itemId") final Long itemId, ItemDto itemDto,
-      User user) throws OAuthRequestException {
+  public Item modifyItem(User user, @Named("itemId") final Long itemId, Item itemToUpdate)
+      throws OAuthRequestException {
 
-    AppUser loggedUser = loginUser(user);
+    validateAdmin(user);
 
-    if (!loggedUser.isAdmin()) {
-      throw new RuntimeException("User not authorized");
-    }
+    Item item = itemService.update(itemId, itemToUpdate);
 
-    Item item = itemService.findById(itemId);
-
-    if (item == null) {
-      throw new RuntimeException("item Not Found");
-    }
-        
-    itemDto.setId(itemId);
-
-    item = itemService.save(itemDto.toEntity());
-
-    itemDto.setCreated(item.getCreated());
-    itemDto.setLastUpdated(item.getLastUpdated());
-
-    return itemDto;
+    return item;
   }
 
   /**
@@ -138,26 +117,13 @@ public class ItemEndpoint extends BaseEndpoint {
    * @throws OAuthRequestException returns a exception if the user is not authenticated
    */
   @ApiMethod(name = "items.find", path = "items", httpMethod = HttpMethod.GET)
-  public List<ItemDto> findItems(User user) throws OAuthRequestException {
+  public List<Item> findItems(User user) throws OAuthRequestException {
 
-    AppUser loggedUser = loginUser(user);
-
-    if (!loggedUser.isAdmin()) {
-      throw new RuntimeException("User not authorized");
-    }
+    validateAdmin(user);
 
     List<Item> items = itemService.getAll();
-    List<ItemDto> itemsDto = new ArrayList<>();
-
-    for (Item item : items) {
-
-      ItemDto itemDto = new ItemDto();
-      itemDto.fromEntity(item);
-      itemsDto.add(itemDto);
-
-    }
-
-    return itemsDto;
+    
+    return items;
 
   }
 
@@ -172,17 +138,7 @@ public class ItemEndpoint extends BaseEndpoint {
   public void deleteItem(@Named("itemId") final Long itemId, User user)
       throws OAuthRequestException {
 
-    AppUser loggedUser = loginUser(user);
-
-    if (!loggedUser.isAdmin()) {
-      throw new RuntimeException("User not authorized");
-    }
-
-    Item item = itemService.findById(itemId);
-
-    if (item == null) {
-      throw new RuntimeException("item Not Found");
-    }
+    validateAdmin(user);
 
     itemService.deleteById(itemId);
 

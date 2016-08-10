@@ -7,6 +7,7 @@ import com.globant.training.google.maps.device.service.DeviceService;
 import com.globant.training.google.maps.item.dao.ItemDao;
 import com.globant.training.google.maps.item.entity.Item;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Named;
@@ -53,11 +54,43 @@ public class ItemServiceImpl implements ItemService {
    * .item.entity.Item)
    */
   @Override
-  public Item save(Item item) {
+  public Item create(Item item) {
 
-    if (item.getDeviceId() != null) {
+    validateDevice(item.getDeviceId());
+    
+    Date now = new Date();
+    
+    item.setCreated(now);
+    item.setLastUpdated(now);
 
-      Device device = deviceService.findById(item.getDeviceId());
+    return itemDao.put(item);
+  }
+  
+  @Override
+  public Item update(Long id, Item item) {
+    
+    Item existingItem = findById(id);
+    
+    validateDevice(item.getDeviceId());
+    
+    item.setId(existingItem.getId());
+    item.setCreated(existingItem.getCreated());
+    item.setLastUpdated(new Date());
+
+    return itemDao.put(item);
+  }
+  
+  /**
+   * Validate if provided device id exists.
+   * If null provided not exception is thrown.
+   * 
+   * @param deviceId deviceId to validate.
+   * @throws RuntimeException is no device found.
+   */
+  private void validateDevice(Long deviceId) {
+    if (deviceId != null) {
+
+      Device device = deviceService.findById(deviceId);
 
       if (!device.isActive()) {
         throw new RuntimeException(
@@ -65,8 +98,6 @@ public class ItemServiceImpl implements ItemService {
       }
 
     }
-
-    return itemDao.put(item);
   }
 
   /*
@@ -76,7 +107,14 @@ public class ItemServiceImpl implements ItemService {
    */
   @Override
   public Item findById(Long id) {
-    return itemDao.get(id);
+    
+    Item item = itemDao.get(id);
+    
+    if (item == null) {
+      throw new RuntimeException("item Not Found");
+    }
+    
+    return item;
   }
 
   /*

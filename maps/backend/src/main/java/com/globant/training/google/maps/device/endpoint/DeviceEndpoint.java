@@ -1,26 +1,26 @@
 package com.globant.training.google.maps.device.endpoint;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Named;
-
-import com.globant.training.google.maps.antenna.endpoint.dtos.AntennaDto;
-import com.globant.training.google.maps.antenna.entity.Antenna;
-import com.globant.training.google.maps.configs.Constants;
-import com.globant.training.google.maps.device.endpoint.dtos.device.DeviceDto;
-import com.globant.training.google.maps.device.entity.Device;
-import com.globant.training.google.maps.device.service.DeviceService;
-import com.globant.training.google.maps.trackpoint.endpoint.dtos.TrackPointDto;
-import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
-import com.globant.training.google.maps.trackpoint.service.TrackPointService;
-
+import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.inject.Inject;
+
+import com.globant.training.google.maps.configs.Constants;
+import com.globant.training.google.maps.core.endpoint.BaseEndpoint;
+import com.globant.training.google.maps.device.entity.Device;
+import com.globant.training.google.maps.device.service.DeviceService;
+import com.globant.training.google.maps.trackpoint.endpoint.dtos.TrackPointDto;
+import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
+import com.globant.training.google.maps.trackpoint.service.TrackPointService;
+import com.globant.training.google.maps.user.service.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Named;
 
 /**
  * API endpoints for {@link device} operations.
@@ -31,7 +31,7 @@ import com.google.inject.Inject;
 @Api(name = "maps", version = "v1", scopes = {Constants.EMAIL_SCOPE},
     clientIds = {Constants.WEB_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID},
     description = "API for maps poc.")
-public class DeviceEndpoint {
+public class DeviceEndpoint extends BaseEndpoint {
 
   private DeviceService deviceService;
 
@@ -40,11 +40,14 @@ public class DeviceEndpoint {
   /**
    * Constructor.
    * 
-   * @param deviceService the device service.
+   * @param deviceService deviceService.
+   * @param trackPointService trackPointService.
+   * @param userService userService.
    */
   @Inject
-  public DeviceEndpoint(@Named("deviceService") DeviceService deviceService,
-      TrackPointService trackPointService) {
+  public DeviceEndpoint(DeviceService deviceService,
+      TrackPointService trackPointService, UserService userService) {
+    super(userService);
     this.deviceService = deviceService;
     this.trackPointService = trackPointService;
   }
@@ -52,82 +55,93 @@ public class DeviceEndpoint {
   /**
    * Add device.
    * 
-   * @param deviceDto the device request
-   * @return deviceDto the device persisted with id
+   * @param device the device request
+   * @return Device the device persisted with id
    */
   @ApiMethod(name = "devices.add", path = "devices", httpMethod = HttpMethod.POST)
-  public DeviceDto add(DeviceDto deviceDto) {
+  public Device add(Device device) {
 
-    Device savedDevice = deviceService.create(deviceDto.toEntity());
+    Device savedDevice = deviceService.create(device);
 
-    DeviceDto createdDto = new DeviceDto();
-
-    return createdDto.fromEntity(savedDevice);
+    return savedDevice;
   }
 
   /**
    * Modify Device by id.
    * 
+   * @param user provided user.
    * @param deviceId the id of device to be modified.
-   * @param deviceDto the dto request to update.
+   * @param device the dto request to update.
    * 
-   * @return deviceDto the device persisted with id
+   * @return Device the device persisted with id
+   * 
+   * @throws OAuthRequestException on authentication/authorization error.
    */
   @ApiMethod(name = "devices.put", path = "devices/{deviceId}", httpMethod = HttpMethod.PUT)
-  public DeviceDto update(@Named("deviceId") final Long deviceId, DeviceDto deviceDto) {
+  public Device update(User user, @Named("deviceId") final Long deviceId, Device device)
+      throws OAuthRequestException {
 
-    Device savedDevice = deviceService.update(deviceId, deviceDto.toEntity());
+    validateAdmin(user);
+    
+    Device savedDevice = deviceService.update(deviceId, device);
 
-    DeviceDto updatedDto = new DeviceDto();
-
-    return updatedDto.fromEntity(savedDevice);
+    return savedDevice;
   }
 
   /**
    * Get an device by id.
    * 
+   * @param user provided user.
    * @param deviceId the id to be found
    * @return {@link device}
+   * 
    * @throws NotFoundException if none device found for provided id
+   * @throws OAuthRequestException on authentication/authorization error.
    */
   @ApiMethod(name = "devices.get", path = "devices/{deviceId}", httpMethod = HttpMethod.GET)
-  public DeviceDto getDevice(@Named("deviceId") final Long deviceId) throws NotFoundException {
+  public Device getDevice(User user, @Named("deviceId") final Long deviceId)
+      throws NotFoundException, OAuthRequestException {
 
+    validateAdmin(user);
+    
     Device device = deviceService.findById(deviceId);
 
-    DeviceDto dto = new DeviceDto();
-
-    return dto.fromEntity(device);
+    return device;
   }
 
   /**
    * Find devices.
    * 
-   * @return List of {@link DeviceDto}
+   * @param user provided user.
+   * 
+   * @return List of {@link Device}
+   * 
+   * @throws OAuthRequestException on authentication/authorization error.
    */
   @ApiMethod(name = "devices.find", path = "devices", httpMethod = HttpMethod.GET)
-  public List<DeviceDto> findAntennas() throws OAuthRequestException {
-
-    // TODO move to builder or helper.
+  public List<Device> findAntennas(User user) throws OAuthRequestException {
+    
+    validateAdmin(user);
+    
     List<Device> devices = deviceService.getAll();
-    List<DeviceDto> deviceDtos = new ArrayList<>();
 
-    for (Device device : devices) {
-
-      DeviceDto deviceDto = new DeviceDto();
-      deviceDto.fromEntity(device);
-      deviceDtos.add(deviceDto);
-
-    }
-    return deviceDtos;
+    return devices;
 
   }
 
   /**
    * Delete Device by id.
+   * 
+   * @param user provided user.
+   * @param deviceId id to be deleted.
+   * 
+   * @throws OAuthRequestException on authentication/authorization error.
    */
   @ApiMethod(name = "devices.delete", path = "devices/{deviceId}", httpMethod = HttpMethod.DELETE)
-  public void deleteAntenna(@Named("deviceId") final Long deviceId) {
+  public void deleteAntenna(User user, @Named("deviceId") final Long deviceId)
+      throws OAuthRequestException {
+
+    validateAdmin(user);
 
     deviceService.deleteById(deviceId);
 
@@ -136,29 +150,25 @@ public class DeviceEndpoint {
   /**
    * Get track points by device id.
    * 
+   * @param user provided user.
    * @param deviceId the id to be found
    * @return List of {@link TrackPointDto}
+   * 
    * @throws NotFoundException if none device found for provided id
+   * @throws OAuthRequestException on authentication/authorization error.
    */
   @ApiMethod(name = "trackpoint.get.by.device.id", path = "devices/{deviceId}/trackpoints",
       httpMethod = HttpMethod.GET)
-  public List<TrackPointDto> getTrackPointsByDeviceIds(@Named("deviceId") final Long deviceId)
-      throws NotFoundException {
+  public List<TrackPoint> getTrackPointsByDeviceIds(User user,
+      @Named("deviceId") final Long deviceId) throws NotFoundException, OAuthRequestException {
 
+    validateAdmin(user);
+    
     Device device = deviceService.findById(deviceId);
 
     List<TrackPoint> trackPoints = trackPointService.findTrackPointsByDeviceId(device.getId());
-    List<TrackPointDto> trackPointsDto = new ArrayList<>();
 
-    for (TrackPoint trackPoint : trackPoints) {
-
-      TrackPointDto trackPointDto = new TrackPointDto();
-      trackPointDto.fromEntity(trackPoint);
-      trackPointsDto.add(trackPointDto);
-
-    }
-
-    return trackPointsDto;
+    return trackPoints;
 
   }
 

@@ -1,66 +1,31 @@
 package com.globant.training.google.maps.device.endpoint.dtos.device;
 
-import static com.globant.training.google.maps.core.endpoint.validation.DtoValidator.validate;
+import com.globant.training.google.maps.core.endpoint.dto.Dto;
+import com.globant.training.google.maps.device.entity.DeviceType;
 
-import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.validation.constraints.NotNull;
-
-import com.globant.training.google.maps.core.endpoint.dto.Dto;
-import com.globant.training.google.maps.device.endpoint.dtos.device.factory.DeviceFactory;
-import com.globant.training.google.maps.device.endpoint.dtos.device.factory.GpsFactory;
-import com.globant.training.google.maps.device.endpoint.dtos.device.factory.RfidFactory;
-import com.globant.training.google.maps.device.entity.Device;
-import com.globant.training.google.maps.device.entity.DeviceType;
 
 /**
  * Device DTO.
  * 
  * @author gaston.aguilera
  */
-public class DeviceDto implements Dto<Device, DeviceDto>, Serializable {
+public class DeviceDto implements Dto {
 
   private static final long serialVersionUID = 1L;
 
-  private static final Map<DeviceType, DeviceFactory> deviceFactoryMap;
-  static {
-    deviceFactoryMap = new HashMap<DeviceType, DeviceFactory>();
-    deviceFactoryMap.put(DeviceType.GPS, new GpsFactory());
-    deviceFactoryMap.put(DeviceType.RFID, new RfidFactory());
-  }
-
   private Long id;
 
-  @NotNull
   private String name;
 
-  @NotNull
   private DeviceType type;
   
   private boolean active;
 
   @NotNull
   private Map<String, String> attributtes;
-
-  @Override
-  public Device toEntity() {
-
-    validate(this);
-
-    return deviceFactoryMap.get(type).makeDevice(name, active, attributtes);
-  }
-  
-  @Override
-  public DeviceDto fromEntity(Device device) {
-    this.id = device.getId();
-    this.name = device.getName();
-    this.type = device.getType();
-    this.active = device.isActive();
-    this.attributtes = device.getAttributes();
-    return this;
-  }
 
   public Long getId() {
     return id;
@@ -78,28 +43,32 @@ public class DeviceDto implements Dto<Device, DeviceDto>, Serializable {
     return attributtes;
   }
 
-  public void setAttributtes(Map<String, String> attributtes) {
+  public DeviceDto setAttributtes(Map<String, String> attributtes) {
     this.attributtes = attributtes;
+    return this;
   }
 
-  public void setId(Long id) {
+  public DeviceDto setId(Long id) {
     this.id = id;
+    return this;
   }
 
-  public void setName(String name) {
+  public DeviceDto setName(String name) {
     this.name = name;
+    return this;
   }
 
-  public void setType(DeviceType type) {
+  public DeviceDto setType(DeviceType type) {
     this.type = type;
+    return this;
   }
 
   public boolean isActive() {
     return active;
   }
 
-  public void setActive(boolean active) {
+  public DeviceDto setActive(boolean active) {
     this.active = active;
+    return this;
   }
-  
 }

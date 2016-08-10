@@ -1,9 +1,10 @@
 package com.globant.training.google.maps.core.endpoint;
 
-import com.globant.training.google.maps.user.entity.AppUser;
-import com.globant.training.google.maps.user.service.UserService;
 import com.google.api.server.spi.auth.common.User;
 import com.google.appengine.api.oauth.OAuthRequestException;
+
+import com.globant.training.google.maps.user.entity.AppUser;
+import com.globant.training.google.maps.user.service.UserService;
 
 /**
  * BaseEndPoint Class. All the endpoints must be extend it.
@@ -51,6 +52,21 @@ public abstract class BaseEndpoint {
 
     return applicationUser;
 
+  }
+  
+  /**
+   * Validates if provided user is an admin user.
+   * 
+   * @param user user to be validated
+   * 
+   * @throws OAuthRequestException if has not rights.
+   */
+  protected void validateAdmin(User user) throws OAuthRequestException {
+    AppUser loggedUser = loginUser(user);
+
+    if (!loggedUser.isAdmin()) {
+      throw new RuntimeException("User not authorized");
+    }
   }
   
   

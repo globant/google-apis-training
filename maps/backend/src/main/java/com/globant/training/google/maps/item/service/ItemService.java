@@ -18,12 +18,20 @@ public interface ItemService {
   List<Item> getAll();
 
   /**
-   * Save or update Item.
+   * Create Item.
    * 
    * @param item the item
    * @return the item persisted
    */
-  Item save(Item item);
+  Item create(Item item);
+  
+  /**
+   * Update Item.
+   * 
+   * @param item the item
+   * @return the item persisted
+   */
+  Item update(Long id, Item item);
 
   /**
    * Find Item by id.

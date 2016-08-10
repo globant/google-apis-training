@@ -7,6 +7,7 @@ import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.inject.Inject;
+
 import com.globant.training.google.maps.antenna.endpoint.dtos.AntennaDto;
 import com.globant.training.google.maps.antenna.entity.Antenna;
 import com.globant.training.google.maps.antenna.service.AntennaService;
@@ -15,13 +16,12 @@ import com.globant.training.google.maps.core.endpoint.BaseEndpoint;
 import com.globant.training.google.maps.user.entity.AppUser;
 import com.globant.training.google.maps.user.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Named;
 
 /**
- * API endpoints for {@link Antenna} operations.
+ * API endpoints for {@link AntennaDto} operations.
  * 
  * @author gastonaguilera
  */
@@ -37,10 +37,10 @@ public class AntennaEndpoint extends BaseEndpoint {
    * Constructor.
    * 
    * @param antennaService the antenna service.
+   * @param userService the user service.
    */
   @Inject
-  public AntennaEndpoint(AntennaService antennaService,
-      @Named("userService") UserService userService) {
+  public AntennaEndpoint(AntennaService antennaService, UserService userService) {
     super(userService);
     this.antennaService = antennaService;
   }
@@ -49,12 +49,12 @@ public class AntennaEndpoint extends BaseEndpoint {
    * Get an Antenna by id.
    * 
    * @param antennaId the id to be found
-   * @return {@link Antenna}
+   * @return {@link AntennaDto}
    * @throws OAuthRequestException returns a exception if the user is not authenticated
    * @throws NotFoundException if none antenna found for provided id
    */
   @ApiMethod(name = "antennas.get", path = "antennas/{antennaId}", httpMethod = HttpMethod.GET)
-  public AntennaDto getAntenna(@Named("antennaId") final Long antennaId, User user)
+  public Antenna getAntenna(@Named("antennaId") final Long antennaId, User user)
       throws OAuthRequestException {
 
     AppUser loggedUser = loginUser(user);
@@ -69,21 +69,18 @@ public class AntennaEndpoint extends BaseEndpoint {
       throw new RuntimeException("Antenna Not Found");
     }
 
-    AntennaDto response = new AntennaDto();
-    response.fromEntity(antenna);
-
-    return response;
+    return antenna;
   }
 
   /**
    * Add Antenna.
    * 
-   * @param antennaDto the antenna request
-   * @return antennaDto the antenna persisted with id
+   * @param antenna the antenna request
+   * @return user the logged user
    * @throws OAuthRequestException returns a exception if the user is not authenticated
    */
   @ApiMethod(name = "antennas.add", path = "antennas", httpMethod = HttpMethod.POST)
-  public AntennaDto addAntenna(AntennaDto antennaDto, User user) throws OAuthRequestException {
+  public Antenna addAntenna(Antenna antenna, User user) throws OAuthRequestException {
 
     AppUser loggedUser = loginUser(user);
 
@@ -91,22 +88,19 @@ public class AntennaEndpoint extends BaseEndpoint {
       throw new RuntimeException("User not authorized");
     }
 
-    Antenna antenna = antennaService.save(antennaDto.toEntity());
-    antennaDto.fromEntity(antenna);
-
-    return antennaDto;
+    return antennaService.create(antenna);
   }
 
   /**
    * Modify Antenna.
    * 
-   * @param antennaDto the antenna request
-   * @return antennaDto the antenna dto
+   * @param antenna the antenna request
+   * @return antenna the antenna
    * @throws OAuthRequestException returns a exception if the user is not authenticated
    */
   @ApiMethod(name = "antennas.put", path = "antennas/{putId}", httpMethod = HttpMethod.PUT)
-  public AntennaDto modify(@Named("putId") final Long putId, AntennaDto antennaDto,
-      User user) throws OAuthRequestException {
+  public Antenna modify(@Named("putId") final Long putId, Antenna antenna, User user)
+      throws OAuthRequestException {
 
     AppUser loggedUser = loginUser(user);
 
@@ -114,17 +108,7 @@ public class AntennaEndpoint extends BaseEndpoint {
       throw new RuntimeException("User not authorized");
     }
 
-    Antenna antenna = antennaService.findById(putId);
-
-    if (antenna == null) {
-      throw new RuntimeException("Antenna Not Found");
-    }
-
-    antennaDto.setAntennaId(putId);
-    antennaDto.setCreated(antenna.getCreated());
-    antennaService.save(antennaDto.toEntity());
-
-    return antennaDto;
+    return antennaService.update(putId, antenna);
   }
 
   /**
@@ -134,7 +118,7 @@ public class AntennaEndpoint extends BaseEndpoint {
    * @throws OAuthRequestException returns a exception if the user is not authenticated
    */
   @ApiMethod(name = "antennas.find", path = "antennas", httpMethod = HttpMethod.GET)
-  public List<AntennaDto> findAntennas(User user) throws OAuthRequestException {
+  public List<Antenna> findAntennas(User user) throws OAuthRequestException {
 
     AppUser loggedUser = loginUser(user);
 
@@ -142,18 +126,7 @@ public class AntennaEndpoint extends BaseEndpoint {
       throw new RuntimeException("User not authorized");
     }
 
-    List<Antenna> antennas = antennaService.getAll();
-    List<AntennaDto> antennasDto = new ArrayList<>();
-
-    for (Antenna antenna : antennas) {
-
-      AntennaDto antennaDto = new AntennaDto();
-      antennaDto.fromEntity(antenna);
-      antennasDto.add(antennaDto);
-
-    }
-
-    return antennasDto;
+    return antennaService.getAll();
 
   }
 
@@ -163,8 +136,7 @@ public class AntennaEndpoint extends BaseEndpoint {
    * @throws OAuthRequestException
    * 
    */
-  @ApiMethod(name = "antennas.delete", path = "antennas/{deleteId}",
-      httpMethod = HttpMethod.DELETE)
+  @ApiMethod(name = "antennas.delete", path = "antennas/{deleteId}", httpMethod = HttpMethod.DELETE)
   public void deleteAntenna(@Named("deleteId") final Long deleteId, User user)
       throws OAuthRequestException {
 
@@ -172,12 +144,6 @@ public class AntennaEndpoint extends BaseEndpoint {
 
     if (!loggedUser.isAdmin()) {
       throw new RuntimeException("User not authorized");
-    }
-
-    Antenna antenna = antennaService.findById(deleteId);
-
-    if (antenna == null) {
-      throw new RuntimeException("Antenna Not Found");
     }
 
     antennaService.deleteById(deleteId);

@@ -1,8 +1,6 @@
 package com.globant.training.google.maps.antenna.endpoint.dtos;
 
-import com.globant.training.google.maps.antenna.entity.Antenna;
 import com.globant.training.google.maps.core.endpoint.dto.Dto;
-import com.globant.training.google.maps.core.endpoint.validation.DtoValidator;
 
 import java.util.Date;
 
@@ -13,7 +11,9 @@ import javax.validation.constraints.NotNull;
  * 
  * @author gabriel.sideri
  */
-public class AntennaDto implements Dto<Antenna, AntennaDto> {
+public class AntennaDto implements Dto {
+
+  private static final long serialVersionUID = 1L;
 
   private Long id;
 
@@ -47,8 +47,9 @@ public class AntennaDto implements Dto<Antenna, AntennaDto> {
    * 
    * @param id the antenna id
    */
-  public void setAntennaId(Long id) {
+  public AntennaDto setId(Long id) {
     this.id = id;
+    return this;
   }
 
   /**
@@ -152,49 +153,6 @@ public class AntennaDto implements Dto<Antenna, AntennaDto> {
 
   public AntennaDto setRangeLimit(Double rangeLimit) {
     this.rangeLimit = rangeLimit;
-    return this;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.globant.training.google.maps.endpoints.dtos.Dto#toEntity()
-   */
-  @Override
-  public Antenna toEntity() {
-    
-    DtoValidator.validate(this);
-
-    Antenna antenna = new Antenna().setName(name).setLatitude(latitude).setLongitude(longitude)
-        .setRangeLimit(rangeLimit).setSerialNumber(serialNumber).setLastUpdated(new Date());
-
-    if (this.getId() == null) {
-      antenna.setCreated(new Date());
-    } else {
-      antenna.setId(id);
-      antenna.setCreated(getCreated());
-    }
-
-    return antenna;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.globant.training.google.maps.endpoints.dtos.Dto#fromEntity(java.lang.Object)
-   */
-  @Override
-  public AntennaDto fromEntity(Antenna antenna) {
-    if (antenna != null) {
-      this.id = antenna.getId();
-      this.name = antenna.getName();
-      this.serialNumber = antenna.getSerialNumber();
-      this.latitude = antenna.getLatitude();
-      this.longitude = antenna.getLongitude();
-      this.created = antenna.getCreated();
-      this.lastUpdated = antenna.getLastUpdated();
-      this.rangeLimit = antenna.getRangeLimit();
-    }
     return this;
   }
 

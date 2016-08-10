@@ -1,8 +1,8 @@
 package com.globant.training.google.maps.device.endpoint.dtos.device.factory;
 
-import java.util.Map;
-
 import com.globant.training.google.maps.device.entity.Device;
+
+import java.util.Map;
 
 
 /**

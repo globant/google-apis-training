@@ -1,7 +1,11 @@
 package com.globant.training.google.maps.antenna.entity;
 
-import com.globant.training.google.maps.core.entity.BaseEntity;
+import com.google.api.server.spi.config.ApiTransformer;
+
 import com.googlecode.objectify.annotation.Entity;
+
+import com.globant.training.google.maps.antenna.endpoint.transformer.AntennaApiTransformer;
+import com.globant.training.google.maps.core.entity.BaseEntity;
 
 import java.util.Date;
 
@@ -12,6 +16,7 @@ import java.util.Date;
  *
  */
 @Entity(name = "Antenna")
+@ApiTransformer(AntennaApiTransformer.class)
 public class Antenna extends BaseEntity {
 
   private String name;

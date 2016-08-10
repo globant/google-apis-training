@@ -2,12 +2,12 @@ package com.globant.training.google.maps.device.endpoint.dtos.device.factory;
 
 import static com.globant.training.google.maps.core.endpoint.validation.DtoValidator.throwError;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.globant.training.google.maps.device.entity.Device;
 import com.globant.training.google.maps.device.entity.GpsDevice;
 import com.globant.training.google.maps.device.entity.RfidDevice;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -50,8 +50,8 @@ public class GpsFactory implements DeviceFactory {
   /**
    * Extract and parse data provided.
    * 
-   * @param attributtes
-   * @return the extracted Map<String, String>
+   * @param attributes attributes
+   * @return the extracted Map String, String
    */
   private Map<String, String> extractAdditionalData(Map<String, String> attributtes) {
 
