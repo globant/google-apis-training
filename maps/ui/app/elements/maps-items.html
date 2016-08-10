@@ -196,7 +196,7 @@
       },
 
       _handleDevicesResponse: function (e, responseData) {
-        this.devices = _(responseData.items).indexBy('id').value();
+        this.devices = _(responseData.items).keyBy('id').value();
       }
     });
   </script>
