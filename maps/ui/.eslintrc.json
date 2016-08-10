@@ -18,6 +18,7 @@
     "require": false,
     "gapi": false,
     "google": false,
-    "MapsBehaviors": false
+    "MapsBehaviors": false,
+    "_": false
   }
 }
