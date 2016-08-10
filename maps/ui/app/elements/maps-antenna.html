@@ -13,6 +13,7 @@
 
 <!--Maps components-->
 <link rel="import" href="maps-request.html">
+<link rel="import" href="maps-google-map-circle.html">
 
 <!--Maps behaviors-->
 <link rel="import" href="behaviors/maps-view-behavior.html">
@@ -130,6 +131,7 @@
 
           <div class="flex map-container">
             <google-map
+              map="{{map}}"
               latitude="[[antenna.latitude]]"
               longitude="[[antenna.longitude]]"
               api-key="{{constants.apiKeys.mapsApiKey}}">
@@ -139,6 +141,11 @@
                   title="[[antenna.name]]"
                   draggable="true"></google-map-marker>
             </google-map>
+            <maps-google-map-circle
+              map="{{map}}"
+              latitude="[[antenna.latitude]]"
+              longitude="[[antenna.longitude]]"
+              radius="[[antenna.rangeLimit]]"></maps-google-map-circle>
           </div>
         </div>
 

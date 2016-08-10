@@ -42,12 +42,12 @@
           type: Number,
           value: null,
           notify: true,
-          _observer: '_updateRadius'
+          observer: '_updateRadius'
         }
       },
 
       observers: [
-        '_updatePosition(latitude, longitude)'
+        '_updateCenter(latitude, longitude)'
       ],
 
       detached: function() {
@@ -65,9 +65,9 @@
         }
       },
 
-      _updatePosition: function() {
+      _updateCenter: function() {
         if (this.circle && this.latitude != null && this.longitude != null) {
-          this.circle.setPosition(new google.maps.LatLng(
+          this.circle.setCenter(new google.maps.LatLng(
             parseFloat(this.latitude), parseFloat(this.longitude)));
         }
       },
