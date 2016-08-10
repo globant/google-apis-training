@@ -129,8 +129,8 @@
       method="DELETE"></maps-request>
 
 
-    <iron-list id="list" selection-enabled>
-      <template is="dom-repeat" items="[[devices.items]]" as="device">
+    <iron-list id="list" items="[[devices.items]]" as="device" selection-enabled>
+      <template>
         <div class$="item [[getClassForItem(device, selected)]]">
           <div class="shortView" tabindex$="[[tabIndex]]">
             <div class="primary">[[device.name]]</div>
