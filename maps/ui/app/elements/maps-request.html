@@ -84,6 +84,7 @@
         var res = response.parseResponse();
         this.data = res;
 
+        e.stopPropagation();
         this.fire('response', this.data);
       },
 
