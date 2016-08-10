@@ -175,6 +175,10 @@
         if(this.routeData.action === 'edit') {
           this.$.itemFind.generateRequest();
         } else {
+          this.item = {
+            name: '',
+            deviceId: null
+          };
           this.$$('form').reset();
         }
       },

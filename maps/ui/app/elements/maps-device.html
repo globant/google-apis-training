@@ -224,6 +224,16 @@
         if(this.routeData.action === 'edit') {
           this.$.deviceFind.generateRequest();
         } else {
+          this.device = {
+            name: '',
+            type: '',
+            active: false,
+            attributtes: {
+              serialNumber: '',
+              rfidId: '',
+              manufacturer: ''
+            }
+          };
           this.$$('form').reset();
         }
       },

@@ -18,7 +18,7 @@
 
 <dom-module id="maps-devices">
   <template>
-    <style include="iron-flex iron-flex-alignment">
+    <style include="iron-flex iron-flex-alignment iron-positioning">
       paper-fab {
         position: fixed;
         right: 25px;
@@ -129,7 +129,7 @@
       method="DELETE"></maps-request>
 
 
-    <iron-list id="list" items="[[devices.items]]" as="device" selection-enabled>
+    <iron-list id="list" items="[[devices.items]]" as="device" selection-enabled hidden="[[!devices.items.length]]">
       <template>
         <div class$="item [[getClassForItem(device, selected)]]">
           <div class="shortView" tabindex$="[[tabIndex]]">
