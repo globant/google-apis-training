@@ -1,11 +1,13 @@
 package com.globant.training.google.maps.user.service;
 
 
-import java.util.List;
+import com.google.inject.Inject;
 
 import com.globant.training.google.maps.user.dao.UserDao;
 import com.globant.training.google.maps.user.entity.AppUser;
-import com.google.inject.Inject;
+import com.globant.training.google.maps.user.entity.UserRole;
+
+import java.util.List;
 
 /**
  * {@link UserService} Implementation
@@ -32,19 +34,6 @@ public class UserServiceImpl implements UserService {
     return userDao.getAll();
   }
 
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.globant.training.google.maps.services.UserService#save(com.globant.training.google.maps.
-   * entities.AppUser)
-   */
-  @Override
-  public AppUser save(AppUser user) {
-    return userDao.put(user);
-  }
-
   /*
    * (non-Javadoc)
    * 
@@ -53,6 +42,37 @@ public class UserServiceImpl implements UserService {
   @Override
   public AppUser findUserByGoogleId(String id) {
     return userDao.findByGoogleId(id);
+  }
+
+  @Override
+  public AppUser create(AppUser user) {
+
+    return userDao.put(user);
+  }
+
+  @Override
+  public AppUser update(Long id, AppUser user) {
+    // TODO Auto-generated method stub
+    return userDao.put(user);
+  }
+
+  @Override
+  public AppUser addRole(String googleId, UserRole role) {
+
+    AppUser user = findUserByGoogleId(googleId);
+
+    if (user == null) {
+      throw new RuntimeException("User not found");
+    }
+
+    if (user.isAdmin()) {
+      throw new RuntimeException("User is already admin");
+
+    }
+
+    user.getRoles().add(UserRole.ADMIN);
+
+    return userDao.put(user);
   }
 
 }

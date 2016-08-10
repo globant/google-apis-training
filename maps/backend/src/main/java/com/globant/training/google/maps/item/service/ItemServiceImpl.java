@@ -10,8 +10,6 @@ import com.globant.training.google.maps.item.entity.Item;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Named;
-
 /**
  * {@link ItemService} Implementation
  * 
@@ -30,7 +28,7 @@ public class ItemServiceImpl implements ItemService {
    * @param deviceService the Device Service
    */
   @Inject
-  public ItemServiceImpl(ItemDao itemDao, @Named("deviceService") DeviceService deviceService) {
+  public ItemServiceImpl(ItemDao itemDao, DeviceService deviceService) {
     super();
     this.itemDao = itemDao;
     this.deviceService = deviceService;

@@ -98,7 +98,7 @@
 		{
 			"id": "a8645028-e90c-8657-a36f-3d385a8c3f4e",
 			"headers": "Authorization: Bearer {{mapsToken}}\n",
-			"url": "{{backend-url}}/_ah/api/maps/v1/items/",
+			"url": "{{backend-url}}/_ah/api/maps/v1/items",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -108,7 +108,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1470752719477,
+			"time": 1470851633720,
 			"name": "Find Items",
 			"description": "",
 			"collectionId": "031462de-b083-66b7-eb39-5b05e4587178",
@@ -128,12 +128,12 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1470752887212,
+			"time": 1470851627721,
 			"name": "Modify Item",
 			"description": "",
 			"collectionId": "031462de-b083-66b7-eb39-5b05e4587178",
 			"responses": [],
-			"rawModeData": "{\n    \"name\": \"Snow Leopard 2\",\n    \"active\":\"true\",\n    \"deviceId\":1\n}"
+			"rawModeData": "{\n    \"name\": \"Snow Leopard 2\",\n    \"active\":\"true\",\n    \"deviceId\":{{deviceId}}\n}"
 		}
 	]
 }

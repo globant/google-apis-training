@@ -46,7 +46,7 @@ public abstract class BaseEndpoint {
 
       applicationUser = new AppUser(user.getId(), user.getEmail());
       applicationUser.setActive(true);
-      userService.save(applicationUser);
+      userService.create(applicationUser);
 
     }
 

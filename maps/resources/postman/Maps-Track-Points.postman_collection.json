@@ -34,7 +34,7 @@
 		{
 			"id": "a6cdb2c2-dc53-a149-3748-3f35d0543d38",
 			"headers": "Authorization: Bearer {{mapsToken}}\nContent-Type: application/json\n",
-			"url": "http://localhost:8080/_ah/api/maps/v1/trackpoints/5629499534213120",
+			"url": "http://localhost:8080/_ah/api/maps/v1/trackpoints/{{trackPointId}}",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -43,7 +43,7 @@
 			"tests": "var jsonData = JSON.parse(responseBody);\npostman.setGlobalVariable(\"deviceId\", jsonData.id);",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1470404625784,
+			"time": 1470851708912,
 			"name": "Get Track Point By Id",
 			"description": "",
 			"collectionId": "54140ac2-3035-5e0a-5117-9de1ab67edb6",

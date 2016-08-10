@@ -5,12 +5,8 @@ import com.google.api.server.spi.config.Transformer;
 import com.globant.training.google.maps.core.endpoint.validation.DtoValidator;
 import com.globant.training.google.maps.item.endpoint.dtos.ItemDto;
 import com.globant.training.google.maps.item.entity.Item;
-import com.globant.training.google.maps.trackpoint.endpoint.dtos.TrackPointDto;
-import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
 
 import org.apache.commons.lang3.Validate;
-
-import java.util.Date;
 
 
 /**

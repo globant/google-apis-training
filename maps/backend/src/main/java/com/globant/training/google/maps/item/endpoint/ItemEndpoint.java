@@ -39,8 +39,7 @@ public class ItemEndpoint extends BaseEndpoint {
    * @param itemService the item service.
    */
   @Inject
-  public ItemEndpoint(ItemService itemService,
-      @Named("userService") UserService userService) {
+  public ItemEndpoint(ItemService itemService, UserService userService) {
     super(userService);
     this.itemService = itemService;
   }
