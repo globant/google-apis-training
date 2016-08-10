@@ -97,11 +97,10 @@ public class GuiceConfig extends GuiceServletContextListener {
       bind(TrackPointDao.class).to(TrackPointOfyDao.class);
 
       // Service Definitions
-      bind(UserService.class).annotatedWith(Names.named("userService")).to(UserServiceImpl.class);
+      bind(UserService.class).to(UserServiceImpl.class);
       bind(AntennaService.class).to(AntennaServiceImpl.class);
       bind(ItemService.class).to(ItemServiceImpl.class);
-      bind(DeviceService.class).annotatedWith(Names.named("deviceService"))
-          .to(DeviceServiceImpl.class);
+      bind(DeviceService.class).to(DeviceServiceImpl.class);
       bind(TrackPointService.class).to(TrackPointServiceImpl.class);
 
     }

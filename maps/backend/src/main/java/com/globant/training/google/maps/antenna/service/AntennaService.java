@@ -1,8 +1,8 @@
 package com.globant.training.google.maps.antenna.service;
 
-import java.util.List;
-
 import com.globant.training.google.maps.antenna.entity.Antenna;
+
+import java.util.List;
 
 /**
  * Interface to expose {@link AntennaService} operations
@@ -18,12 +18,21 @@ public interface AntennaService {
   List<Antenna> getAll();
   
   /** 
-   * Save or update Antenna.
+   * create an Antenna.
    * 
    * @param antenna the antenna
    * @return the antenna persisted
    */
-  Antenna save(Antenna antenna);
+  Antenna create(Antenna antenna);
+  
+  /** 
+   * Updates Antenna.
+   * 
+   * @param id the antenna id
+   * @param antenna the antenna
+   * @return the antenna persisted
+   */
+  Antenna update(Long id, Antenna antenna);
   
   /**
    * Find Antenna by id.

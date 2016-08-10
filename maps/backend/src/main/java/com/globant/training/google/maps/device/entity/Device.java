@@ -1,16 +1,21 @@
 package com.globant.training.google.maps.device.entity;
 
-import java.util.Date;
-import java.util.Map;
+import com.google.api.server.spi.config.ApiTransformer;
+
+import com.googlecode.objectify.annotation.Entity;
 
 import com.globant.training.google.maps.core.entity.BaseEntity;
-import com.googlecode.objectify.annotation.Entity;
+import com.globant.training.google.maps.device.endpoint.transformer.DeviceApiTransformer;
+
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Represents a base device with common attributes accross devices.
  *
  */
 @Entity(name = "Device")
+@ApiTransformer(DeviceApiTransformer.class)
 public abstract class Device extends BaseEntity {
 
   /**
@@ -43,21 +48,20 @@ public abstract class Device extends BaseEntity {
   /**
    * Provide a Map of particular values for device.
    * 
-   * @return a {@link Map<String, String>}
+   * @return a {@link Map{String, String}}
    */
   public abstract Map<String, String> getAttributes();
 
   /**
    * Provide a Map of particular values for device.
    * 
-   * @return a {@link Map<String, String>}
+   * @param device device.
    */
   public abstract void update(Device device);
 
   /**
    * Get device name.
    * 
-   * @param name the device name.
    */
   public String getName() {
     return this.name;
@@ -125,7 +129,5 @@ public abstract class Device extends BaseEntity {
   public void setLastUpdated(Date lastUpdated) {
     this.lastUpdated = lastUpdated;
   }
-  
-  
 
 }

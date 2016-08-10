@@ -44,8 +44,9 @@ public class Item extends BaseEntity {
    * 
    * @param name the item name
    */
-  public void setName(String name) {
+  public Item setName(String name) {
     this.name = name;
+    return this;
   }
 
   /**
@@ -62,8 +63,9 @@ public class Item extends BaseEntity {
    * 
    * @param deviceId the device id
    */
-  public void setDeviceId(Long deviceId) {
+  public Item setDeviceId(Long deviceId) {
     this.deviceId = deviceId;
+    return this;
   }
 
   /**
@@ -80,8 +82,9 @@ public class Item extends BaseEntity {
    * 
    * @param active true or false
    */
-  public void setActive(boolean active) {
+  public Item setActive(boolean active) {
     this.active = active;
+    return this;
   }
 
   /**
@@ -98,8 +101,9 @@ public class Item extends BaseEntity {
    * 
    * @param created the date
    */
-  public void setCreated(Date created) {
+  public Item setCreated(Date created) {
     this.created = created;
+    return this;
   }
 
   /**
@@ -116,8 +120,9 @@ public class Item extends BaseEntity {
    * 
    * @param lastUpdated the last updated
    */
-  public void setLastUpdated(Date lastUpdated) {
+  public Item setLastUpdated(Date lastUpdated) {
     this.lastUpdated = lastUpdated;
+    return this;
   }
 
 }

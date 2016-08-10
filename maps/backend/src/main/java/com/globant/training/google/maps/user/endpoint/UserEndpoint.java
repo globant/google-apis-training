@@ -34,7 +34,7 @@ public class UserEndpoint extends BaseEndpoint {
    * @param userService the user service.
    */
   @Inject
-  public UserEndpoint(@Named("userService") UserService userService) {
+  public UserEndpoint(UserService userService) {
     super(userService);
   }
 
@@ -51,11 +51,6 @@ public class UserEndpoint extends BaseEndpoint {
 
     List<AppUser> users = userService.getAllUsers();
 
-    if (users.isEmpty()) {
-      createEntityUser(user);
-      users = userService.getAllUsers();
-    }
-
     return users;
   }
 
@@ -68,33 +63,7 @@ public class UserEndpoint extends BaseEndpoint {
   @ApiMethod(name = "user.admin", path = "users/admin/role/{googleId}", httpMethod = HttpMethod.PUT)
   public void setAdminRole(@Named("googleId") final String googleId) {
 
-    AppUser user = userService.findUserByGoogleId(googleId);
+    userService.addRole(googleId, UserRole.ADMIN);
 
-    if (user == null) {
-      throw new RuntimeException("User not found");
-    }
-
-    if (user.isAdmin()) {
-      throw new RuntimeException("User is already admin");
-
-    }
-
-    user.getRoles().add(UserRole.ADMIN);
-    userService.save(user);
-
-  }
-
-
-  /**
-   * Creates an {@link EntityUser} form a {@link User}.
-   * 
-   * @param user a {@link User}
-   */
-  private void createEntityUser(User user) {
-
-    // TODO move to service
-    AppUser userToCreate = new AppUser();
-    userToCreate.setEmail(user.getEmail());
-    userService.save(userToCreate);
   }
 }

@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.api.server.spi.auth.common.User;
 import com.google.appengine.api.oauth.OAuthRequestException;
+
 import com.globant.training.google.maps.antenna.endpoint.AntennaEndpoint;
 import com.globant.training.google.maps.antenna.endpoint.dtos.AntennaDto;
 import com.globant.training.google.maps.antenna.entity.Antenna;
@@ -51,7 +52,7 @@ public class AntennaEndpointTest {
 
   private AntennaEndpoint antennaEndpoint;
 
-  private AntennaDto validAntennaDto;
+  private Antenna validAntennaRequest;
 
   private Antenna validAntenna;
 
@@ -100,13 +101,13 @@ public class AntennaEndpointTest {
     validAntenna.setLongitude(VALID_ANTENNA_LONGITUDE);
     validAntenna.setRangeLimit(VALID_ANTENNA_RANGE_LIMIT);
 
-    validAntennaDto = new AntennaDto();
-    validAntennaDto.setAntennaId(VALID_ANTENNA_ID);
-    validAntennaDto.setSerialNumber(VALID_ANTENNA_SERIAL_NUMBER);
-    validAntennaDto.setName(VALID_ANTENNA_NAME);
-    validAntennaDto.setLatitude(VALID_ANTENNA_LATITUDE);
-    validAntennaDto.setLongitude(VALID_ANTENNA_LONGITUDE);
-    validAntennaDto.setRangeLimit(VALID_ANTENNA_RANGE_LIMIT);
+    validAntennaRequest = new Antenna();
+    validAntennaRequest.setId(VALID_ANTENNA_ID);
+    validAntennaRequest.setSerialNumber(VALID_ANTENNA_SERIAL_NUMBER);
+    validAntennaRequest.setName(VALID_ANTENNA_NAME);
+    validAntennaRequest.setLatitude(VALID_ANTENNA_LATITUDE);
+    validAntennaRequest.setLongitude(VALID_ANTENNA_LONGITUDE);
+    validAntennaRequest.setRangeLimit(VALID_ANTENNA_RANGE_LIMIT);
 
     authenticatedUser = new User(GOOGLE_ID, EMAIL_USER);
 
@@ -133,14 +134,14 @@ public class AntennaEndpointTest {
   public void testModifyntennaWithInvalidAntennaId() throws OAuthRequestException {
     when(antennaServiceMock.findById(INVALID_ANTENNA_ID)).thenReturn(null);
 
-    antennaEndpoint.modify(INVALID_ANTENNA_ID, validAntennaDto, authenticatedUser);
+    antennaEndpoint.modify(INVALID_ANTENNA_ID, validAntennaRequest, authenticatedUser);
 
     verify(antennaServiceMock).findById(INVALID_ANTENNA_ID);
   }
 
   /**
    * Invoke {@link AntennaEndpoint#modify(Long, AntennaDto)} with valid id and check if
-   * {@link AntennaService#findById(Long)} & {@link AntennaService#save(Antenna)} was called.
+   * {@link AntennaService#findById(Long)} & {@link AntennaService#save(AntennaDto)} was called.
    * 
    * <pre>
    * Scenario:
@@ -155,10 +156,10 @@ public class AntennaEndpointTest {
   public void testModifyAntennaWithValidAntennaId() throws OAuthRequestException {
     when(antennaServiceMock.findById(VALID_ANTENNA_ID)).thenReturn(validAntenna);
 
-    antennaEndpoint.modify(VALID_ANTENNA_ID, validAntennaDto, authenticatedUser);
+    antennaEndpoint.modify(VALID_ANTENNA_ID, validAntennaRequest, authenticatedUser);
 
     verify(antennaServiceMock).findById(VALID_ANTENNA_ID);
-    verify(antennaServiceMock).save(validAntenna);
+    verify(antennaServiceMock).update(VALID_ANTENNA_ID, validAntenna);
   }
 
   /**
@@ -218,7 +219,7 @@ public class AntennaEndpointTest {
    */
   @Test(expected = RuntimeException.class)
   public void testAddAntennaWithEmptyMandatoryValues() throws OAuthRequestException {
-    AntennaDto newAntenna = new AntennaDto();
+    Antenna newAntenna = new Antenna();
     newAntenna.setLatitude(VALID_ANTENNA_LATITUDE);
     newAntenna.setLongitude(VALID_ANTENNA_LONGITUDE);
     newAntenna.setRangeLimit(VALID_ANTENNA_RANGE_LIMIT);
@@ -241,20 +242,20 @@ public class AntennaEndpointTest {
    */
   @Test
   public void testAddAntennaWithValidValues() throws OAuthRequestException {
-    AntennaDto newAntenna = new AntennaDto();
+    Antenna newAntenna = new Antenna();
     newAntenna.setSerialNumber(VALID_ANTENNA_SERIAL_NUMBER);
     newAntenna.setName(VALID_ANTENNA_NAME);
     newAntenna.setLatitude(VALID_ANTENNA_LATITUDE);
     newAntenna.setLongitude(VALID_ANTENNA_LONGITUDE);
     newAntenna.setRangeLimit(VALID_ANTENNA_RANGE_LIMIT);
 
-    when(antennaServiceMock.save(newAntenna.toEntity())).thenReturn(validAntenna);
+    when(antennaServiceMock.create(newAntenna)).thenReturn(validAntenna);
 
-    AntennaDto response = antennaEndpoint.addAntenna(newAntenna, authenticatedUser);
+    Antenna response = antennaEndpoint.addAntenna(newAntenna, authenticatedUser);
 
-    verify(antennaServiceMock).save(any(Antenna.class));
+    verify(antennaServiceMock).create(any(Antenna.class));
     assertNotNull(response);
-    antennaDtoValidation(response);
+    antennaValidation(response);
   }
 
   /**
@@ -274,13 +275,13 @@ public class AntennaEndpointTest {
 
     when(antennaServiceMock.getAll()).thenReturn(antennas);
 
-    List<AntennaDto> response = antennaEndpoint.findAntennas(authenticatedUser);
+    List<Antenna> response = antennaEndpoint.findAntennas(authenticatedUser);
 
     verify(antennaServiceMock).getAll();
 
     assertNotNull(response);
     assertFalse(response.isEmpty());
-    antennaDtoValidation(response.get(0));
+    antennaValidation(response.get(0));
   }
 
   /**
@@ -320,11 +321,11 @@ public class AntennaEndpointTest {
   public void testGetAntennaWithValidAntennaId() throws OAuthRequestException {
     when(antennaServiceMock.findById(VALID_ANTENNA_ID)).thenReturn(validAntenna);
 
-    AntennaDto response = antennaEndpoint.getAntenna(VALID_ANTENNA_ID, authenticatedUser);
+    Antenna response = antennaEndpoint.getAntenna(VALID_ANTENNA_ID, authenticatedUser);
 
     verify(antennaServiceMock).findById(VALID_ANTENNA_ID);
     assertNotNull(response);
-    antennaDtoValidation(response);
+    antennaValidation(response);
   }
 
   /**
@@ -332,7 +333,7 @@ public class AntennaEndpointTest {
    * 
    * @param antenna the dto to be validate it.
    */
-  private void antennaDtoValidation(AntennaDto antenna) {
+  private void antennaValidation(Antenna antenna) {
     assertEquals(antenna.getId(), VALID_ANTENNA_ID);
     assertEquals(antenna.getName(), VALID_ANTENNA_NAME);
     assertEquals(antenna.getSerialNumber(), VALID_ANTENNA_SERIAL_NUMBER);

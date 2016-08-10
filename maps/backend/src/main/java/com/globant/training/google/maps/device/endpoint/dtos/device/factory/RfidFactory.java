@@ -2,13 +2,13 @@ package com.globant.training.google.maps.device.endpoint.dtos.device.factory;
 
 import static com.globant.training.google.maps.core.endpoint.validation.DtoValidator.validateForErrors;
 
+import com.globant.training.google.maps.device.entity.Device;
+import com.globant.training.google.maps.device.entity.RfidDevice;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import com.globant.training.google.maps.device.entity.Device;
-import com.globant.training.google.maps.device.entity.RfidDevice;
 
 /**
  * Factory for RfidDevice instantiation and validation.
@@ -42,8 +42,8 @@ public class RfidFactory implements DeviceFactory {
   /**
    * Extract and parse data provided.
    * 
-   * @param attributtes
-   * @return the extracted Map<String, String>
+   * @param attributes attributes.
+   * @return the extracted Map String, String
    */
   private Map<String, String> extractAdditionalData(Map<String, String> attributtes) {
 

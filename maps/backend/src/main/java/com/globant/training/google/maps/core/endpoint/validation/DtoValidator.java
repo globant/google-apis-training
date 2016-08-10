@@ -1,13 +1,13 @@
 package com.globant.training.google.maps.core.endpoint.validation;
 
+import com.globant.training.google.maps.core.endpoint.dto.Dto;
+
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-
-import com.globant.training.google.maps.core.endpoint.dto.Dto;
 
 /**
  * Dto Validator. Its validates using Javax Validation API.
@@ -23,12 +23,17 @@ public class DtoValidator {
    * 
    * @param dto a {@link Dto}
    */
-  @SuppressWarnings("rawtypes")
-  public static void validate(final Dto dto) {
+  public static void validate(final Dto dto, Class<?>... group) {
 
     validator = Validation.buildDefaultValidatorFactory().getValidator();
-
-    Set<ConstraintViolation<Dto>> constraintViolations = validator.validate(dto);
+    
+    Set<ConstraintViolation<Dto>> constraintViolations;
+    
+    if (group.length > 0) {
+      constraintViolations = validator.validate(dto, group);
+    } else {
+      constraintViolations = validator.validate(dto);
+    }
 
     if (!constraintViolations.isEmpty()) {
       Set<String> errorMessages = new HashSet<String>();
@@ -55,7 +60,7 @@ public class DtoValidator {
   /**
    * Throw a validation error.
    * 
-   * @param errorMessagesvalidation error message.
+   * @param errorMessage error message.
    */
   public static void throwError(String errorMessage) {
     throw new RuntimeException("API Error: " + errorMessage);
@@ -64,10 +69,10 @@ public class DtoValidator {
   /**
    * Validates the provided errors if errors are present the a validation error is thrown.
    * 
-   * @param errorMessagesvalidation error message.
+   * @param errorMessages error message.
    */
   public static void validateForErrors(Set<String> errorMessages) {
-    if(!errorMessages.isEmpty()){
+    if (!errorMessages.isEmpty()) {
       throwErrors(errorMessages);
     }
   }

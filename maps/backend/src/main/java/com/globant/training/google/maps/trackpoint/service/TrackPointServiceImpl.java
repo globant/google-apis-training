@@ -13,8 +13,6 @@ import org.apache.commons.lang3.Validate;
 
 import java.util.List;
 
-import javax.inject.Named;
-
 /**
  * {@link TrackPointService} Implementation
  * 
@@ -35,8 +33,8 @@ public class TrackPointServiceImpl implements TrackPointService {
    * @param deviceService the device service
    */
   @Inject
-  public TrackPointServiceImpl(TrackPointDao trackPointDao,
-      @Named("deviceService") DeviceService deviceService, ItemService itemService) {
+  public TrackPointServiceImpl(TrackPointDao trackPointDao, DeviceService deviceService,
+      ItemService itemService) {
     super();
     this.trackPointDao = trackPointDao;
     this.deviceService = deviceService;

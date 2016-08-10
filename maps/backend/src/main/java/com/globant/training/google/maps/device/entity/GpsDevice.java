@@ -1,11 +1,11 @@
 package com.globant.training.google.maps.device.entity;
 
+import com.googlecode.objectify.annotation.Subclass;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.jdo.annotations.Embedded;
-
-import com.googlecode.objectify.annotation.Subclass;
 
 /**
  * Class to represent a GPS entity
@@ -84,4 +84,5 @@ public class GpsDevice extends Device {
     // TODO Auto-generated method stub
     
   }
+
 }

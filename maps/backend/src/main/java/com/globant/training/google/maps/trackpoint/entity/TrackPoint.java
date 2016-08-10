@@ -1,10 +1,14 @@
 package com.globant.training.google.maps.trackpoint.entity;
 
+import com.google.api.server.spi.config.ApiTransformer;
+
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 
+
 import com.globant.training.google.maps.core.entity.BaseEntity;
+import com.globant.training.google.maps.trackpoint.endpoint.transformer.TrackPointApiTransformer;
 
 import java.util.Date;
 import java.util.Map;
@@ -16,6 +20,7 @@ import java.util.Map;
  *
  */
 @Entity
+@ApiTransformer(TrackPointApiTransformer.class)
 public class TrackPoint extends BaseEntity {
 
   @Index
@@ -51,8 +56,9 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param deviceId the device id
    */
-  public void setDeviceId(Long deviceId) {
+  public TrackPoint setDeviceId(Long deviceId) {
     this.deviceId = deviceId;
+    return this;
   }
 
   /**
@@ -69,8 +75,9 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param latitude the Latitude
    */
-  public void setLatitude(Double latitude) {
+  public TrackPoint setLatitude(Double latitude) {
     this.latitude = latitude;
+    return this;
   }
 
   /**
@@ -87,8 +94,9 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param longitude the Longitude
    */
-  public void setLongitude(Double longitude) {
+  public TrackPoint setLongitude(Double longitude) {
     this.longitude = longitude;
+    return this;
   }
 
   /**
@@ -105,8 +113,9 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param measuredDate the measured Date
    */
-  public void setMeasuredDate(Date measuredDate) {
+  public TrackPoint setMeasuredDate(Date measuredDate) {
     this.measuredDate = measuredDate;
+    return this;
   }
 
   /**
@@ -123,8 +132,9 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param savedDate the saved Date
    */
-  public void setSavedDate(Date savedDate) {
+  public TrackPoint setSavedDate(Date savedDate) {
     this.savedDate = savedDate;
+    return this;
   }
 
   /**
@@ -141,8 +151,9 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param context Map with context information
    */
-  public void setContext(Map<String, String> context) {
+  public TrackPoint setContext(Map<String, String> context) {
     this.context = context;
+    return this;
   }
 
   /**
@@ -159,8 +170,9 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param itemId the item id
    */
-  public void setItemId(Long itemId) {
+  public TrackPoint setItemId(Long itemId) {
     this.itemId = itemId;
+    return this;
   }
 
 }

@@ -38,16 +38,16 @@ public class TrackPointEndpoint {
   /**
    * Add TrackPoint.
    * 
-   * @param trackPointDto the track point request
+   * @param trackPointToSave the track point request
    * @return trackPointDto the track point persisted with id
    * 
    */
   @ApiMethod(name = "trackpoint.add", path = "trackpoints", httpMethod = HttpMethod.POST)
-  public TrackPointDto addTrackPoint(TrackPointDto trackPointDto) {
+  public TrackPoint addTrackPoint(TrackPoint trackPointToSave) {
     
-    TrackPoint trackPoint = trackPointService.save(trackPointDto.toEntity());
+    TrackPoint trackPoint = trackPointService.save(trackPointToSave);
 
-    return trackPointDto.fromEntity(trackPoint);
+    return trackPoint;
   }
 
 
@@ -58,12 +58,10 @@ public class TrackPointEndpoint {
    */
   @ApiMethod(name = "trackpoint.get", path = "trackpoints/{trackPointId}",
       httpMethod = HttpMethod.GET)
-  public TrackPointDto getTrackPoint(@Named("trackPointId") final Long trackPointId) {
+  public TrackPoint getTrackPoint(@Named("trackPointId") final Long trackPointId) {
     TrackPoint trackPoint = trackPointService.findById(trackPointId);
 
-    TrackPointDto response = new TrackPointDto();
-
-    return response.fromEntity(trackPoint);
+    return trackPoint;
   }
 
 }

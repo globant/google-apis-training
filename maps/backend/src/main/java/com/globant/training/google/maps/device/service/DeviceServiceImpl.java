@@ -15,7 +15,13 @@ import java.util.List;
 public class DeviceServiceImpl implements DeviceService {
 
   private final DeviceDao deviceDao;
-
+  
+  /**
+   * Constructor.
+   * 
+   * @param deviceDao dao.
+   * @param deviceValidator validator.
+   */
   @Inject
   public DeviceServiceImpl(DeviceDao deviceDao) {
     super();
@@ -44,7 +50,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     // validate that exists
     Device existingDevice = findById(id);
-
+    
     if (existingDevice.getType() != updateDevice.getType()) {
       // Todo move to a custom exception.
       throw new RuntimeException("Device type cannot be changed.");
@@ -59,6 +65,7 @@ public class DeviceServiceImpl implements DeviceService {
 
   @Override
   public Device create(Device device) {
+    
     return deviceDao.put(device);
   }
 

@@ -45,7 +45,7 @@ There are several tools that will help us in order to accomplish that.These are 
 ### Checkstyle 
 This will be in charge of checking the source code at compiling/building stage. It is located at
 ```sh
-/backend/src/main/resources/maps_checkstyle.xml
+/backend/dev-resources/maps_checkstyle.xml
 ```
 
 #### Checkstyle Eclipse plugin
@@ -57,11 +57,11 @@ http://eclipse-cs.sourceforge.net/update/
 ### Formatter
 This in charge of organize your code and imports. There are located at
 ```sh
-/backend/src/main/resources/eclipse-java-google-style-formatter.xml
-/backend/src/main/resources/intellij-java-google-style-formatter.xml
+/backend/dev-resources/eclipse-java-google-style-formatter.xml
+/backend/dev-resources/intellij-java-google-style-formatter.xml
 ```
 Also you need to configure the organize imports orders as follows:
 
-![Organize Imports](/maps/backend/src/main/resources/organize-imports.png "Organize Imports")
+![Organize Imports](/maps/dev-resources/organize-imports.png "Organize Imports")
 
 
