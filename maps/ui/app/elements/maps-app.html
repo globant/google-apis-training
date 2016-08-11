@@ -24,6 +24,8 @@
 <link rel="import" href="maps-antenna.html">
 <link rel="import" href="maps-devices.html">
 <link rel="import" href="maps-device.html">
+<link rel="import" href="maps-items.html">
+<link rel="import" href="maps-item.html">
 
 <dom-module id="maps-app">
 
@@ -89,6 +91,7 @@
             <a name="home" href="/#/home">Home</a>
             <a name="antennas" href="/#/antennas">Antennas</a>
             <a name="devices" href="/#/devices">Devices</a>
+            <a name="items" href="/#/items">Items</a>
           </iron-selector>
         </app-drawer>
 
@@ -116,6 +119,9 @@
 
               <maps-devices name="devices" user="[[user]]"></maps-devices>
               <maps-device name="device" user="[[user]]" route="[[subroute]]"></maps-device>
+
+              <maps-items name="items" user="[[user]]"></maps-items>
+              <maps-item name="item" user="[[user]]" route="[[subroute]]"></maps-item>
           </iron-pages>
 
         </app-header-layout>

@@ -6,8 +6,6 @@
 <link rel="import" href="../bower_components/paper-styles/color.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/iron-icons/av-icons.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
@@ -16,7 +14,7 @@
 <!--Maps components-->
 <link rel="import" href="maps-request.html">
 
-<dom-module id="maps-devices">
+<dom-module id="maps-items">
   <template>
     <style include="iron-flex iron-flex-alignment iron-positioning">
       paper-fab {
@@ -99,16 +97,6 @@
         display: none;
       }
 
-      .activeDevice {
-        @apply(--layout-horizontal);
-        @apply(--layout-justified);
-        @apply(--layout-start);
-      }
-
-      .activeDevice iron-icon {
-        color: var(--paper-green-a700);
-      }
-
       div p {
         margin: 0;
       }
@@ -120,55 +108,55 @@
       user="[[user]]"
       endpoint="/devices"
       method="GET"
-      data="{{devices}}"
+      on-response="_handleDevicesResponse"
       load-with-view></maps-request>
 
-    <maps-request id="deviceDelete"
+    <maps-request id="items"
       user="[[user]]"
-      endpoint="/devices/[[deviceToDelete]]"
+      endpoint="/items"
+      method="GET"
+      data="{{items}}"
+      load-with-view></maps-request>
+
+    <maps-request id="itemDelete"
+      user="[[user]]"
+      endpoint="/items/[[itemToDelete]]"
       method="DELETE"></maps-request>
 
 
-    <iron-list id="list" items="[[devices.items]]" as="device" selection-enabled hidden="[[!devices.items.length]]">
+    <iron-list id="list" items="[[items.items]]" as="item" selection-enabled hidden="[[!items.items.length]]">
       <template>
-        <div class$="item [[getClassForItem(device, selected)]]">
+        <div class$="item [[getClassForItem(item, selected)]]">
           <div class="shortView" tabindex$="[[tabIndex]]">
-            <div class="primary">[[device.name]]</div>
-            <div class="activeDevice">
-              <div hidden="[[!device.active]]">
-                <iron-icon icon="av:fiber-manual-record"></iron-icon>
-              </div>
-              <div>[[device.type]]</div>
-            </div>
+            <div class="primary">[[item.name]]</div>
           </div>
 
-          <paper-card class="longView" heading="[[device.name]]" elevation="5">
+          <paper-card class="longView" heading="[[item.name]]" elevation="5">
             <div class="card-content">
-              <span><em>Name:</em> {{device.name}}</span>
-              <span><em>Type:</em> {{device.type}}</span>
-              <span hidden="[[!device.attributtes.serialNumber]]"><em>Serial number:</em> {{device.attributtes.serialNumber}}</span>
-              <span hidden="[[!device.attributtes.rfidId]]"><em>RFID ID:</em> {{device.attributtes.rfidId}}</span>
-              <span hidden="[[!device.attributtes.manufacturer]]"><em>Manufacturer:</em> {{device.attributtes.manufacturer}}</span>
-              <span hidden="[[!device.active]]"><em>Active</em></span>
+              <span><em>Name:</em> {{item.name}}</span>
+              <span hidden="[[!item.deviceId]]"><em>Assigned Device:</em> {{getDeviceName(item.deviceId)}}</span>
             </div>
             <div class="card-actions">
-              <paper-icon-button icon="create" device-id="[[device.id]]" on-tap="editDevice"></paper-icon-button>
-              <paper-icon-button icon="delete" device-id="[[device.id]]" on-tap="removeDevice"></paper-icon-button>
+              <paper-icon-button icon="create" item-id="[[item.id]]" on-tap="editItem"></paper-icon-button>
+              <paper-icon-button icon="delete" item-id="[[item.id]]" on-tap="removeItem"></paper-icon-button>
             </div>
           </paper-card>
         </div>
       </template>
     </iron-list>
 
-    <paper-fab icon="add" on-tap="addDevice"></paper-fab>
+    <paper-fab icon="add" on-tap="addItem"></paper-fab>
   </template>
 
   <script>
     Polymer({
-      is: 'maps-devices',
+      is: 'maps-items',
 
       properties: {
-        type: Object
+        item: {
+          type: Object
+
+        }
       },
 
       behaviors: [
@@ -188,20 +176,30 @@
         return selected ? 'expanded' : '';
       },
 
-      addDevice: function () {
-        this.hash = '/device/create';
+      addItem: function () {
+        this.hash = '/item/create';
       },
 
-      editDevice: function (e) {
-        this.hash = '/device/edit/' + e.currentTarget.deviceId;
+      editItem: function (e) {
+        this.hash = '/item/edit/' + e.currentTarget.itemId;
       },
 
-      removeDevice: function (e) {
+      removeItem: function (e) {
         var self = this;
-        this.deviceToDelete = e.currentTarget.deviceId;
-        this.$.deviceDelete.generateRequest().completes.then(function () {
-          self.$.devices.generateRequest();
+        this.itemToDelete = e.currentTarget.itemId;
+        this.$.itemDelete.generateRequest().completes.then(function () {
+          self.$.items.generateRequest();
         });
+      },
+
+      getDeviceName: function(deviceId) {
+        if(deviceId) {
+          return this.devices[deviceId].name;
+        }
+      },
+
+      _handleDevicesResponse: function (e, responseData) {
+        this.devices = _(responseData.items).keyBy('id').value();
       }
     });
   </script>

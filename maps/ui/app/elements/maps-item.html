@@ -3,7 +3,6 @@
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/iron-input/iron-input.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/iron-location/iron-location.html">
@@ -22,7 +21,7 @@
 <link rel="import" href="behaviors/maps-constants-behavior.html">
 
 
-<dom-module id="maps-device">
+<dom-module id="maps-item">
   <template>
     <style include="iron-flex iron-flex-alignment">
       .container {
@@ -39,17 +38,13 @@
         color: white;
       }
 
-      google-map {
-        height: 400px;
-      }
-
-      paper-checkbox {
-        margin: 20px 0;
-      }
-
       .flex-end-justified {
         @apply(--layout-horizontal);
         @apply(--layout-end-justified);
+      }
+
+      google-map {
+        height: 400px;
       }
 
       .map-container {
@@ -65,23 +60,29 @@
 
     <iron-location hash="{{hash}}"></iron-location>
 
-
-    <maps-request id="deviceFind"
+    <maps-request id="devices"
       user="[[user]]"
-      endpoint="/devices{{viewData.path}}"
+      endpoint="/devices"
       method="GET"
-      data="{{device}}"></maps-request>
+      on-response="_handleDevicesResponse"
+      load-with-view></maps-request>
 
-    <maps-request id="deviceEdit"
+    <maps-request id="itemFind"
       user="[[user]]"
-      endpoint="/devices{{viewData.path}}"
+      endpoint="/items{{viewData.path}}"
+      method="GET"
+      data="{{item}}"></maps-request>
+
+    <maps-request id="itemEdit"
+      user="[[user]]"
+      endpoint="/items{{viewData.path}}"
       method="PUT"
       body="{{body}}"
       on-response="_handleSuccessfulResponse"></maps-request>
 
-    <maps-request id="deviceCreate"
+    <maps-request id="itemCreate"
       user="[[user]]"
-      endpoint="/devices"
+      endpoint="/items"
       method="POST"
       body="{{body}}"
       on-response="_handleSuccessfulResponse"></maps-request>
@@ -90,7 +91,7 @@
       <paper-material elevation="2" class="layout vertical">
         <div class="layout horizontal">
           <div class="flex">
-            <h2>New Device</h2>
+            <h2>New Item</h2>
 
             <form is="iron-form">
               <paper-input
@@ -99,40 +100,15 @@
                 required
                 auto-validate
                 error-message="This field is required"
-                value="{{device.name}}"></paper-input>
+                value="{{item.name}}"></paper-input>
 
-              <paper-dropdown-menu label="Device type" required>
-                <paper-listbox class="dropdown-content" attr-for-selected="option" selected="{{device.type}}" selection-enabled>
-                  <paper-item option="GPS">GPS</paper-item>
-                  <paper-item option="RFID">RFID</paper-item>
+              <paper-dropdown-menu label="Device">
+                <paper-listbox class="dropdown-content" selected="{{item.deviceId}}" attr-for-selected="option">
+                  <template is="dom-repeat" items="[[devices]]" as="device">
+                    <paper-item option="[[device.id]]">[[device.name]]</paper-item>
+                  </template>
                 </paper-listbox>
               </paper-dropdown-menu>
-
-              <paper-input id="serialNumber"
-                label="Serial Number"
-                type="text"
-                required
-                auto-validate
-                error-message="This field is required"
-                value="{{device.attributtes.serialNumber}}"></paper-input>
-
-              <paper-input id="rfidId"
-                label="RFID ID"
-                type="text"
-                required
-                auto-validate
-                error-message="This field is required"
-                value="{{device.attributtes.rfidId}}"></paper-input>
-
-              <paper-input id="manufacturer"
-                label="Manufacturer"
-                type="text"
-                required
-                auto-validate
-                error-message="This field is required"
-                value="{{device.attributtes.manufacturer}}"></paper-input>
-
-              <paper-checkbox checked="{{device.active}}">Active</paper-checkbox>
             </form>
           </div>
         </div>
@@ -147,7 +123,7 @@
 
   <script>
     Polymer({
-      is: 'maps-device',
+      is: 'maps-item',
 
       properties: {
         user: {
@@ -155,16 +131,11 @@
           value: null
         },
 
-        device: {
+        item: {
           type: Object,
           value: {
             name: '',
-            type: '',
-            attributtes: {
-              serialNumber: '',
-              rfidId: '',
-              manufacturer: ''
-            }
+            deviceId: null
           }
         },
 
@@ -179,75 +150,41 @@
         MapsBehaviors.ConstantsBehavior
       ],
 
-      observers: [
-        '_deviceSelected(device.type)'
-      ],
-
       listeners: {
         'view-activated': '_handleViewActivated'
       },
 
       _submit: function () {
-        var requestBody = {};
-
-        requestBody.name = this.device.name;
-        requestBody.type = this.device.type;
-        requestBody.active = this.device.active;
-        if(this.device.type === 'GPS') {
-          requestBody.attributtes = {
-            serialNumber: this.device.attributtes.serialNumber
-          }
-        } else {
-          requestBody.attributtes = {
-            rfidId: this.device.attributtes.rfidId,
-            manufacturer: this.device.attributtes.manufacturer
-          }
-        }
-
-        this.body = JSON.stringify(requestBody);
+        this.body = JSON.stringify(this.item);
         if(this.routeData.action === 'create') {
-          this.$.deviceCreate.generateRequest();
+          this.$.itemCreate.generateRequest();
         } else {
-          this.$.deviceEdit.generateRequest();
+          this.$.itemEdit.generateRequest();
         }
       },
 
       _cancel: function () {
-        this.hash = '/devices';
+        this.hash = '/items';
       },
 
       _handleSuccessfulResponse: function () {
-        this.hash = '/devices';
+        this.hash = '/items';
       },
 
       _handleViewActivated: function () {
         if(this.routeData.action === 'edit') {
-          this.$.deviceFind.generateRequest();
+          this.$.itemFind.generateRequest();
         } else {
-          this.device = {
+          this.item = {
             name: '',
-            type: '',
-            active: false,
-            attributtes: {
-              serialNumber: '',
-              rfidId: '',
-              manufacturer: ''
-            }
+            deviceId: null
           };
           this.$$('form').reset();
         }
       },
 
-      _deviceSelected: function (deviceType) {
-        if (deviceType === 'RFID') {
-          this.$.manufacturer.toggleAttribute('hidden', false);
-          this.$.serialNumber.toggleAttribute('hidden', true);
-          this.$.rfidId.toggleAttribute('hidden', false);
-        } else {
-          this.$.manufacturer.toggleAttribute('hidden', true);
-          this.$.serialNumber.toggleAttribute('hidden', false);
-          this.$.rfidId.toggleAttribute('hidden', true);
-        }
+      _handleDevicesResponse: function (e, responseData) {
+        this.devices = _(responseData.items).filter('active', true).value();
       }
     });
   </script>
