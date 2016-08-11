@@ -32,6 +32,8 @@ public class AntennaDto implements Dto {
   private Date lastUpdated;
 
   private Double rangeLimit;
+  
+  private boolean active;
 
   /**
    * Gets antenna id.
@@ -154,6 +156,14 @@ public class AntennaDto implements Dto {
   public AntennaDto setRangeLimit(Double rangeLimit) {
     this.rangeLimit = rangeLimit;
     return this;
+  }
+
+  public boolean isActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
   }
 
 }

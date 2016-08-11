@@ -28,6 +28,7 @@ public class AntennaApiTransformer implements Transformer<Antenna, AntennaDto> {
         .setLongitude(dto.getLongitude())
         .setRangeLimit(dto.getRangeLimit())
         .setSerialNumber(dto.getSerialNumber())
+        .setActive(dto.isActive())
         .setLastUpdated(new Date());
     // @formatter:on
     if (dto.getId() == null) {
@@ -53,7 +54,8 @@ public class AntennaApiTransformer implements Transformer<Antenna, AntennaDto> {
        .setLongitude(antenna.getLongitude())
        .setCreated(antenna.getCreated())
        .setLastUpdated(antenna.getLastUpdated())
-       .setRangeLimit(antenna.getRangeLimit());
+       .setRangeLimit(antenna.getRangeLimit())
+       .setActive(antenna.isActive());
     // @formatter:on
     return dto;
   }

@@ -31,6 +31,8 @@ import com.globant.training.google.maps.trackpoint.dao.objectify.TrackPointOfyDa
 import com.globant.training.google.maps.trackpoint.endpoint.TrackPointEndpoint;
 import com.globant.training.google.maps.trackpoint.service.TrackPointService;
 import com.globant.training.google.maps.trackpoint.service.TrackPointServiceImpl;
+import com.globant.training.google.maps.trackpoint.service.visitor.TrackPointProcessorVisitor;
+import com.globant.training.google.maps.trackpoint.service.visitor.TrackPointVisitor;
 import com.globant.training.google.maps.user.dao.UserDao;
 import com.globant.training.google.maps.user.dao.objectify.UserOfyDao;
 import com.globant.training.google.maps.user.endpoint.UserEndpoint;
@@ -102,6 +104,7 @@ public class GuiceConfig extends GuiceServletContextListener {
       bind(ItemService.class).to(ItemServiceImpl.class);
       bind(DeviceService.class).to(DeviceServiceImpl.class);
       bind(TrackPointService.class).to(TrackPointServiceImpl.class);
+      bind(TrackPointVisitor.class).to(TrackPointProcessorVisitor.class);
 
     }
 

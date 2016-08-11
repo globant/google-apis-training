@@ -1,5 +1,6 @@
 package com.globant.training.google.maps.device.entity;
 
+import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Subclass;
 
 import java.util.HashMap;
@@ -18,6 +19,7 @@ public class RfidDevice extends Device {
   public static final String MANUFACTURER_KEY = "manufacturer";
   public static final String RFID_ID_KEY = "rfidId";
 
+  @Index
   private String rfidId;
 
   private String manufacturer;

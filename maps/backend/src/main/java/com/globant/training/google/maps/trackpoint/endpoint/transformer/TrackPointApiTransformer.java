@@ -3,8 +3,15 @@ package com.globant.training.google.maps.trackpoint.endpoint.transformer;
 import com.google.api.server.spi.config.Transformer;
 
 import com.globant.training.google.maps.core.endpoint.validation.DtoValidator;
+import com.globant.training.google.maps.device.entity.DeviceType;
+import com.globant.training.google.maps.trackpoint.endpoint.dtos.GpsTrackPointFactory;
+import com.globant.training.google.maps.trackpoint.endpoint.dtos.RfidTrackPointFactory;
 import com.globant.training.google.maps.trackpoint.endpoint.dtos.TrackPointDto;
+import com.globant.training.google.maps.trackpoint.endpoint.dtos.TrackPointFactory;
 import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -15,22 +22,19 @@ import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
  */
 public class TrackPointApiTransformer implements Transformer<TrackPoint, TrackPointDto> {
 
+  private static final Map<DeviceType, TrackPointFactory> trackPointFactoryMap;
+
+  static {
+    trackPointFactoryMap = new HashMap<DeviceType, TrackPointFactory>();
+    trackPointFactoryMap.put(DeviceType.GPS, new GpsTrackPointFactory());
+    trackPointFactoryMap.put(DeviceType.RFID, new RfidTrackPointFactory());
+  }
+
   @Override
   public TrackPoint transformFrom(TrackPointDto dto) {
     DtoValidator.validate(dto);
 
-    TrackPoint trackPoint = new TrackPoint();
-    // @formatter:off
-    trackPoint.setDeviceId(dto.getDeviceId())
-              .setLatitude(dto.getLatitude())
-              .setLongitude(dto.getLongitude())
-              .setMeasuredDate(dto.getMeasuredDate());
-    // @formatter:on
-    if (dto.getId() != null) {
-      // TODO review if this shoud be moved to service.
-      trackPoint.setId(dto.getId());
-      trackPoint.setSavedDate(dto.getSavedDate());
-    }
+    TrackPoint trackPoint = trackPointFactoryMap.get(dto.getType()).buildTrackPoint(dto);
 
     return trackPoint;
   }
@@ -39,11 +43,9 @@ public class TrackPointApiTransformer implements Transformer<TrackPoint, TrackPo
   public TrackPointDto transformTo(TrackPoint trackPoint) {
     TrackPointDto dto = new TrackPointDto();
     // @formatter:off
-    dto.setId(trackPoint.getId())
-       .setLatitude(trackPoint.getLatitude())
-       .setLongitude(trackPoint.getLongitude())
-       .setMeasuredDate(trackPoint.getMeasuredDate())
-       .setSavedDate(trackPoint.getSavedDate());
+    dto.setId(trackPoint.getId()).setLatitude(trackPoint.getLatitude())
+        .setLongitude(trackPoint.getLongitude()).setMeasuredDate(trackPoint.getMeasuredDate())
+        .setSavedDate(trackPoint.getSavedDate());
     // @formatter:on
     return dto;
   }

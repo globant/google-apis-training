@@ -47,11 +47,6 @@ public class AntennaServiceImpl implements AntennaService {
     Validate.notNull(antenna, "Antenna cannot be null");
 
     Antenna existingAntenna = findById(id);
-
-    if (existingAntenna == null) {
-      throw new RuntimeException("Antenna Not Found");
-    }
-
     antenna.setId(existingAntenna.getId());
     antenna.setCreated(existingAntenna.getCreated());
     antenna.setLastUpdated(new Date());
@@ -63,18 +58,20 @@ public class AntennaServiceImpl implements AntennaService {
   public Antenna findById(Long id) {
     Validate.notNull(id, "id cannot be null");
 
-    return antennaDao.get(id);
+    Antenna antenna = antennaDao.get(id);
+    
+    if (antenna == null) {
+      throw new RuntimeException("Antenna Not Found");
+    }
+    
+    return antenna;
   }
 
   @Override
   public void deleteById(Long id) {
     Validate.notNull(id, "id cannot be null");
 
-    Antenna antenna = findById(id);
-
-    if (antenna == null) {
-      throw new RuntimeException("Antenna Not Found");
-    }
+    findById(id);
 
     antennaDao.delete(id);
   }

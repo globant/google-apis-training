@@ -5,6 +5,8 @@ import com.google.inject.Inject;
 import com.globant.training.google.maps.device.daos.DeviceDao;
 import com.globant.training.google.maps.device.entity.Device;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ import java.util.List;
 public class DeviceServiceImpl implements DeviceService {
 
   private final DeviceDao deviceDao;
-  
+
   /**
    * Constructor.
    * 
@@ -50,13 +52,13 @@ public class DeviceServiceImpl implements DeviceService {
 
     // validate that exists
     Device existingDevice = findById(id);
-    
+
     if (existingDevice.getType() != updateDevice.getType()) {
       // Todo move to a custom exception.
       throw new RuntimeException("Device type cannot be changed.");
     }
-    
-    //overwrite fully
+
+    // overwrite fully
     updateDevice.setId(id);
     Device savedDevice = deviceDao.put(updateDevice);
 
@@ -65,17 +67,30 @@ public class DeviceServiceImpl implements DeviceService {
 
   @Override
   public Device create(Device device) {
-    
+
     return deviceDao.put(device);
   }
 
   @Override
   public void deleteById(Long id) {
-    
+
     // validate that exists
     findById(id);
-    
+
     deviceDao.delete(id);
+  }
+
+  @Override
+  public Device findDeviceByRfidId(String rfidId) {
+    Validate.notEmpty(rfidId, "Rfid Id cannot be null or empty");
+
+    Device rfid = deviceDao.findDeviceByRfidId(rfidId);
+
+    if (rfid == null) {
+      throw new RuntimeException("Rfid not found.");
+    }
+
+    return rfid;
   }
 
 }

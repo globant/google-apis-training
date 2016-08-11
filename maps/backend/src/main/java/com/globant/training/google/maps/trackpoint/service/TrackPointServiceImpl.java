@@ -2,15 +2,15 @@ package com.globant.training.google.maps.trackpoint.service;
 
 import com.google.inject.Inject;
 
-import com.globant.training.google.maps.device.entity.Device;
 import com.globant.training.google.maps.device.service.DeviceService;
-import com.globant.training.google.maps.item.entity.Item;
 import com.globant.training.google.maps.item.service.ItemService;
 import com.globant.training.google.maps.trackpoint.dao.TrackPointDao;
 import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
+import com.globant.training.google.maps.trackpoint.service.visitor.TrackPointVisitor;
 
 import org.apache.commons.lang3.Validate;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,10 +21,8 @@ import java.util.List;
 public class TrackPointServiceImpl implements TrackPointService {
 
   private TrackPointDao trackPointDao;
-
-  private DeviceService deviceService;
-
-  private ItemService itemService;
+ 
+  private TrackPointVisitor trackPointVisitor;
 
   /**
    * Injects the needed services.
@@ -34,35 +32,20 @@ public class TrackPointServiceImpl implements TrackPointService {
    */
   @Inject
   public TrackPointServiceImpl(TrackPointDao trackPointDao, DeviceService deviceService,
-      ItemService itemService) {
+      ItemService itemService, TrackPointVisitor trackPointVisitor) {
     super();
     this.trackPointDao = trackPointDao;
-    this.deviceService = deviceService;
-    this.itemService = itemService;
+    this.trackPointVisitor = trackPointVisitor;
   }
 
   @Override
   public TrackPoint save(TrackPoint trackPoint) {
     Validate.notNull(trackPoint, "trackPoint can not be null");
-    Validate.notNull(trackPoint.getDeviceId(), "Device Id can not be null");
-
-    Item item = itemService.findItemByDeviceId(trackPoint.getDeviceId());
-
-    if (!item.isActive()) {
-      throw new RuntimeException(
-          "The Item assigned to the device is not active, "
-          + "you only can add a track point for an active item.");
-    }
-
-    trackPoint.setItemId(item.getId());
-
-    Device device = deviceService.findById(trackPoint.getDeviceId());
-
-    if (!device.isActive()) {
-      throw new RuntimeException(
-          "Device is not active, you only can add a track point for an active device.");
-    }
-
+ 
+    trackPoint.visit(trackPointVisitor);
+    
+    trackPoint.setSavedDate(new Date());
+    
     return trackPointDao.put(trackPoint);
   }
 
@@ -84,6 +67,5 @@ public class TrackPointServiceImpl implements TrackPointService {
     Validate.notNull(deviceId, "Device Id can not be null");
     return trackPointDao.getTrackPointsByDeviceId(deviceId);
   }
-
 
 }

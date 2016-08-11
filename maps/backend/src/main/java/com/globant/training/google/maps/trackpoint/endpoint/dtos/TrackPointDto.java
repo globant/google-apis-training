@@ -1,6 +1,7 @@
 package com.globant.training.google.maps.trackpoint.endpoint.dtos;
 
 import com.globant.training.google.maps.core.endpoint.dto.Dto;
+import com.globant.training.google.maps.device.entity.DeviceType;
 
 import java.util.Date;
 
@@ -14,24 +15,26 @@ import javax.validation.constraints.NotNull;
 public class TrackPointDto implements Dto {
 
   private static final long serialVersionUID = 1L;
+  
+  @NotNull
+  private DeviceType type;
 
   private Long id;
 
-  @NotNull
   private Long deviceId;
-  
-  private Long itemId;
 
-  @NotNull
+  private Long antennaId;
+  
+  private String rfidId;
+  
   private Double latitude;
 
-  @NotNull
   private Double longitude;
 
-  @NotNull
   private Date measuredDate;
 
   private Date savedDate;
+  
 
   /**
    * Gets the date when the track point was measured.
@@ -145,6 +148,60 @@ public class TrackPointDto implements Dto {
   public TrackPointDto setId(Long id) {
     this.id = id;
     return this;
+  }
+
+  /**
+   * Gets device type to be tracked.
+   * 
+   * @return the device type
+   */
+  public DeviceType getType() {
+    return type;
+  }
+
+  /**
+   * Sets the device type to be tracked.
+   * 
+   * @param type the device type
+   */
+  public void setType(DeviceType type) {
+    this.type = type;
+  }
+
+  /**
+   * Gets the antenna id.
+   * 
+   * @return the antenna id
+   */
+  public Long getAntennaId() {
+    return antennaId;
+  }
+
+  /**
+   * Sets the antenna id.
+   * 
+   * @param antennaId the antenna id
+   */
+  public void setAntennaId(Long antennaId) {
+    this.antennaId = antennaId;
+  }
+
+  /**
+   * Gets the Rfid Id.
+   * 
+   * @return the Rfid Id
+   */
+  public String getRfidId() {
+    return rfidId;
+  }
+
+  /**
+   * Sets the Rfid Id.
+   * 
+   * @param rfidId the Rfid Id
+   */
+  public void setRfidId(String rfidId) {
+    this.rfidId = rfidId;
   }
 
 }

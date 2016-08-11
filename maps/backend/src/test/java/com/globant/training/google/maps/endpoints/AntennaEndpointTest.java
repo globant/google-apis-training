@@ -33,6 +33,7 @@ import com.globant.training.google.maps.user.entity.UserRole;
 import com.globant.training.google.maps.user.service.UserService;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -47,6 +48,7 @@ import java.util.List;
  * 
  * @author gaston.aguilera
  */
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class AntennaEndpointTest {
 

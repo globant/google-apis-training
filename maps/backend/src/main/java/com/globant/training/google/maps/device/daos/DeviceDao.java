@@ -3,6 +3,7 @@ package com.globant.training.google.maps.device.daos;
 import java.util.List;
 
 import com.globant.training.google.maps.device.entity.Device;
+import com.globant.training.google.maps.item.entity.Item;
 
 /**
  * Antenna DAO Interface.
@@ -40,4 +41,13 @@ public interface DeviceDao {
    * @param id the device id
    */
   void delete(Long id);
+  
+  /**
+   * Find device by rfid id.
+   * 
+   * @param rfidId
+   * @return the device 
+   */
+  Device findDeviceByRfidId(String rfidId);  
+  
 }

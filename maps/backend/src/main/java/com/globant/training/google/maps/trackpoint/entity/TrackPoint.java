@@ -1,14 +1,14 @@
 package com.globant.training.google.maps.trackpoint.entity;
 
-import com.google.api.server.spi.config.ApiTransformer;
-
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 
+import com.google.api.server.spi.config.ApiTransformer;
 
 import com.globant.training.google.maps.core.entity.BaseEntity;
 import com.globant.training.google.maps.trackpoint.endpoint.transformer.TrackPointApiTransformer;
+import com.globant.training.google.maps.trackpoint.service.visitor.TrackPointVisitor;
 
 import java.util.Date;
 import java.util.Map;
@@ -21,26 +21,36 @@ import java.util.Map;
  */
 @Entity
 @ApiTransformer(TrackPointApiTransformer.class)
-public class TrackPoint extends BaseEntity {
-
-  @Index
-  private Long deviceId;
- 
-  @Index
-  private Long itemId;
-
-  private Double latitude;
-
-  private Double longitude;
-
-  private Date measuredDate;
-
-  private Date savedDate;
+public abstract class TrackPoint extends BaseEntity {
   
-  private Map<String, String> context;
+  @Ignore
+  public static final String LATITUDE_FIELD = "latitude";
+  
+  @Ignore
+  public static final String LONGITUDE_FIELD = "longitude";
+  
+  @Ignore
+  public static final String MEASURED_DATE = "measuredDate";
   
   @Ignore
   public static final String DEVICE_ID_FIELD = "deviceId";
+  
+  @Index
+  protected Long itemId;
+
+  @Index
+  private Long deviceId;
+  
+  protected Double latitude;
+
+  protected Double longitude;
+
+  protected Date measuredDate;
+
+  protected Date savedDate;
+  
+  protected Map<String, String> context;
+  
 
   /**
    * Gets the device id associated with the Tack Point.
@@ -56,11 +66,10 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param deviceId the device id
    */
-  public TrackPoint setDeviceId(Long deviceId) {
+  public void setDeviceId(Long deviceId) {
     this.deviceId = deviceId;
-    return this;
   }
-
+  
   /**
    * Gets the Latitude where the device registered the Track Point.
    * 
@@ -75,9 +84,8 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param latitude the Latitude
    */
-  public TrackPoint setLatitude(Double latitude) {
+  public void setLatitude(Double latitude) {
     this.latitude = latitude;
-    return this;
   }
 
   /**
@@ -94,9 +102,8 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param longitude the Longitude
    */
-  public TrackPoint setLongitude(Double longitude) {
+  public void setLongitude(Double longitude) {
     this.longitude = longitude;
-    return this;
   }
 
   /**
@@ -113,9 +120,8 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param measuredDate the measured Date
    */
-  public TrackPoint setMeasuredDate(Date measuredDate) {
+  public void setMeasuredDate(Date measuredDate) {
     this.measuredDate = measuredDate;
-    return this;
   }
 
   /**
@@ -132,9 +138,8 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param savedDate the saved Date
    */
-  public TrackPoint setSavedDate(Date savedDate) {
+  public void setSavedDate(Date savedDate) {
     this.savedDate = savedDate;
-    return this;
   }
 
   /**
@@ -151,9 +156,8 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param context Map with context information
    */
-  public TrackPoint setContext(Map<String, String> context) {
+  public void setContext(Map<String, String> context) {
     this.context = context;
-    return this;
   }
 
   /**
@@ -170,9 +174,14 @@ public class TrackPoint extends BaseEntity {
    * 
    * @param itemId the item id
    */
-  public TrackPoint setItemId(Long itemId) {
+  public void setItemId(Long itemId) {
     this.itemId = itemId;
-    return this;
   }
+  
+  /**
+   * 
+   * @param visitor
+   */
+  public abstract void visit(TrackPointVisitor visitor);
 
 }

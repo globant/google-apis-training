@@ -65,10 +65,6 @@ public class AntennaEndpoint extends BaseEndpoint {
 
     Antenna antenna = antennaService.findById(antennaId);
 
-    if (antenna == null) {
-      throw new RuntimeException("Antenna Not Found");
-    }
-
     return antenna;
   }
 
