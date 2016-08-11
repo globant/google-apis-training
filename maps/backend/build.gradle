@@ -8,8 +8,6 @@ buildscript {
     }
 }
 
-
-
 repositories {
     mavenCentral();
 }
@@ -37,11 +35,18 @@ dependencies {
     compile 'javax.jdo:jdo-api:3.0.1'
     compile 'org.apache.bval:bval-guice:0.5'
     compile 'javax.validation:validation-api:1.1.0.Final'
+    compile 'com.google.apis:google-api-services-fusiontables:v2-rev13-1.22.0'
     
     testCompile 'com.google.appengine:appengine-testing:1.9.38'
     testCompile 'com.google.appengine:appengine-api-stubs:1.9.38'
     testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-all:1.9.0'
+}
+
+eclipse {
+    classpath {
+       downloadSources=true
+    }
 }
 
 appengine {
