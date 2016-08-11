@@ -1,6 +1,7 @@
 package com.globant.training.google.maps.core.endpoint.validation;
 
 import com.globant.training.google.maps.core.endpoint.dto.Dto;
+import com.globant.training.google.maps.core.exception.ValidationException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -54,7 +55,7 @@ public class DtoValidator {
    * @param errorMessages Set of validation error messages.
    */
   public static void throwErrors(Set<String> errorMessages) {
-    throw new RuntimeException("API Errors: " + errorMessages);
+    throw new ValidationException("API Errors: " + errorMessages);
   }
 
   /**
@@ -63,7 +64,7 @@ public class DtoValidator {
    * @param errorMessage error message.
    */
   public static void throwError(String errorMessage) {
-    throw new RuntimeException("API Error: " + errorMessage);
+    throw new ValidationException("API Error: " + errorMessage);
   }
   
   /**

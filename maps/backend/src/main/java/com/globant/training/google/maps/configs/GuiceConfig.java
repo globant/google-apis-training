@@ -4,8 +4,8 @@ import com.google.api.server.spi.guice.GuiceSystemServiceServletModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Scopes;
 import com.google.inject.Singleton;
-import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 
 import com.googlecode.objectify.ObjectifyFilter;
@@ -16,6 +16,7 @@ import com.globant.training.google.maps.antenna.endpoint.AntennaEndpoint;
 import com.globant.training.google.maps.antenna.service.AntennaService;
 import com.globant.training.google.maps.antenna.service.AntennaServiceImpl;
 import com.globant.training.google.maps.core.dao.objectify.OfyService;
+import com.globant.training.google.maps.core.filter.ErrorFilter;
 import com.globant.training.google.maps.device.daos.DeviceDao;
 import com.globant.training.google.maps.device.daos.objectify.DeviceOfyDao;
 import com.globant.training.google.maps.device.endpoint.DeviceEndpoint;
@@ -66,8 +67,11 @@ public class GuiceConfig extends GuiceServletContextListener {
     protected void configureServlets() {
       super.configureServlets();
 
+      bind(ErrorFilter.class).in(Scopes.SINGLETON);
+      
+      filter("/*").through(ErrorFilter.class);
       filter("/*").through(ObjectifyFilter.class);
-
+      
       Set<Class<?>> serviceClasses = new HashSet<Class<?>>();
       serviceClasses.add(UserEndpoint.class);
       serviceClasses.add(AntennaEndpoint.class);
