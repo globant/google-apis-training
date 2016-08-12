@@ -28,20 +28,20 @@ task npmBin << {
 
 task npm(type: Exec) {
     description = "Grab NodeJS dependencies (from package.json)"
-    
+
     if (System.getProperty('os.name').toLowerCase().contains('windows')) {
 	    commandLine 'cmd', '/c', 'npm', 'install'
 	} else {
 		commandLine 'npm', 'install'
 		inputs.file "package.json"
 	    outputs.dir "node_modules"
-	
+
 	    tasks.npmBin.execute()
 	}
 }
 
 task bower(dependsOn: 'npm', type: Exec){
-    
+
     if (System.getProperty('os.name').toLowerCase().contains('windows')) {
 	    commandLine 'cmd', '/c', 'bower', 'install'
 	} else {
@@ -59,6 +59,16 @@ task deploy(dependsOn: 'copyAppFile', type: Exec) {
 		commandLine 'gcloud', 'app', 'deploy', 'dist/app.yaml'
 	}
 }
+
+task run(dependsOn: 'build', type: Exec) {
+
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+	    commandLine 'cmd', '/c', 'gulp',  'serve:dist'
+	} else {
+		commandLine 'gulp', 'serve:dist'
+	}
+}
+
 
 task copyAppFile << {
   copy {

@@ -1,0 +1,56 @@
+<!--Polymer components-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-styles/color.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/google-map/google-map.html">
+<link rel="import" href="maps-fusiontable-heatmap.html">
+
+<dom-module id="maps-views">
+  <template>
+    <style include="iron-flex iron-flex-alignment iron-positioning">
+      :host {
+        @apply(--layout-block);
+        @apply(--layout-flex);
+        height: 100%;
+        position: relative;
+      }
+    </style>
+
+    <iron-location hash="{{hash}}"></iron-location>
+
+    <google-map
+      map="{{map}}"
+      zoom="4"
+      latitude="-36.330"
+      longitude="-64.827"
+      api-key="{{constants.apiKeys.mapsApiKey}}">
+
+    <maps-fusiontables-heatmap
+      map="{{map}}"
+      fusion-table-doc-id="1l3aY566TBTeIRbjWdze-khRA3uByS853AMjCxqs7">
+      <fusion-table-doc-id="">
+    </maps-fusiontables-heatmap>
+  </template>
+
+  <!--{{constants.fusionTableDocId}}-->
+
+  <script>
+    Polymer({
+      is: 'maps-views',
+      properties: {
+        map:{
+          type: Object
+        }
+      },
+
+      behaviors: [
+        MapsBehaviors.ViewBehavior,
+        MapsBehaviors.ConstantsBehavior
+      ]
+    });
+  </script>
+</dom-module>

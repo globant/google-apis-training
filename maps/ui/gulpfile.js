@@ -143,6 +143,7 @@ gulp.task('copy:elements', function() {
   return gulp.src('app/elements/**/*.html')
     .pipe($.replace('@GoogleClientID@', googleProperties.get('clientId')))
     .pipe($.replace('@MapsApiKey@', googleProperties.get('apiKey')))
+    .pipe($.replace('@FusionTableDocId@', googleProperties.get('fusionTableDocId')))
     .pipe($.replace('@Host@', googleProperties.get('backendApiUrl', 'http://localhost:8080')))
     .pipe(gulp.dest(dist('elements')))
     .pipe($.size({title: 'Copy elements'}));

@@ -1,0 +1,71 @@
+//Polymer components
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/google-apis/google-maps-api.html">
+
+<dom-module id="maps-fusiontables-heatmap">
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'maps-fusiontables-heatmap',
+
+      properties: {
+        //must be a public fusion table document id
+        fusionTableDocId: {
+          type: String
+        },
+
+        map: {
+          type: Object,
+          observer: '_mapChanged'
+        }
+      },
+
+      detached: function() {
+        if (this.layer) {
+          this.layer.setMap(null);
+        }
+      },
+
+      attached: function() {
+        // If element is added back to DOM, put it back on the map.
+        if (this.layer) {
+          this.layer.setMap(this.map);
+        }
+      },
+
+      _mapChanged: function() {
+        if (this.layer) {
+          this.layer.setMap(null);
+        }
+        if (this.map && this.map instanceof google.maps.Map) {
+          this._mapReady();
+        }
+      },
+
+      _mapReady: function() {
+
+        this.layer = new google.maps.FusionTablesLayer({
+          //center: {lat: -36.330, lng: -64.827},
+          //zoom: 13,
+          query: {
+            select: 'Location',
+            from: this.fusionTableDocId
+          },
+          radius: 35,
+          heatmap: {
+            enabled: true
+          }
+        });
+
+        this.layer.setMap(this.map);
+      }
+    });
+  </script>
+</dom-module>
