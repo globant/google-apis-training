@@ -1,0 +1,228 @@
+//Polymer components
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/google-map/google-map.html">
+<link rel="import" href="../bower_components/google-map/google-map-marker.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-styles/color.html">
+
+<link rel="import" href="maps-google-map-polyline.html">
+
+<dom-module id="maps-item-tracking">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-flex-factors iron-positioning">
+      :host {
+        @apply(--layout-block);
+        @apply(--layout-flex);
+        height: 100%;
+        position: relative;
+      }
+
+      div[drawer] {
+        display: block;
+        position: relative;
+      }
+
+      paper-item {
+        padding: 16px;
+      }
+
+      paper-fab {
+        position: fixed;
+        right: 25px;
+        top: 35px;
+      }
+
+      paper-material {
+        position: absolute;
+        top: 0;
+        left: -80px;
+        background-color: white;
+        visibility: visible;
+      }
+
+      div[secondary] p {
+        margin: 5px;
+      }
+
+      .sub-header {
+        --paper-toolbar-background: var(--paper-indigo-300);
+      }
+    </style>
+
+    <app-route
+      route="{{route}}"
+      pattern="/:deviceId/:itemId"
+      data="{{routeData}}"
+      tail="{{viewData}}"></app-route>
+
+    <maps-request id="itemFind"
+      user="[[user]]"
+      endpoint="/items/{{routeData.itemId}}"
+      method="GET"
+      data="{{item}}"
+      load-with-view></maps-request>
+
+    <maps-request id="deviceFind"
+      user="[[user]]"
+      endpoint="/devices/{{routeData.deviceId}}"
+      method="GET"
+      data="{{device}}"
+      load-with-view></maps-request>
+
+    <maps-request id="trackPointsFind"
+      user="[[user]]"
+      endpoint="/devices/{{routeData.deviceId}}/trackpoints"
+      method="GET"
+      data="{{trackPoints}}"
+      load-with-view></maps-request>
+
+    <paper-drawer-panel id="trackPointsList" right-drawer force-narrow drawer-width="400px" selected="{{_panelSelected}}">
+      <div drawer>
+        <paper-material elevation="2">
+          <paper-icon-button icon="[[_getIconDrawer(_panelSelected)]]" paper-drawer-toggle></paper-icon-button>
+          <paper-icon-button icon="icons:settings-input-antenna" paper-drawer-toggle></paper-icon-button>
+        </paper-material>
+
+        <paper-toolbar>
+          <span class="title">{{item.name}}</span>
+        </paper-toolbar>
+
+        <paper-item>
+          <paper-item-body two-line>
+            <div>
+              Device
+            </div>
+            <div secondary>
+              <p>{{device.name}}</p>
+              <p hidden="[[!device.attributtes.serialNumber]]"><em>Serial number:</em> {{device.attributtes.serialNumber}}</p>
+              <p hidden="[[!device.attributtes.rfidId]]"><em>RFID ID:</em> {{device.attributtes.rfidId}}</p>
+              <p hidden="[[!device.attributtes.manufacturer]]"><em>Manufacturer:</em> {{device.attributtes.manufacturer}}</p>
+            </div>
+          </paper-item-body>
+        </paper-item>
+
+        <paper-toolbar class="sub-header">
+          <span class="title">Track Points</span>
+        </paper-toolbar>
+
+        <paper-listbox selected="{{_trackPointIndex}}">
+          <template is="dom-repeat" items="[[trackPoints.items]]">
+            <paper-item>
+              <paper-item-body two-line>
+                <div></div>
+                <div secondary class="layout horizontal justified">
+                  <div>
+                    <p><em>Latitude:</em> {{item.latitude}}</p>
+                    <p><em>Longitude:</em> {{item.longitude}}</p>
+                    <p><em>Measure date:</em> [[_formatDate(item.measuredDate)]]</p>
+                  </div>
+                </div>
+              </paper-item-body>
+            </paper-item>
+          </template>
+        </paper-listbox>
+      </div>
+
+      <div main>
+        <google-map
+          map="{{map}}"
+          latitude="{{_selectedTrackPoint.latitude}}"
+          longitude="{{_selectedTrackPoint.longitude}}"
+          api-key="{{constants.apiKeys.mapsApiKey}}"></google-map>
+
+        <template is="dom-repeat" items="[[trackPoints.items]]">
+          <google-map-marker
+            map="{{map}}"
+            latitude="[[item.latitude]]"
+            longitude="[[item.longitude]]"
+            title="[[item.name]]"
+            draggable="false"
+            click-events="true"
+            data="[[item.id]]"
+            fit-to-markers></google-map-marker>
+        </template>
+
+        <maps-google-map-polyline
+          map="{{map}}"
+          path="[[path]]"></maps-google-map-polyline>
+      </div>
+    </paper-drawer-panel>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'maps-item-tracking',
+
+      properties: {
+        trackPoints: {
+          type: Array,
+          value: []
+        },
+
+        path: {
+          computed: '_getPath(trackPoints)'
+        },
+
+        _selectedTrackPoint: {
+          computed: '_getSelectedTrackPoint(trackPoints)'
+        },
+
+        _trackPointIndex: {
+          type: Number,
+          observer: '_setSelectedTrackPoint'
+        }
+      },
+
+      behaviors: [
+        MapsBehaviors.ViewBehavior,
+        MapsBehaviors.ConstantsBehavior
+      ],
+
+      _getIconDrawer: function (_panelSelected) {
+        return _panelSelected === 'drawer' ? 'chevron-right' : 'chevron-left';
+      },
+
+      _formatDate: function (date) {
+        return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+      },
+
+      _setSelectedTrackPoint: function (_trackPointIndex) {
+        var newCenter = new google.maps.LatLng(this.trackPoints.items[_trackPointIndex].latitude, this.trackPoints.items[_trackPointIndex].longitude);
+        this.map.panTo(newCenter);
+        this.$.trackPointsList.closeDrawer();
+      },
+
+      _getPath: function (trackPoints) {
+        return _(trackPoints.items).map(function (trackPoint) {
+          return {
+            lat: parseFloat(trackPoint.latitude),
+            lng: parseFloat(trackPoint.longitude)
+          }
+        }).value();
+      },
+
+      _getSelectedTrackPoint: function (trackPoints) {
+        var selected = {};
+
+        if(trackPoints.items && trackPoints.items.length) {
+          selected.latitude = this.trackPoints.items[0].latitude;
+          selected.longitude = this.trackPoints.items[0].longitude;
+        } else {
+          selected.latitude = 0;
+          selected.longitude = 0;
+        }
+        return selected;
+      }
+    });
+  </script>
+</dom-module>

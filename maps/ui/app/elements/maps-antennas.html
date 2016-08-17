@@ -77,7 +77,7 @@
     <paper-drawer-panel id="antennasList" right-drawer force-narrow drawer-width="400px" selected="{{_panelSelected}}">
       <div drawer>
         <paper-material elevation="2">
-          <paper-icon-button icon="{{_iconDrawer}}" paper-drawer-toggle></paper-icon-button>
+          <paper-icon-button icon="[[_getIconDrawer(_panelSelected)]]" paper-drawer-toggle></paper-icon-button>
           <paper-icon-button icon="icons:settings-input-antenna" paper-drawer-toggle></paper-icon-button>
         </paper-material>
 
@@ -152,11 +152,6 @@
           value: ''
         },
 
-        _panelSelected: {
-          type: Boolean,
-          observer: '_getIconDrawer'
-        },
-
         _antennaIndex: {
           type: Number,
           observer: '_setSelectedAntenna'
@@ -174,7 +169,7 @@
       ],
 
       _getIconDrawer: function (_panelSelected) {
-        this._iconDrawer = _panelSelected === 'drawer' ? 'chevron-right' : 'chevron-left';
+        return _panelSelected === 'drawer' ? 'chevron-right' : 'chevron-left';
       },
 
       _handleDbClickMarker: function (e) {

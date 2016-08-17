@@ -99,13 +99,13 @@
         display: none;
       }
 
-      .activeDevice {
+      .activeItem {
         @apply(--layout-horizontal);
         @apply(--layout-justified);
         @apply(--layout-start);
       }
 
-      .activeDevice iron-icon {
+      .activeItem iron-icon {
         color: var(--paper-green-a700);
       }
 
@@ -134,7 +134,7 @@
         <div class$="item [[getClassForItem(device, selected)]]">
           <div class="shortView" tabindex$="[[tabIndex]]">
             <div class="primary">[[device.name]]</div>
-            <div class="activeDevice">
+            <div class="activeItem">
               <div hidden="[[!device.active]]">
                 <iron-icon icon="av:fiber-manual-record"></iron-icon>
               </div>
@@ -168,7 +168,7 @@
       is: 'maps-devices',
 
       properties: {
-        type: Object
+
       },
 
       behaviors: [
