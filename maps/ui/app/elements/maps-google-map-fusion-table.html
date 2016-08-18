@@ -1,5 +1,6 @@
 //Polymer components
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="maps-google-map-heat-layer">
   <template>
@@ -8,6 +9,13 @@
         display: none;
       }
     </style>
+
+    <iron-ajax
+      auto
+      url="https://www.googleapis.com/fusiontables/v2/tables/[[fusionTableId]]"
+      handle-as="json"
+      on-response="handleResponse"
+      debounce-duration="300"></iron-ajax>
   </template>
 
   <script>
@@ -68,6 +76,7 @@
             enabled: true
           },
           query: {
+            select: 'Location',
             from: this.fusionTableId
           }
         });
