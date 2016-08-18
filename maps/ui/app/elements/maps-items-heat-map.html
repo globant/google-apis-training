@@ -1,0 +1,189 @@
+//Polymer components
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/google-map/google-map.html">
+<link rel="import" href="../bower_components/google-map/google-map-marker.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+
+//Maps components
+<link rel="import" href="maps-request.html">
+<link rel="import" href="maps-google-map-fusion-table.html">
+
+//Maps behaviours
+<link rel="import" href="behaviors/maps-view-behavior.html">
+<link rel="import" href="behaviors/maps-constants-behavior.html">
+
+<dom-module id="maps-items-heat-map">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-flex-factors iron-positioning">
+      :host {
+        @apply(--layout-block);
+        @apply(--layout-flex);
+        height: 100%;
+        position: relative;
+      }
+
+      div[drawer] {
+        display: block;
+        position: relative;
+      }
+
+      paper-material {
+        position: absolute;
+        top: 0;
+        left: -80px;
+        background-color: white;
+        visibility: visible;
+      }
+
+      paper-item {
+        padding: 16px;
+      }
+
+      paper-fab {
+        position: fixed;
+        right: 25px;
+        top: 35px;
+      }
+
+      div[secondary] p {
+        margin: 5px;
+      }
+    </style>
+
+    <iron-location hash="{{hash}}"></iron-location>
+
+    <paper-drawer-panel id="antennasList" right-drawer force-narrow drawer-width="400px" selected="{{_panelSelected}}">
+      <div drawer>
+        <!--<paper-material elevation="2">
+          <paper-icon-button icon="[[_getIconDrawer(_panelSelected)]]" paper-drawer-toggle></paper-icon-button>
+          <paper-icon-button icon="icons:settings-input-antenna" paper-drawer-toggle></paper-icon-button>
+        </paper-material>
+
+        <paper-toolbar>
+          <span class="title">Antennas</span>
+        </paper-toolbar>
+
+        <paper-listbox selected="{{_antennaIndex}}">
+          <template is="dom-repeat" items="[[antennas.items]]">
+            <paper-item>
+              <paper-item-body two-line>
+                <div>{{item.name}}</div>
+                <div secondary class="layout horizontal justified">
+                  <div>
+                    <p><em>Serial number:</em> {{item.serialNumber}}</p>
+                    <p><em>Latitude:</em> {{item.latitude}}</p>
+                    <p><em>Longitude:</em> {{item.longitude}}</p>
+                    <p><em>Range:</em> {{item.rangeLimit}}</p>
+                  </div>
+                  <div class="layout vertical justified">
+                    <paper-icon-button icon="create" antenna-id="{{item.id}}" on-tap="editAntenna"></paper-icon-button>
+                    <paper-icon-button icon="delete" antenna-id="{{item.id}}" on-tap="removeAntenna"></paper-icon-button>
+                  </div>
+                </div>
+              </paper-item-body>
+            </paper-item>
+          </template>
+        </paper-listbox>
+        <paper-fab icon="add" on-tap="addAntenna"></paper-fab>-->
+      </div>
+
+      <div main>
+        <google-map
+          map="{{map}}"
+          latitude="{{_selectedAntenna.latitude}}"
+          longitude="{{_selectedAntenna.longitude}}"
+          api-key="{{constants.apiKeys.mapsApiKey}}"></google-map>
+
+        <maps-google-map-heat-layer
+          map="{{map}}"
+          fusion-table-id="1HDsK1F34vOx5tn7aBGVR0MPdRfNn2DDWTvAG2Ji0"></maps-google-map-heat-layer>
+      </div>
+    </paper-drawer-panel>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'maps-items-heat-map',
+
+      properties: {
+        antennas: {
+          type: Object,
+          value: []
+        },
+
+        antennaToDelete: {
+          type: String,
+          value: ''
+        },
+
+        _antennaIndex: {
+          type: Number,
+          observer: '_setSelectedAntenna'
+        },
+
+        _selectedAntenna: {
+          type: Object,
+          computed: '_getSelectedAntenna(antennas)'
+        }
+      },
+
+      behaviors: [
+        MapsBehaviors.ViewBehavior,
+        MapsBehaviors.ConstantsBehavior
+      ],
+
+      _getIconDrawer: function (_panelSelected) {
+        return _panelSelected === 'drawer' ? 'chevron-right' : 'chevron-left';
+      },
+
+      _handleDbClickMarker: function (e) {
+        this.editAntenna(e.currentTarget.data);
+      },
+
+      _setSelectedAntenna: function (antennaIndex) {
+        var newCenter = new google.maps.LatLng(this.antennas.items[antennaIndex].latitude, this.antennas.items[antennaIndex].longitude);
+        this.map.panTo(newCenter);
+        this.$.antennasList.closeDrawer();
+      },
+
+      _getSelectedAntenna: function (antennas) {
+        var selected = {};
+
+        if(antennas.items && antennas.items.length) {
+          selected.latitude = this.antennas.items[0].latitude;
+          selected.longitude = this.antennas.items[0].longitude;
+        } else {
+          selected.latitude = 0;
+          selected.longitude = 0;
+        }
+        return selected;
+      },
+
+      addAntenna: function () {
+        this.$.antennasList.closeDrawer();
+        this.hash = '/antenna/create';
+      },
+
+      editAntenna: function (e) {
+        this.$.antennasList.closeDrawer();
+        this.hash = '/antenna/edit/' + e.currentTarget.antennaId;
+      },
+
+      removeAntenna: function (e) {
+        this.antennaToDelete = e.currentTarget.antennaId;
+        this.$.antennaDelete.generateRequest();
+        this.$.antennas.generateRequest();
+      }
+    });
+  </script>
+</dom-module>

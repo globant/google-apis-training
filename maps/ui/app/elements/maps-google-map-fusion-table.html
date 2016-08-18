@@ -1,0 +1,77 @@
+//Polymer components
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="maps-google-map-heat-layer">
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'maps-google-map-heat-layer',
+
+      properties: {
+        fusionTable: {
+          type: Object,
+          notify: true
+        },
+
+        map: {
+          type: Object,
+          observer: '_mapChanged'
+        },
+
+        fusionTableId: {
+          type: String,
+          value: '',
+          observer: '_updateFusionTableId'
+        }
+      },
+
+      detached: function() {
+        if (this.fusionTable) {
+          this.fusionTable.setMap(null);
+        }
+        if (this._contentObserver)
+          this._contentObserver.disconnect();
+      },
+
+      attached: function() {
+        if (this.fusionTable) {
+          this.fusionTable.setMap(this.map);
+        }
+      },
+
+      _updateFusionTableId: function() {
+        if (this.fusionTable && this.path != null) {
+          this.fusionTable.setPath(this.path);
+        }
+      },
+
+      _mapChanged: function() {
+        if (this.fusionTable) {
+          this.fusionTable.setMap(null);
+        }
+        if (this.map && this.map instanceof google.maps.Map) {
+          this._mapReady();
+        }
+      },
+
+      _mapReady: function() {
+        this.fusionTable = new google.maps.FusionTablesLayer({
+          map: this.map,
+          heatmap: {
+            enabled: true
+          },
+          query: {
+            from: this.fusionTableId
+          }
+        });
+      }
+    });
+  </script>
+</dom-module>
