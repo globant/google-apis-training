@@ -9,8 +9,9 @@ import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
 import com.globant.training.google.maps.trackpoint.service.visitor.TrackPointVisitor;
 
 import org.apache.commons.lang3.Validate;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,8 +45,8 @@ public class TrackPointServiceImpl implements TrackPointService {
  
     trackPoint.visit(trackPointVisitor);
     
-    trackPoint.setSavedDate(new Date());
-    
+    trackPoint.setSavedDate(new DateTime(DateTimeZone.UTC));
+        
     return trackPointDao.put(trackPoint);
   }
 
