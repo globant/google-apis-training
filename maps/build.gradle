@@ -21,6 +21,10 @@ task config << {
 		backendApiUrl = 'http://localhost:8080'
 	}
 	
+	if(!project.hasProperty('appEnginejsonCredentialsPath')){
+		appEnginejsonCredentialsPath = ''
+	}
+	
 	Properties props = new Properties()
 	File propsFile = new File('./gradle.properties')
 	
@@ -28,6 +32,8 @@ task config << {
 	props.setProperty('clientId', clientId)
 	props.setProperty('apiKey', apiKey)
 	props.setProperty('backendApiUrl', backendApiUrl)
+	rops.setProperty('appEnginejsonCredentialsPath', appEnginejsonCredentialsPath)
+	
 	
 	props.store(propsFile.newWriter(), null)
 }

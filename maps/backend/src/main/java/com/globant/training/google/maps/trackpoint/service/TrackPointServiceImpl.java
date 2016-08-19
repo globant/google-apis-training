@@ -6,6 +6,7 @@ import com.globant.training.google.maps.device.service.DeviceService;
 import com.globant.training.google.maps.item.service.ItemService;
 import com.globant.training.google.maps.trackpoint.dao.TrackPointDao;
 import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
+import com.globant.training.google.maps.trackpoint.service.publisher.TrackPointPublisher;
 import com.globant.training.google.maps.trackpoint.service.visitor.TrackPointVisitor;
 
 import org.apache.commons.lang3.Validate;
@@ -23,6 +24,8 @@ public class TrackPointServiceImpl implements TrackPointService {
   private TrackPointDao trackPointDao;
  
   private TrackPointVisitor trackPointVisitor;
+  
+  private TrackPointPublisher publisher;
 
   /**
    * Injects the needed services.
@@ -32,10 +35,11 @@ public class TrackPointServiceImpl implements TrackPointService {
    */
   @Inject
   public TrackPointServiceImpl(TrackPointDao trackPointDao, DeviceService deviceService,
-      ItemService itemService, TrackPointVisitor trackPointVisitor) {
+      ItemService itemService, TrackPointVisitor trackPointVisitor, TrackPointPublisher publisher) {
     super();
     this.trackPointDao = trackPointDao;
     this.trackPointVisitor = trackPointVisitor;
+    this.publisher = publisher;
   }
 
   @Override
@@ -46,7 +50,11 @@ public class TrackPointServiceImpl implements TrackPointService {
     
     trackPoint.setSavedDate(new Date());
     
-    return trackPointDao.put(trackPoint);
+    TrackPoint savedTrackpoint = trackPointDao.put(trackPoint);
+    
+    publisher.publish(savedTrackpoint);
+    
+    return savedTrackpoint;
   }
 
   @Override
