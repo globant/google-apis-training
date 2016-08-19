@@ -76,6 +76,11 @@
       }
     </style>
 
+    <maps-request id="userInfo"
+      user="[[user]]"
+      endpoint="/users"
+      data="{{users}}"></maps-request>
+
     <app-location route="{{route}}" use-hash-as-path></app-location>
 
     <app-route
@@ -92,9 +97,9 @@
           <app-toolbar>Menu</app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
             <a name="home" href="/#/home">Home</a>
-            <a name="antennas" href="/#/antennas">Antennas</a>
-            <a name="devices" href="/#/devices">Devices</a>
-            <a name="items" href="/#/items">Items</a>
+            <a name="antennas" href="/#/antennas" hidden="[[_userIsAdmin()]]">Antennas</a>
+            <a name="devices" href="/#/devices" hidden="[[_userIsAdmin()]]">Devices</a>
+            <a name="items" href="/#/items" hidden="[[_userIsAdmin()]]">Items</a>
             <a name="heat-map" href="/#/heat-map">Heat Map</a>
           </iron-selector>
         </app-drawer>
@@ -172,7 +177,13 @@
       },
 
       _observeUser: function () {
-        console.log(this.user);
+        if (this.user !== null) {
+          this.$.userInfo.generateRequest();
+        }
+      },
+
+      _userIsAdmin: function() {
+        return !!(this.users && this.users.items[0].roles[1] === 'ADMIN');
       },
 
       _handleSubRouteChanged: function () {
