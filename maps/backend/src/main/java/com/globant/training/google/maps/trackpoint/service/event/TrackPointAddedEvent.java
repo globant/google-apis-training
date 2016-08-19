@@ -46,7 +46,7 @@ public class TrackPointAddedEvent implements Serializable {
     event.deviceId = trackpoint.getDeviceId();
     event.latitude = trackpoint.getLatitude();
     event.longitude = trackpoint.getLongitude();
-    event.measuredDate = trackpoint.getMeasuredDate();
+    event.measuredDate = trackpoint.getMeasuredDate().toDate();
 
     return event;
   }
