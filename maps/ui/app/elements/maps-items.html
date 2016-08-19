@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/paper-styles/color.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
@@ -50,7 +51,7 @@
 
       .card-actions {
         @apply(--layout-horizontal);
-        @apply(--layout-end-justified);
+        @apply(--layout-justified);
       }
 
       .item {
@@ -97,6 +98,10 @@
         display: none;
       }
 
+      .activeItem {
+        color: var(--paper-green-a700);
+      }
+
       div p {
         margin: 0;
       }
@@ -129,16 +134,23 @@
         <div class$="item [[getClassForItem(item, selected)]]">
           <div class="shortView" tabindex$="[[tabIndex]]">
             <div class="primary">[[item.name]]</div>
+            <div class="activeItem" hidden="[[!item.active]]">
+              <iron-icon icon="av:fiber-manual-record"></iron-icon>
+            </div>
           </div>
 
           <paper-card class="longView" heading="[[item.name]]" elevation="5">
             <div class="card-content">
               <span><em>Name:</em> {{item.name}}</span>
               <span hidden="[[!item.deviceId]]"><em>Assigned Device:</em> {{getDeviceName(item.deviceId)}}</span>
+              <span hidden="[[!item.active]]"><em>Active</em></span>
             </div>
             <div class="card-actions">
-              <paper-icon-button icon="create" item-id="[[item.id]]" on-tap="editItem"></paper-icon-button>
-              <paper-icon-button icon="delete" item-id="[[item.id]]" on-tap="removeItem"></paper-icon-button>
+              <paper-icon-button icon="info" item-id="[[item.id]]" device-id="[[item.deviceId]]" on-tap="viewItemTrackedDetail"></paper-icon-button>
+              <div>
+                <paper-icon-button icon="create" item-id="[[item.id]]" on-tap="editItem"></paper-icon-button>
+                <paper-icon-button icon="delete" item-id="[[item.id]]" on-tap="removeItem"></paper-icon-button>
+              </div>
             </div>
           </paper-card>
         </div>
@@ -155,7 +167,6 @@
       properties: {
         item: {
           type: Object
-
         }
       },
 
@@ -190,6 +201,10 @@
         this.$.itemDelete.generateRequest().completes.then(function () {
           self.$.items.generateRequest();
         });
+      },
+
+      viewItemTrackedDetail: function (e) {
+        this.hash = '/item-tracking/' + e.currentTarget.deviceId + '/' + e.currentTarget.itemId;
       },
 
       getDeviceName: function(deviceId) {

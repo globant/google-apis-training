@@ -5,6 +5,9 @@ import static com.globant.training.google.maps.core.endpoint.validation.DtoValid
 import com.globant.training.google.maps.trackpoint.entity.RfidTrackPoint;
 import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,9 +30,10 @@ public class RfidTrackPointFactory implements TrackPointFactory {
     trackPoint.setAntennaId(trackPointDto.getAntennaId());
     trackPoint.setRfidId(trackPointDto.getRfidId());
     trackPoint.setLatitude(trackPointDto.getLatitude());
-    trackPoint.setLongitude(trackPointDto.getLongitude());
-    trackPoint.setMeasuredDate(trackPointDto.getMeasuredDate());
-   
+    trackPoint.setLongitude(trackPointDto.getLongitude());    
+    trackPoint.setMeasuredDate(
+        new DateTime(trackPointDto.getMeasuredDate().toRfc3339String(), DateTimeZone.UTC));
+    
     return trackPoint;
   }
   

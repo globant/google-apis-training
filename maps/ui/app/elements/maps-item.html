@@ -47,6 +47,11 @@
         height: 400px;
       }
 
+      paper-checkbox {
+        @apply(--layout-block);
+        margin: 20px 0;
+      }
+
       .map-container {
         margin-left: 10px;
       }
@@ -109,6 +114,8 @@
                   </template>
                 </paper-listbox>
               </paper-dropdown-menu>
+
+              <paper-checkbox checked="{{item.active}}">Active</paper-checkbox>
             </form>
           </div>
         </div>
@@ -135,7 +142,8 @@
           type: Object,
           value: {
             name: '',
-            deviceId: null
+            deviceId: null,
+            active: false
           }
         },
 
@@ -177,7 +185,8 @@
         } else {
           this.item = {
             name: '',
-            deviceId: null
+            deviceId: null,
+            active: false
           };
           this.$$('form').reset();
         }

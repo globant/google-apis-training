@@ -19,6 +19,7 @@
     "gapi": false,
     "google": false,
     "MapsBehaviors": false,
-    "_": false
+    "_": false,
+    "moment": false
   }
 }

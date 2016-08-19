@@ -10,6 +10,7 @@
 <link rel="import" href="../bower_components/google-map/google-map.html">
 <link rel="import" href="../bower_components/google-map/google-map-marker.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 
 <!--Maps components-->
 <link rel="import" href="maps-request.html">
@@ -44,6 +45,10 @@
 
       google-map {
         height: 400px;
+      }
+
+      paper-checkbox {
+        margin: 20px 0;
       }
 
       .map-container {
@@ -126,6 +131,8 @@
                 pattern="[-+]?[0-9]*\.?[0-9]*"
                 error-message="This field only allow numbers"
                 value="{{antenna.rangeLimit}}"></paper-input>
+
+              <paper-checkbox checked="{{antenna.active}}">Active</paper-checkbox>
             </form>
           </div>
 
@@ -174,7 +181,8 @@
             serialNumber: '',
             latitude: 0,
             longitude: 0,
-            rangeLimit: 0
+            rangeLimit: 0,
+            active: false
           }
         },
 

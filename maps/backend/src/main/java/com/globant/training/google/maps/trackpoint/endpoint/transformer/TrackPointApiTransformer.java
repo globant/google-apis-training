@@ -1,6 +1,7 @@
 package com.globant.training.google.maps.trackpoint.endpoint.transformer;
 
 import com.google.api.server.spi.config.Transformer;
+import com.google.api.server.spi.types.DateAndTime;
 
 import com.globant.training.google.maps.core.endpoint.validation.DtoValidator;
 import com.globant.training.google.maps.device.entity.DeviceType;
@@ -9,6 +10,10 @@ import com.globant.training.google.maps.trackpoint.endpoint.dtos.RfidTrackPointF
 import com.globant.training.google.maps.trackpoint.endpoint.dtos.TrackPointDto;
 import com.globant.training.google.maps.trackpoint.endpoint.dtos.TrackPointFactory;
 import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
+
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +29,8 @@ public class TrackPointApiTransformer implements Transformer<TrackPoint, TrackPo
 
   private static final Map<DeviceType, TrackPointFactory> trackPointFactoryMap;
 
+  private static DateTimeFormatter dateFormatter = ISODateTimeFormat.dateTime();
+  
   static {
     trackPointFactoryMap = new HashMap<DeviceType, TrackPointFactory>();
     trackPointFactoryMap.put(DeviceType.GPS, new GpsTrackPointFactory());
@@ -44,9 +51,13 @@ public class TrackPointApiTransformer implements Transformer<TrackPoint, TrackPo
     TrackPointDto dto = new TrackPointDto();
     // @formatter:off
     dto.setId(trackPoint.getId()).setLatitude(trackPoint.getLatitude())
-        .setLongitude(trackPoint.getLongitude()).setMeasuredDate(trackPoint.getMeasuredDate())
-        .setSavedDate(trackPoint.getSavedDate());
+        .setLongitude(trackPoint.getLongitude())
+        .setMeasuredDate(DateAndTime.parseRfc3339String(dateFormatter.print(trackPoint.getMeasuredDate())))
+        .setSavedDate(DateAndTime.parseRfc3339String(dateFormatter.print(trackPoint.getSavedDate())));
     // @formatter:on
+    
+    
+    
     return dto;
   }
 

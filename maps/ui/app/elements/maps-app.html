@@ -26,6 +26,7 @@
 <link rel="import" href="maps-device.html">
 <link rel="import" href="maps-items.html">
 <link rel="import" href="maps-item.html">
+<link rel="import" href="maps-item-tracking.html">
 
 <dom-module id="maps-app">
 
@@ -122,6 +123,8 @@
 
               <maps-items name="items" user="[[user]]"></maps-items>
               <maps-item name="item" user="[[user]]" route="[[subroute]]"></maps-item>
+
+              <maps-item-tracking name="item-tracking" user="[[user]]" route="[[subroute]]"></maps-item-tracking>
           </iron-pages>
 
         </app-header-layout>
