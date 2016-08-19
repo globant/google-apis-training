@@ -9,13 +9,6 @@
         display: none;
       }
     </style>
-
-    <iron-ajax
-      auto
-      url="https://www.googleapis.com/fusiontables/v2/tables/[[fusionTableId]]"
-      handle-as="json"
-      on-response="handleResponse"
-      debounce-duration="300"></iron-ajax>
   </template>
 
   <script>
@@ -23,7 +16,7 @@
       is: 'maps-google-map-heat-layer',
 
       properties: {
-        fusionTable: {
+        heatMap: {
           type: Object,
           notify: true
         },
@@ -33,36 +26,36 @@
           observer: '_mapChanged'
         },
 
-        fusionTableId: {
-          type: String,
-          value: '',
-          observer: '_updateFusionTableId'
+        locations: {
+          type: Object,
+          value: [],
+          observer: '_updateLocations'
         }
       },
 
       detached: function() {
-        if (this.fusionTable) {
-          this.fusionTable.setMap(null);
+        if (this.heatMap) {
+          this.heatMap.setMap(null);
         }
         if (this._contentObserver)
           this._contentObserver.disconnect();
       },
 
       attached: function() {
-        if (this.fusionTable) {
-          this.fusionTable.setMap(this.map);
+        if (this.heatMap) {
+          this.heatMap.setMap(this.map);
         }
       },
 
-      _updateFusionTableId: function() {
-        if (this.fusionTable && this.path != null) {
-          this.fusionTable.setPath(this.path);
+      _updateLocations: function() {
+        if (this.heatMap && this.fusionTableId != null) {
+          this.heatMap.setData(this.locations);
         }
       },
 
       _mapChanged: function() {
-        if (this.fusionTable) {
-          this.fusionTable.setMap(null);
+        if (this.heatMap) {
+          this.heatMap.setMap(null);
         }
         if (this.map && this.map instanceof google.maps.Map) {
           this._mapReady();
@@ -70,15 +63,9 @@
       },
 
       _mapReady: function() {
-        this.fusionTable = new google.maps.FusionTablesLayer({
+        this.heatMap = new google.maps.visualization.HeatmapLayer({
           map: this.map,
-          heatmap: {
-            enabled: true
-          },
-          query: {
-            select: 'Location',
-            from: this.fusionTableId
-          }
+          data: this.locations
         });
       }
     });
