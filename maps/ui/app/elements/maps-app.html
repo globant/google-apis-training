@@ -28,7 +28,7 @@
 <link rel="import" href="maps-items.html">
 <link rel="import" href="maps-item.html">
 <link rel="import" href="maps-item-tracking.html">
-<link rel="import" href="maps-items-heat-map.html">
+<link rel="import" href="maps-items-heatmap.html">
 
 <dom-module id="maps-app">
 
@@ -100,7 +100,7 @@
             <a name="antennas" href="/#/antennas" hidden="[[_userIsAdmin()]]">Antennas</a>
             <a name="devices" href="/#/devices" hidden="[[_userIsAdmin()]]">Devices</a>
             <a name="items" href="/#/items" hidden="[[_userIsAdmin()]]">Items</a>
-            <a name="heat-map" href="/#/heat-map">Heat Map</a>
+            <a name="heatmap" href="/#/heatmap">Heat Map</a>
           </iron-selector>
         </app-drawer>
 
@@ -134,7 +134,7 @@
 
               <maps-item-tracking name="item-tracking" user="[[user]]" route="[[subroute]]"></maps-item-tracking>
 
-              <maps-items-heat-map name="heat-map" user="[[user]]"></maps-items-heat-map>
+              <maps-items-heat-map name="heatmap" user="[[user]]"></maps-items-heat-map>
           </iron-pages>
 
         </app-header-layout>

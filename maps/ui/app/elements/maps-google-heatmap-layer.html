@@ -2,7 +2,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
-<dom-module id="maps-google-map-heat-layer">
+<dom-module id="maps-google-heatmap-layer">
   <template>
     <style>
       :host {
@@ -13,7 +13,7 @@
 
   <script>
     Polymer({
-      is: 'maps-google-map-heat-layer',
+      is: 'maps-google-heatmap-layer',
 
       properties: {
         heatMap: {
@@ -30,6 +30,12 @@
           type: Object,
           value: [],
           observer: '_updateLocations'
+        },
+
+        radius: {
+          type: Number,
+          value: 12,
+          observer: '_updateRadius'
         }
       },
 
@@ -48,8 +54,16 @@
       },
 
       _updateLocations: function() {
-        if (this.heatMap && this.fusionTableId != null) {
+        if (this.heatMap && this.locations != null) {
           this.heatMap.setData(this.locations);
+        }
+      },
+
+      _updateRadius: function () {
+        if (this.heatMap && this.locations != 0) {
+          this.heatMap.setOptions({
+            radius: parseInt(this.radius)
+          });
         }
       },
 
