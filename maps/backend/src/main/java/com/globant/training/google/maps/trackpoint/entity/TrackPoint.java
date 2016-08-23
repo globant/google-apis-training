@@ -10,7 +10,8 @@ import com.globant.training.google.maps.core.entity.BaseEntity;
 import com.globant.training.google.maps.trackpoint.endpoint.transformer.TrackPointApiTransformer;
 import com.globant.training.google.maps.trackpoint.service.visitor.TrackPointVisitor;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+
 import java.util.Map;
 
 /**
@@ -45,9 +46,10 @@ public abstract class TrackPoint extends BaseEntity {
 
   protected Double longitude;
 
-  protected Date measuredDate;
+  @Index
+  protected DateTime measuredDate;
 
-  protected Date savedDate;
+  protected DateTime savedDate;
   
   protected Map<String, String> context;
   
@@ -111,7 +113,7 @@ public abstract class TrackPoint extends BaseEntity {
    * 
    * @return the measured date
    */
-  public Date getMeasuredDate() {
+  public DateTime getMeasuredDate() {
     return measuredDate;
   }
 
@@ -120,7 +122,7 @@ public abstract class TrackPoint extends BaseEntity {
    * 
    * @param measuredDate the measured Date
    */
-  public void setMeasuredDate(Date measuredDate) {
+  public void setMeasuredDate(DateTime measuredDate) {
     this.measuredDate = measuredDate;
   }
 
@@ -129,7 +131,7 @@ public abstract class TrackPoint extends BaseEntity {
    * 
    * @return the saved date
    */
-  public Date getSavedDate() {
+  public DateTime getSavedDate() {
     return savedDate;
   }
 
@@ -138,7 +140,7 @@ public abstract class TrackPoint extends BaseEntity {
    * 
    * @param savedDate the saved Date
    */
-  public void setSavedDate(Date savedDate) {
+  public void setSavedDate(DateTime savedDate) {
     this.savedDate = savedDate;
   }
 

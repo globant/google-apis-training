@@ -1,9 +1,9 @@
 package com.globant.training.google.maps.trackpoint.endpoint.dtos;
 
+import com.google.api.server.spi.types.DateAndTime;
+
 import com.globant.training.google.maps.core.endpoint.dto.Dto;
 import com.globant.training.google.maps.device.entity.DeviceType;
-
-import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
@@ -31,9 +31,9 @@ public class TrackPointDto implements Dto {
 
   private Double longitude;
 
-  private Date measuredDate;
+  private DateAndTime measuredDate;
 
-  private Date savedDate;
+  private DateAndTime savedDate;
   
 
   /**
@@ -41,7 +41,7 @@ public class TrackPointDto implements Dto {
    * 
    * @return the measuted date.
    */
-  public Date getMeasuredDate() {
+  public DateAndTime getMeasuredDate() {
     return measuredDate;
   }
 
@@ -50,7 +50,7 @@ public class TrackPointDto implements Dto {
    * 
    * @param measuredDate the measured date
    */
-  public TrackPointDto setMeasuredDate(Date measuredDate) {
+  public TrackPointDto setMeasuredDate(DateAndTime measuredDate) {
     this.measuredDate = measuredDate;
     return this;
   }
@@ -117,7 +117,7 @@ public class TrackPointDto implements Dto {
    * 
    * @return the saved date
    */
-  public Date getSavedDate() {
+  public DateAndTime getSavedDate() {
     return savedDate;
   }
 
@@ -126,7 +126,7 @@ public class TrackPointDto implements Dto {
    * 
    * @param savedDate the saved date
    */
-  public TrackPointDto setSavedDate(Date savedDate) {
+  public TrackPointDto setSavedDate(DateAndTime savedDate) {
     this.savedDate = savedDate;
     return this;
   }

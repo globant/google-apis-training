@@ -1,9 +1,10 @@
 package com.globant.training.google.maps.user.entity;
 
-import com.globant.training.google.maps.core.entity.BaseEntity;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
+
+import com.globant.training.google.maps.core.entity.BaseEntity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +26,7 @@ public class AppUser extends BaseEntity {
 
   private String email;
 
+  @Index
   private List<UserRole> roles = new ArrayList<>();
 
   private boolean active;

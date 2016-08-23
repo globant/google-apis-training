@@ -7,6 +7,7 @@ import com.globant.training.google.maps.user.dao.UserDao;
 import com.globant.training.google.maps.user.entity.AppUser;
 import com.globant.training.google.maps.user.entity.UserRole;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**

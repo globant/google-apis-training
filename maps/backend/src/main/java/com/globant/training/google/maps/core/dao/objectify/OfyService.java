@@ -4,6 +4,8 @@ package com.globant.training.google.maps.core.dao.objectify;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.impl.translate.opt.joda.JodaTimeTranslators;
+
 import com.globant.training.google.maps.antenna.entity.Antenna;
 import com.globant.training.google.maps.device.entity.Device;
 import com.globant.training.google.maps.device.entity.GpsDevice;
@@ -26,6 +28,9 @@ public class OfyService {
    * Register all entities
    */
   static {
+  
+    JodaTimeTranslators.add(ObjectifyService.factory());
+    
     ObjectifyService.register(AppUser.class);
 
     ObjectifyService.register(Device.class);
@@ -37,6 +42,7 @@ public class OfyService {
     ObjectifyService.register(TrackPoint.class);
     ObjectifyService.register(RfidTrackPoint.class);
     ObjectifyService.register(GpsTrackPoint.class);
+   
   }
 
   /**

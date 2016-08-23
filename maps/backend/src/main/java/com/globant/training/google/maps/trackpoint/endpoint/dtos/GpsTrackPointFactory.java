@@ -5,6 +5,9 @@ import static com.globant.training.google.maps.core.endpoint.validation.DtoValid
 import com.globant.training.google.maps.trackpoint.entity.GpsTrackPoint;
 import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +17,7 @@ import java.util.Set;
  * @author gabriel.sideri
  */
 public class GpsTrackPointFactory implements TrackPointFactory {
- 
+   
   private static final String IS_REQUIRED = " is required";
   
   private static final String PARAMETER = "parameter.";
@@ -27,7 +30,8 @@ public class GpsTrackPointFactory implements TrackPointFactory {
     trackPoint.setDeviceId(trackPointDto.getDeviceId());
     trackPoint.setLatitude(trackPointDto.getLatitude());
     trackPoint.setLongitude(trackPointDto.getLongitude());
-    trackPoint.setMeasuredDate(trackPointDto.getMeasuredDate());
+    trackPoint.setMeasuredDate(
+        new DateTime(trackPointDto.getMeasuredDate().toRfc3339String(), DateTimeZone.UTC));
     
     return trackPoint;
   }

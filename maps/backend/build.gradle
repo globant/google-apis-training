@@ -36,6 +36,13 @@ dependencies {
     compile 'org.apache.bval:bval-guice:0.5'
     compile 'javax.validation:validation-api:1.1.0.Final'
     compile 'com.google.apis:google-api-services-fusiontables:v2-rev13-1.22.0'
+    compile 'com.google.api-client:google-api-client-appengine:1.20.0'
+    compile 'com.google.api-client:google-api-client-servlet:1.20.0'
+    compile 'com.google.api-client:google-api-client:1.20.0'
+    compile 'com.google.apis:google-api-services-drive:v2-rev232-1.22.0'
+   
+    
+    compile group: 'joda-time', name: 'joda-time', version: '2.9.4'
     
     testCompile 'com.google.appengine:appengine-testing:1.9.38'
     testCompile 'com.google.appengine:appengine-api-stubs:1.9.38'
@@ -85,6 +92,7 @@ compileJava.doFirst {
         into(tempDir)
     }
     ant.replace(file: constantFile, token: '@WEB_CLIENT_ID@', value: clientId)
+    ant.replace(file: constantFile, token: '@JSON_CREDENTIALS_PATH@', value: appEnginejsonCredentialsPath)
 }
 
 compileJava.doLast {
