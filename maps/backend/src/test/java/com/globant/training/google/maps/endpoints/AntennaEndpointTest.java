@@ -129,11 +129,11 @@ public class AntennaEndpointTest {
    *      1) Try to invoke {@link AntennaEndpoint#modify(Long, AntennaDto)} 
    *      with a invalid antenna id.
    * Expectations:
-   *      1) Exception is returned.
+   *      2) Exception is returned.
    * </pre>
    */
   @Test(expected = RuntimeException.class)
-  public void testModifyntennaWithInvalidAntennaId() throws OAuthRequestException {
+  public void testModifyAntennaWithInvalidAntennaId() throws OAuthRequestException {
     when(antennaServiceMock.findById(INVALID_ANTENNA_ID)).thenReturn(null);
 
     antennaEndpoint.modify(INVALID_ANTENNA_ID, validAntennaRequest, authenticatedUser);
