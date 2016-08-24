@@ -46,9 +46,14 @@ public class ItemApiTransformer implements Transformer<Item, ItemDto> {
        .setActive(item.isActive())
        .setCreated(item.getCreated())
        .setLastUpdated(item.getLastUpdated())
-       .setDeviceId(item.getDeviceId());
-   
+       .setDeviceId(item.getDeviceId()); 
     // @formatter:on
+    
+    if (item.getDeviceType() != null) {
+      dto.setDeviceName(item.getDeviceName());
+      dto.setDeviceType(item.getDeviceType());
+    }
+    
     return dto;
   }
 

@@ -27,10 +27,15 @@ public class TrackPointOfyDao extends BaseOfyDao<TrackPoint> implements TrackPoi
   }
 
   @Override
-  public List<TrackPoint> findTrackPointsByItemIdAndDateRange(Long itemId, DateTime fromDate,
-      DateTime toDate) {
+  public List<TrackPoint> find(DateTime fromDate,
+      DateTime toDate, Long itemId) {
 
-    Query<TrackPoint> query = this.query().filter(TrackPoint.ITEM_ID_FIELD, itemId);
+    Query<TrackPoint> query = this.query();
+    
+    if (itemId != null) {
+      query = query.filter(TrackPoint.ITEM_ID_FIELD, itemId);
+    }
+
     query = query.filter("measuredDate >=", fromDate);
     query = query.filter("measuredDate <=", toDate);
 

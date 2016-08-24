@@ -45,11 +45,11 @@ public interface TrackPointDao {
   /**
    * Find Track Points by Item Id and Date Range.
    * 
-   * @param itemId the item id
    * @param fromDate from measured date
    * @param toDate to measured date
+   * @param itemId the item id (if null then information for all items is returned)
    */
-  List<TrackPoint> findTrackPointsByItemIdAndDateRange(Long itemId, DateTime fromDate,
-      DateTime toDate);
+  List<TrackPoint> find(DateTime fromDate,
+      DateTime toDate, Long itemId);
 
 }

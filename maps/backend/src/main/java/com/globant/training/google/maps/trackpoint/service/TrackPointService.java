@@ -46,10 +46,10 @@ public interface TrackPointService {
   /**
    * Find Track Points by Item Id and Date Range.
    * 
-   * @param itemId the item id
    * @param fromDate from measured date
    * @param toDate to measured date
+   * @param itemId the item id
    */
-  List<TrackPoint> findTrackPointsByItemIdAndDateRange(Long itemId, DateTime fromDate,
-      DateTime toDate);
+  List<TrackPoint> find(DateTime fromDate,
+      DateTime toDate, Long itemId);
 }

@@ -112,6 +112,12 @@ public class ItemServiceImpl implements ItemService {
       throw new RuntimeException("item Not Found");
     }
     
+    if (item.getDeviceId() != null) {
+      Device device = deviceService.findById(item.getDeviceId());
+      item.setDeviceName(device.getName());
+      item.setDeviceType(device.getType());
+    }
+    
     return item;
   }
 
