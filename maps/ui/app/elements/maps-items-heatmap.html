@@ -14,6 +14,8 @@
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 
+<link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+
 //Maps components
 <link rel="import" href="maps-request.html">
 <link rel="import" href="maps-google-heatmap-layer.html">
@@ -65,6 +67,13 @@
       }
     </style>
 
+    <maps-request id="trackPoints"
+      user="[[user]]"
+      endpoint="/trackpoints"
+      method="GET"
+      params="{{searchParams}}"
+      data="{{trackPoints}}"></maps-request>
+
     <iron-location hash="{{hash}}"></iron-location>
 
     <paper-drawer-panel id="trackPointsList" right-drawer force-narrow drawer-width="400px" selected="{{_panelSelected}}">
@@ -80,6 +89,16 @@
 
         <paper-item>
           <paper-item-body two-line>
+            <div>Show track points: </div>
+            <div secondary>
+              <vaadin-date-picker label="from" value="{{fromDate}}"></vaadin-date-picker>
+              <vaadin-date-picker label="to" value="{{toDate}}"></vaadin-date-picker>
+            </div>
+          </paper-item-body>
+        </paper-item>
+
+        <paper-item>
+          <paper-item-body two-line>
             <div>Radius</div>
             <div secondary>
               <paper-slider min="1" max="50" immediate-value="{{radius}}" value="{{radius}}" editable></paper-slider>
@@ -87,7 +106,7 @@
           </paper-item-body>
         </paper-item>
 
-        <paper-listbox selected="{{_trackPointIndex}}">
+        <!--<paper-listbox selected="{{_trackPointIndex}}">
           <template is="dom-repeat" items="[[antennas.items]]">
             <paper-item>
               <paper-item-body two-line>
@@ -107,7 +126,7 @@
               </paper-item-body>
             </paper-item>
           </template>
-        </paper-listbox>
+        </paper-listbox>-->
       </div>
 
       <div main>
@@ -126,32 +145,26 @@
   </template>
 
   <script>
-    var trackPoints = [
-      {
-        "deviceId": "asd1231321312",
-        "latitude":"30",
-        "longitude":"-120",
-        "measuredDate": "2016-08-05T23:20:50.520Z"
-      }
-    ];
-
     Polymer({
       is: 'maps-items-heat-map',
 
       properties: {
         trackPoints: {
           type: Object,
-          value: trackPoints
+          value: []
         },
 
         locations: {
-          type: Object,
-          value: []
+          computed: '_getLocations(trackPoints)'
         },
 
         radius: {
           type: Number,
           value: 12
+        },
+
+        searchParams: {
+          computed: '_getParams(fromDate, toDate)'
         },
 
         _trackPointIndex: {
@@ -165,22 +178,35 @@
         }
       },
 
-      listeners: {
-        'view-activated': '_handleViewActivated'
-      },
-
       behaviors: [
         MapsBehaviors.ViewBehavior,
         MapsBehaviors.ConstantsBehavior
       ],
 
+      listeners: {
+        'view-activated': '_handleViewActivated'
+      },
+
+      _getParams: function(fromDate, toDate) {
+        return {
+          from: fromDate,
+          to: toDate
+        };
+      },
+
+      _getLocations: function (trackPoints) {
+        if(trackPoints.items && trackPoints.items.length > 0) {
+          return _(trackPoints.items)
+            .map(trackPoint => new google.maps.LatLng(parseFloat(trackPoint.latitude), parseFloat(trackPoint.longitude)))
+            .value();
+        } else {
+          return [];
+        }
+      },
+
       _handleViewActivated: function () {
-        this.locations = [
-          new google.maps.LatLng(parseFloat(19), parseFloat(-99)),
-          new google.maps.LatLng(parseFloat(19.1), parseFloat(-99.1)),
-          new google.maps.LatLng(parseFloat(19.2), parseFloat(-99.2)),
-          new google.maps.LatLng(parseFloat(19.3), parseFloat(-99.3))
-        ];
+        this.fromDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
+        this.toDate = moment().format('YYYY-MM-DD');
       },
 
       _getIconDrawer: function (_panelSelected) {
