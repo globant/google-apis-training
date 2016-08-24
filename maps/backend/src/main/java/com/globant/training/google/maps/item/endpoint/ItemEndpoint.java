@@ -5,6 +5,7 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.response.NotFoundException;
+import com.google.api.server.spi.types.DateAndTime;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.inject.Inject;
 
@@ -13,8 +14,12 @@ import com.globant.training.google.maps.core.endpoint.BaseEndpoint;
 import com.globant.training.google.maps.item.endpoint.dtos.ItemDto;
 import com.globant.training.google.maps.item.entity.Item;
 import com.globant.training.google.maps.item.service.ItemService;
+import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
+import com.globant.training.google.maps.trackpoint.service.TrackPointService;
 import com.globant.training.google.maps.user.entity.AppUser;
 import com.globant.training.google.maps.user.service.UserService;
+
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -33,15 +38,19 @@ public class ItemEndpoint extends BaseEndpoint {
 
   private ItemService itemService;
 
+  private TrackPointService trackPointService;
+
   /**
    * Constructor.
    * 
    * @param itemService the item service.
    */
   @Inject
-  public ItemEndpoint(ItemService itemService, UserService userService) {
+  public ItemEndpoint(ItemService itemService, UserService userService,
+      TrackPointService trackPointService) {
     super(userService);
     this.itemService = itemService;
+    this.trackPointService = trackPointService;
   }
 
   /**
@@ -53,8 +62,7 @@ public class ItemEndpoint extends BaseEndpoint {
    * @throws NotFoundException if none item found for provided id
    */
   @ApiMethod(name = "items.get", path = "items/{itemId}", httpMethod = HttpMethod.GET)
-  public Item getItem(@Named("itemId") final Long itemId, User user)
-      throws OAuthRequestException {
+  public Item getItem(@Named("itemId") final Long itemId, User user) throws OAuthRequestException {
 
     AppUser loggedUser = loginUser(user);
 
@@ -121,7 +129,7 @@ public class ItemEndpoint extends BaseEndpoint {
     validateAdmin(user);
 
     List<Item> items = itemService.getAll();
-    
+
     return items;
 
   }
@@ -132,14 +140,56 @@ public class ItemEndpoint extends BaseEndpoint {
    * @throws OAuthRequestException
    * 
    */
-  @ApiMethod(name = "items.delete", path = "items/{itemId}",
-      httpMethod = HttpMethod.DELETE)
+  @ApiMethod(name = "items.delete", path = "items/{itemId}", httpMethod = HttpMethod.DELETE)
   public void deleteItem(@Named("itemId") final Long itemId, User user)
       throws OAuthRequestException {
 
     validateAdmin(user);
 
     itemService.deleteById(itemId);
+
+  }
+
+  /**
+   * Find track points by item id and date range.
+   * 
+   * @throws OAuthRequestException return an exception if the user is not logged.
+   */
+  @ApiMethod(name = "items.find.trackpoints", path = "items/{itemId}/trackpoints",
+      httpMethod = HttpMethod.GET)
+  public List<TrackPoint> findTrackPointsByItemId(@Named("itemId") final Long itemId,
+      @Named("from") DateAndTime start, @Named("to") DateAndTime end, User user)
+      throws OAuthRequestException {
+
+    validateAdmin(user);
+    validateDates(start, end);
+   
+    DateTime fromDate = null;
+    DateTime toDate = null;
+
+    if (start == null && end == null) {
+      toDate = new DateTime();
+      fromDate = toDate.minusWeeks(1);
+    } else {
+      fromDate = new DateTime(start.toRfc3339String());
+      toDate = new DateTime(end.toRfc3339String());
+    }
+    
+    return trackPointService.findTrackPointsByItemIdAndDateRange(itemId, fromDate, toDate);
+
+  }
+
+  private void validateDates(DateAndTime start, DateAndTime end) {
+
+    if ((start == null && end != null)) {
+      throw new RuntimeException(
+          "You can not send 'from' parameter as null if 'to' parameters is send it.");
+    }
+
+    if ((start != null && end == null)) {
+      throw new RuntimeException(
+          "You can not send 'to' parameter as null if 'from' parameters is send it.");
+    }
 
   }
 

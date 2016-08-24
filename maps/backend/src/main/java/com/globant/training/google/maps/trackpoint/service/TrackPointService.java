@@ -2,6 +2,8 @@ package com.globant.training.google.maps.trackpoint.service;
 
 import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 /**
@@ -40,4 +42,14 @@ public interface TrackPointService {
    * @return the track points by device id
    */
   List<TrackPoint> findTrackPointsByDeviceId(Long deviceId);
+  
+  /**
+   * Find Track Points by Item Id and Date Range.
+   * 
+   * @param itemId the item id
+   * @param fromDate from measured date
+   * @param toDate to measured date
+   */
+  List<TrackPoint> findTrackPointsByItemIdAndDateRange(Long itemId, DateTime fromDate,
+      DateTime toDate);
 }
