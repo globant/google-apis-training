@@ -1,8 +1,6 @@
 package com.globant.training.google.maps.configs;
 
 
-import com.googlecode.objectify.ObjectifyFilter;
-
 import com.google.api.server.spi.guice.GuiceSystemServiceServletModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -12,6 +10,13 @@ import com.google.inject.Singleton;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 
+import com.googlecode.objectify.ObjectifyFilter;
+
+import com.globant.training.google.maps.alert.dao.AlertDao;
+import com.globant.training.google.maps.alert.dao.objectify.AlertOfyDao;
+import com.globant.training.google.maps.alert.endpoint.AlertEndpoint;
+import com.globant.training.google.maps.alert.service.AlertService;
+import com.globant.training.google.maps.alert.service.AlertServiceImpl;
 import com.globant.training.google.maps.antenna.dao.AntennaDao;
 import com.globant.training.google.maps.antenna.dao.objectify.AntennaOfyDao;
 import com.globant.training.google.maps.antenna.endpoint.AntennaEndpoint;
@@ -89,6 +94,7 @@ public class GuiceConfig extends GuiceServletContextListener {
       serviceClasses.add(ItemEndpoint.class);
       serviceClasses.add(TrackPointEndpoint.class);
       serviceClasses.add(ConfigEndpoint.class);
+      serviceClasses.add(AlertEndpoint.class);
 
       this.serveGuiceSystemServiceServlet("/_ah/spi/*", serviceClasses);
 
@@ -125,6 +131,7 @@ public class GuiceConfig extends GuiceServletContextListener {
       bind(DeviceDao.class).to(DeviceOfyDao.class);
       bind(ItemDao.class).to(ItemOfyDao.class);
       bind(TrackPointDao.class).to(TrackPointOfyDao.class);
+      bind(AlertDao.class).to(AlertOfyDao.class);
 
       // Service Definitions
       bind(UserService.class).to(UserServiceImpl.class);
@@ -138,6 +145,8 @@ public class GuiceConfig extends GuiceServletContextListener {
       
       bind(FusionTablesService.class).to(FusionTablesServiceImpl.class);
       bind(HeatmapService.class).to(HeatMapServiceFusionTablesService.class);
+      
+      bind(AlertService.class).to(AlertServiceImpl.class);
     }
 
   }

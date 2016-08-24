@@ -36,6 +36,9 @@ public abstract class TrackPoint extends BaseEntity {
   @Ignore
   public static final String DEVICE_ID_FIELD = "deviceId";
   
+  @Ignore
+  public static final String ITEM_ID_FIELD = "itemId";
+  
   @Index
   protected Long itemId;
 
