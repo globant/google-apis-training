@@ -175,10 +175,17 @@ public class ItemEndpoint extends BaseEndpoint {
       toDate = new DateTime(end.toRfc3339String());
     }
     
-    return trackPointService.findTrackPointsByItemIdAndDateRange(itemId, fromDate, toDate);
+    return trackPointService.find(fromDate, toDate, itemId);
 
   }
 
+
+  /**
+   * Validates that provided dates (range) are: both completed or both null.
+   * 
+   * @param start the start date.
+   * @param end the end date.
+   */
   private void validateDates(DateAndTime start, DateAndTime end) {
 
     if ((start == null && end != null)) {

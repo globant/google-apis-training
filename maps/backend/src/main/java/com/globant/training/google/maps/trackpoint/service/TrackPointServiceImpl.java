@@ -78,12 +78,12 @@ public class TrackPointServiceImpl implements TrackPointService {
   }
 
   @Override
-  public List<TrackPoint> findTrackPointsByItemIdAndDateRange(Long itemId, DateTime fromDate,
-      DateTime toDate) {
-    Validate.notNull(itemId, "Item Id can not be null");
+  public List<TrackPoint> find(DateTime fromDate,
+      DateTime toDate, Long itemId) {
     Validate.notNull(fromDate, "From date can not be null");
     Validate.notNull(toDate, "To Date can not be null");
-    return trackPointDao.findTrackPointsByItemIdAndDateRange(itemId, fromDate, toDate);
+    
+    return trackPointDao.find(fromDate, toDate,itemId);
   }
 
 }

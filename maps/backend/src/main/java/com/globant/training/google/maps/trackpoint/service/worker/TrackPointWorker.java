@@ -32,8 +32,8 @@ public class TrackPointWorker extends BaseWorker<TrackPointAddedEvent> {
   @Override
   public void process(TrackPointAddedEvent dto) {
     logger.info("procesing entry point for item" + dto.getItemId());
-
-    heatmapService.addEntryPoint(dto);
+    
+    //TODO add alarm processor.
 
     logger.info("entry point for item" + dto.getItemId() + " processed");
 

@@ -1,10 +1,11 @@
 {
-	"id": "54140ac2-3035-5e0a-5117-9de1ab67edb6",
+	"id": "c2433340-d678-3bd2-bc8e-ebe7157ec3b0",
 	"name": "Maps-Track-Points",
 	"description": "",
 	"order": [
-		"11e180aa-9827-51f5-4a9b-7dfc7f3c550d",
-		"a6cdb2c2-dc53-a149-3748-3f35d0543d38"
+		"ceabcb0d-1cb3-0847-c64f-bb8161485a7b",
+		"39ae562b-c33f-772a-557b-910af8804912",
+		"f929ee23-9e7b-a999-eda3-e0768328c7d6"
 	],
 	"folders": [],
 	"timestamp": 1470400522872,
@@ -13,26 +14,7 @@
 	"published": false,
 	"requests": [
 		{
-			"id": "11e180aa-9827-51f5-4a9b-7dfc7f3c550d",
-			"headers": "Authorization: Bearer {{mapsToken}}\nContent-Type: application/json\n",
-			"url": "{{backend-url}}/_ah/api/maps/v1/trackpoints",
-			"preRequestScript": null,
-			"pathVariables": {},
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"tests": "var jsonData = JSON.parse(responseBody);\npostman.setGlobalVariable(\"trackpointId\", jsonData.id);",
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1470752868146,
-			"name": "Add Track Point",
-			"description": "",
-			"collectionId": "54140ac2-3035-5e0a-5117-9de1ab67edb6",
-			"responses": [],
-			"rawModeData": "{\n    \"deviceId\":\"{{deviceId}}\",\n    \"latitude\":\"30\",\n    \"longitude\":\"-120\",\n    \"measuredDate\": \"2016-08-05T23:20:50.520Z\"\n}"
-		},
-		{
-			"id": "a6cdb2c2-dc53-a149-3748-3f35d0543d38",
+			"id": "39ae562b-c33f-772a-557b-910af8804912",
 			"headers": "Authorization: Bearer {{mapsToken}}\nContent-Type: application/json\n",
 			"url": "http://localhost:8080/_ah/api/maps/v1/trackpoints/{{trackPointId}}",
 			"preRequestScript": null,
@@ -46,9 +28,47 @@
 			"time": 1470851708912,
 			"name": "Get Track Point By Id",
 			"description": "",
-			"collectionId": "54140ac2-3035-5e0a-5117-9de1ab67edb6",
+			"collectionId": "c2433340-d678-3bd2-bc8e-ebe7157ec3b0",
 			"responses": [],
 			"rawModeData": "{\n    \"deviceId\":\"222\",\n    \"latitude\":\"30\",\n    \"longitude\":\"-120\",\n    \"measuredDate\": \"2016-08-05T23:20:50.520Z\"\n}"
+		},
+		{
+			"id": "ceabcb0d-1cb3-0847-c64f-bb8161485a7b",
+			"headers": "Authorization: Bearer {{mapsToken}}\nContent-Type: application/json\n",
+			"url": "{{backend-url}}/_ah/api/maps/v1/trackpoints",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": "var jsonData = JSON.parse(responseBody);\npostman.setGlobalVariable(\"trackpointId\", jsonData.id);",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1470752868146,
+			"name": "Add Track Point",
+			"description": "",
+			"collectionId": "c2433340-d678-3bd2-bc8e-ebe7157ec3b0",
+			"responses": [],
+			"rawModeData": "{\n    \"deviceId\":\"{{deviceId}}\",\n    \"latitude\":\"30\",\n    \"longitude\":\"-120\",\n    \"measuredDate\": \"2016-08-05T23:20:50.520Z\"\n}"
+		},
+		{
+			"id": "f929ee23-9e7b-a999-eda3-e0768328c7d6",
+			"headers": "Authorization: Bearer {{mapsToken}}\nContent-Type: application/json\n",
+			"url": "{{backend-url}}/_ah/api/maps/v1/trackpoints?from=2016-08-17&to=2016-08-24",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"tests": "var jsonData = JSON.parse(responseBody);\n\nvar count = 0;\n\nif(jsonData.items){\n    count = jsonData.items.length;\n}\n\n\npostman.setGlobalVariable(\"deviceNumber\", count);\n\ntests[\"Status code is 200\"] = responseCode.code === 200;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1472065535951,
+			"name": "Find trackpoints",
+			"description": "",
+			"collectionId": "c2433340-d678-3bd2-bc8e-ebe7157ec3b0",
+			"responses": [],
+			"rawModeData": "{\n    \"name\": \"gps one modified\",\n    \"type\": \"GPS\",\n    \"attributtes\": {\n        \"serialNumber\": \"123455\"\n    }\n    \n}"
 		}
 	]
 }
