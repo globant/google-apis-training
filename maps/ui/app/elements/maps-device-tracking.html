@@ -16,7 +16,7 @@
 
 <link rel="import" href="maps-google-map-polyline.html">
 
-<dom-module id="maps-item-tracking">
+<dom-module id="maps-device-tracking">
   <template>
     <style is="custom-style" include="iron-flex iron-flex-alignment iron-flex-factors iron-positioning">
       :host {
@@ -137,18 +137,19 @@
           map="{{map}}"
           latitude="{{_selectedTrackPoint.latitude}}"
           longitude="{{_selectedTrackPoint.longitude}}"
-          api-key="{{constants.apiKeys.mapsApiKey}}"></google-map>
+          api-key="{{constants.apiKeys.mapsApiKey}}"
+          fit-to-markers></google-map>
 
         <template is="dom-repeat" items="[[trackPoints.items]]">
           <google-map-marker
             map="{{map}}"
+            marker="{{marker}}"
             latitude="[[item.latitude]]"
             longitude="[[item.longitude]]"
-            title="[[item.name]]"
+            title="[[_formatDate(item.measuredDate)]]"
             draggable="false"
             click-events="true"
-            data="[[item.id]]"
-            fit-to-markers></google-map-marker>
+            data="[[item.id]]"></google-map-marker>
         </template>
 
         <maps-google-map-polyline
@@ -161,7 +162,7 @@
 
   <script>
     Polymer({
-      is: 'maps-item-tracking',
+      is: 'maps-device-tracking',
 
       properties: {
         trackPoints: {
