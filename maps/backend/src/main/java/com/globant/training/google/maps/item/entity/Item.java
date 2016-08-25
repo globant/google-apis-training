@@ -5,6 +5,7 @@ import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 
 import com.globant.training.google.maps.core.entity.BaseEntity;
+import com.globant.training.google.maps.device.entity.DeviceType;
 
 import java.util.Date;
 
@@ -26,6 +27,12 @@ public class Item extends BaseEntity {
   private Date created;
 
   private Date lastUpdated;
+  
+  @Ignore
+  private String deviceName;
+  
+  @Ignore
+  private DeviceType deviceType;
 
   @Ignore
   public static final String DEVICE_ID_FIELD = "deviceId";
@@ -123,6 +130,42 @@ public class Item extends BaseEntity {
   public Item setLastUpdated(Date lastUpdated) {
     this.lastUpdated = lastUpdated;
     return this;
+  }
+
+  /**
+   * Gets device name.
+   * 
+   * @return the associated device name
+   */
+  public String getDeviceName() {
+    return deviceName;
+  }
+
+  /**
+   * Sets the device name.
+   * 
+   * @param deviceName the device name
+   */
+  public void setDeviceName(String deviceName) {
+    this.deviceName = deviceName;
+  }
+
+  /**
+   * Gets device Type.
+   * 
+   * @return the device Type
+   */
+  public DeviceType getDeviceType() {
+    return deviceType;
+  }
+
+  /**
+   * Sets the device type.
+   * 
+   * @param deviceType the device type
+   */
+  public void setDeviceType(DeviceType deviceType) {
+    this.deviceType = deviceType;
   }
 
 }

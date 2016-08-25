@@ -1,6 +1,7 @@
 package com.globant.training.google.maps.item.endpoint.dtos;
 
 import com.globant.training.google.maps.core.endpoint.dto.Dto;
+import com.globant.training.google.maps.device.entity.DeviceType;
 
 import java.util.Date;
 
@@ -21,6 +22,10 @@ public class ItemDto implements Dto {
   private String name;
 
   private Long deviceId;
+  
+  private String deviceName;
+  
+  private DeviceType deviceType;
   
   private boolean active;
 
@@ -140,6 +145,43 @@ public class ItemDto implements Dto {
   public ItemDto setDeviceId(Long deviceId) {
     this.deviceId = deviceId;
     return this;
+  }
+  
+
+  /**
+   * Gets device name.
+   * 
+   * @return the associated device name
+   */
+  public String getDeviceName() {
+    return deviceName;
+  }
+
+  /**
+   * Sets the device name.
+   * 
+   * @param deviceName the device name
+   */
+  public void setDeviceName(String deviceName) {
+    this.deviceName = deviceName;
+  }
+
+  /**
+   * Gets device Type.
+   * 
+   * @return the device Type
+   */
+  public DeviceType getDeviceType() {
+    return deviceType;
+  }
+
+  /**
+   * Sets the device type.
+   * 
+   * @param deviceType the device type
+   */
+  public void setDeviceType(DeviceType deviceType) {
+    this.deviceType = deviceType;
   }
 
 }
