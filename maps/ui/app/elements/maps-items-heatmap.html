@@ -74,6 +74,13 @@
       params="{{searchParams}}"
       data="{{trackPoints}}"></maps-request>
 
+    <maps-request id="items"
+      user="[[user]]"
+      endpoint="/items"
+      method="GET"
+      data="{{items}}"
+      load-with-view></maps-request>
+
     <iron-location hash="{{hash}}"></iron-location>
 
     <paper-drawer-panel id="trackPointsList" right-drawer force-narrow drawer-width="400px" selected="{{_panelSelected}}">
@@ -86,6 +93,17 @@
         <paper-toolbar>
           <span class="title">Track Points</span>
         </paper-toolbar>
+
+        <paper-item>
+          <paper-dropdown-menu label="Item">
+            <paper-listbox class="dropdown-content" selected="{{itemId}}" attr-for-selected="option">
+              <paper-item option="">All</paper-item>
+              <template is="dom-repeat" items="[[items.items]]">
+                <paper-item option="[[item.id]]">[[item.name]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </paper-item>
 
         <paper-item>
           <paper-item-body two-line>
@@ -164,7 +182,8 @@
         },
 
         searchParams: {
-          computed: '_getParams(fromDate, toDate)'
+          computed: '_getParams(fromDate, toDate, itemId)',
+          observer: '_updateTrackPoints'
         },
 
         _trackPointIndex: {
@@ -183,15 +202,23 @@
         MapsBehaviors.ConstantsBehavior
       ],
 
-      listeners: {
-        'view-activated': '_handleViewActivated'
-      },
-
-      _getParams: function(fromDate, toDate) {
-        return {
+      _getParams: function(fromDate, toDate, itemId) {
+        var params = {
           from: fromDate,
           to: toDate
         };
+
+        if(itemId !== '') {
+          params.itemId = itemId;
+        }
+
+        return params;
+      },
+
+      _updateTrackPoints: function () {
+        if(this.fromDate !== '' && this.toDate !== '') {
+          this.$.trackPoints.generateRequest();
+        }
       },
 
       _getLocations: function (trackPoints) {
@@ -204,9 +231,10 @@
         }
       },
 
-      _handleViewActivated: function () {
+      ready: function () {
         this.fromDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
         this.toDate = moment().format('YYYY-MM-DD');
+        this.itemId = '';
       },
 
       _getIconDrawer: function (_panelSelected) {

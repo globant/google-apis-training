@@ -172,10 +172,6 @@
         '_handleSubRouteChanged(subroute.path)'
       ],
 
-      ready: function () {
-        gapi.client.load('fusiontables', 'v1');
-      },
-
       _observeUser: function () {
         if (this.user !== null) {
           this.$.userInfo.generateRequest();
