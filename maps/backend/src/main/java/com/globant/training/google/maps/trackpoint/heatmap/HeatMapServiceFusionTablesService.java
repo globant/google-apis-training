@@ -4,7 +4,7 @@ import com.google.api.services.fusiontables.model.Column;
 import com.google.api.services.fusiontables.model.Table;
 import com.google.inject.Inject;
 
-import com.globant.training.google.maps.fusiontables.service.FusionTablesService;
+import com.globant.training.google.maps.export.fusiontables.FusionTablesService;
 import com.globant.training.google.maps.trackpoint.service.event.TrackPointAddedEvent;
 import com.globant.training.google.maps.user.entity.AppUser;
 import com.globant.training.google.maps.user.service.UserService;

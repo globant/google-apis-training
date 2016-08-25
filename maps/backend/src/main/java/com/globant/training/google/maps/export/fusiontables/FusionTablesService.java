@@ -1,4 +1,4 @@
-package com.globant.training.google.maps.fusiontables.service;
+package com.globant.training.google.maps.export.fusiontables;
 
 import com.google.api.services.fusiontables.model.Column;
 import com.google.api.services.fusiontables.model.Table;

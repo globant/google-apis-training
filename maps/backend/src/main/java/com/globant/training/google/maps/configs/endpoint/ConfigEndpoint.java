@@ -12,7 +12,7 @@ import com.globant.training.google.maps.configs.Constants;
 import com.globant.training.google.maps.core.endpoint.BaseEndpoint;
 import com.globant.training.google.maps.device.entity.Device;
 import com.globant.training.google.maps.device.service.DeviceService;
-import com.globant.training.google.maps.fusiontables.service.FusionTablesService;
+import com.globant.training.google.maps.export.fusiontables.FusionTablesService;
 import com.globant.training.google.maps.trackpoint.heatmap.HeatmapService;
 import com.globant.training.google.maps.trackpoint.service.TrackPointService;
 import com.globant.training.google.maps.user.service.UserService;

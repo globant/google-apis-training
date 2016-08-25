@@ -4,9 +4,6 @@ import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Subclass;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
 import com.globant.training.google.maps.trackpoint.service.visitor.TrackPointVisitor;
 import com.globant.training.google.maps.trackpoint.service.visitor.VisitableTrackPoint;
 

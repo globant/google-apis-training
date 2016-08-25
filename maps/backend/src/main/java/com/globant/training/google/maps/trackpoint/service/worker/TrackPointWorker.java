@@ -2,8 +2,8 @@ package com.globant.training.google.maps.trackpoint.service.worker;
 
 import com.google.inject.Inject;
 
+import com.globant.training.google.maps.alert.service.AlertProcessorService;
 import com.globant.training.google.maps.core.event.worker.BaseWorker;
-import com.globant.training.google.maps.trackpoint.heatmap.HeatmapService;
 import com.globant.training.google.maps.trackpoint.service.event.TrackPointAddedEvent;
 
 import java.util.logging.Logger;
@@ -22,18 +22,18 @@ public class TrackPointWorker extends BaseWorker<TrackPointAddedEvent> {
 
   private Logger logger = Logger.getLogger(TrackPointWorker.class.getName());
 
-  private final HeatmapService heatmapService;
+  private final AlertProcessorService alertProcessorService;
 
   @Inject
-  public TrackPointWorker(HeatmapService heatmapService) {
-    this.heatmapService = heatmapService;
+  public TrackPointWorker(AlertProcessorService alertProcessorService) {
+    this.alertProcessorService = alertProcessorService;
   }
 
   @Override
   public void process(TrackPointAddedEvent dto) {
     logger.info("procesing entry point for item" + dto.getItemId());
-    
-    //TODO add alarm processor.
+
+    alertProcessorService.process(dto);
 
     logger.info("entry point for item" + dto.getItemId() + " processed");
 
