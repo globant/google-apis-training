@@ -1,10 +1,10 @@
 package com.globant.training.google.maps.trackpoint.entity;
 
+import com.google.api.server.spi.config.ApiTransformer;
+
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
-
-import com.google.api.server.spi.config.ApiTransformer;
 
 import com.globant.training.google.maps.core.entity.BaseEntity;
 import com.globant.training.google.maps.trackpoint.endpoint.transformer.TrackPointApiTransformer;
@@ -23,6 +23,8 @@ import java.util.Map;
 @Entity
 @ApiTransformer(TrackPointApiTransformer.class)
 public abstract class TrackPoint extends BaseEntity {
+  
+  private static final String COMMA = ",";
   
   @Ignore
   public static final String LATITUDE_FIELD = "latitude";
@@ -183,9 +185,14 @@ public abstract class TrackPoint extends BaseEntity {
     this.itemId = itemId;
   }
   
+  public String getLocation() {
+    return latitude + COMMA + longitude;
+  }
+  
   /**
+   * visitor method.
    * 
-   * @param visitor
+   * @param visitor visitor.
    */
   public abstract void visit(TrackPointVisitor visitor);
 

@@ -1,4 +1,4 @@
-package com.globant.training.google.maps.export.fusiontables;
+package com.globant.training.google.maps.export.service.fusiontables;
 
 import com.google.api.services.fusiontables.model.Column;
 import com.google.api.services.fusiontables.model.Table;
@@ -43,7 +43,7 @@ public interface FusionTablesService {
    * 
    * @throws IOException if an error in communication with fusion table service.
    */
-  void insertRows(String tableId, Column[] columns, String[] row) throws IOException;
+  void insertRows(String tableId, Column[] columns, List<String[]> row) throws IOException;
 
   /**
    * Delete a fusion table by id.

@@ -1,4 +1,4 @@
-package com.globant.training.google.maps.export.fusiontables;
+package com.globant.training.google.maps.export.service.fusiontables;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.extensions.appengine.auth.oauth2.AppIdentityCredential;
@@ -114,9 +114,14 @@ public class FusionTablesServiceImpl implements FusionTablesService {
   }
 
   @Override
-  public void insertRows(String tableId, Column[] columns, String[] row) throws IOException {
-    Sql sql = fusionTables.query().sql(createSqlInsertStatement(tableId, columns, row));
-    sql.execute();
+  public void insertRows(String tableId, Column[] columns, List<String[]> rows) throws IOException {
+    Sql sql = null;
+    for (String[] row : rows) {
+      sql = fusionTables.query().sql(createSqlInsertStatement(tableId, columns, row));
+    }
+    if (sql != null) {
+      sql.execute();
+    }
   }
 
 
