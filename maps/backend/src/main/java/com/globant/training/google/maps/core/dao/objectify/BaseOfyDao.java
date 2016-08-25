@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class BaseOfyDao<T> implements Dao<T> {
 
-  private final Class<T> entity;
+  protected final Class<T> entity;
 
   /**
    * Constructor to work with generics.

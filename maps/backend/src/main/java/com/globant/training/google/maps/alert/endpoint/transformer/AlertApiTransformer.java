@@ -5,7 +5,7 @@ import com.google.api.server.spi.config.Transformer;
 import com.globant.training.google.maps.alert.endpoint.dtos.AlertDto;
 import com.globant.training.google.maps.alert.endpoint.dtos.CoordinatePointDto;
 import com.globant.training.google.maps.alert.entity.Alert;
-import com.globant.training.google.maps.alert.entity.Coordinate;
+import com.globant.training.google.maps.alert.entity.LatLng;
 import com.globant.training.google.maps.core.endpoint.validation.DtoValidator;
 
 import org.apache.commons.lang3.Validate;
@@ -70,16 +70,16 @@ public class AlertApiTransformer implements Transformer<Alert, AlertDto> {
     return dto;
   }
 
-  private List<Coordinate> processDtoCoordinates(List<CoordinatePointDto> dtoCoordinates) {
+  private List<LatLng> processDtoCoordinates(List<CoordinatePointDto> dtoCoordinates) {
 
     Collections.sort(dtoCoordinates, COORDINATE_COMPARATOR);
 
-    List<Coordinate> coordinates = new ArrayList<>();
+    List<LatLng> coordinates = new ArrayList<>();
 
     for (CoordinatePointDto coordinateDto : dtoCoordinates) {
       DtoValidator.validate(coordinateDto);
 
-      coordinates.add(new Coordinate(coordinateDto.getLatitude(), coordinateDto.getLongitude()));
+      coordinates.add(new LatLng(coordinateDto.getLatitude(), coordinateDto.getLongitude()));
     }
 
     return coordinates;

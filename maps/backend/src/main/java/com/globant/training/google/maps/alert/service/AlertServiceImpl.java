@@ -105,5 +105,8 @@ public class AlertServiceImpl implements AlertService {
     }
   }
 
-
+  @Override
+  public List<Alert> findActive() {
+    return alertDao.findActive();
+  }
 }

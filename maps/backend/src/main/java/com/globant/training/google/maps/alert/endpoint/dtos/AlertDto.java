@@ -1,6 +1,6 @@
 package com.globant.training.google.maps.alert.endpoint.dtos;
 
-import com.globant.training.google.maps.alert.entity.Coordinate;
+import com.globant.training.google.maps.alert.entity.LatLng;
 import com.globant.training.google.maps.core.endpoint.dto.Dto;
 
 import java.util.ArrayList;
@@ -133,13 +133,13 @@ public class AlertDto implements Dto {
    * 
    * @param coordinates list of coordinates.
    */
-  public void setCoordinatesFromEntity(List<Coordinate> coordinates) {
+  public void setCoordinatesFromEntity(List<LatLng> coordinates) {
 
     this.coordinates = new ArrayList<>();
 
     for (int i = 0; i < coordinates.size(); i++) {
 
-      Coordinate coordinate = coordinates.get(i);
+      LatLng coordinate = coordinates.get(i);
       
       // @formatter:off
       CoordinatePointDto coordinatePointDto = new CoordinatePointDto()

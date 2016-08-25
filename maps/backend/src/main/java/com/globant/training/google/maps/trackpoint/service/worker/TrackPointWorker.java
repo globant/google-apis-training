@@ -2,7 +2,7 @@ package com.globant.training.google.maps.trackpoint.service.worker;
 
 import com.google.inject.Inject;
 
-import com.globant.training.google.maps.alert.service.AlertProcessorService;
+import com.globant.training.google.maps.alert.service.processor.AlertProcessorService;
 import com.globant.training.google.maps.core.event.worker.BaseWorker;
 import com.globant.training.google.maps.trackpoint.service.event.TrackPointAddedEvent;
 

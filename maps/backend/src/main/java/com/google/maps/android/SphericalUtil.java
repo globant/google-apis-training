@@ -15,6 +15,8 @@ import static java.lang.Math.tan;
 import static java.lang.Math.toDegrees;
 import static java.lang.Math.toRadians;
 
+import com.globant.training.google.maps.alert.entity.LatLng;
+
 /*
  * Copyright 2013 Google Inc.
  *
@@ -43,10 +45,10 @@ public class SphericalUtil {
    */
   public static double computeHeading(LatLng from, LatLng to) {
     // http://williams.best.vwh.net/avform.htm#Crs
-    double fromLat = toRadians(from.latitude);
-    double fromLng = toRadians(from.longitude);
-    double toLat = toRadians(to.latitude);
-    double toLng = toRadians(to.longitude);
+    double fromLat = toRadians(from.latitude());
+    double fromLng = toRadians(from.longitude());
+    double toLat = toRadians(to.latitude());
+    double toLng = toRadians(to.longitude());
     double dLng = toLng - fromLng;
     double heading = atan2(sin(dLng) * cos(toLat),
         cos(fromLat) * sin(toLat) - sin(fromLat) * cos(toLat) * cos(dLng));
@@ -65,8 +67,8 @@ public class SphericalUtil {
     distance /= EARTH_RADIUS;
     heading = toRadians(heading);
     // http://williams.best.vwh.net/avform.htm#LL
-    double fromLat = toRadians(from.latitude);
-    double fromLng = toRadians(from.longitude);
+    double fromLat = toRadians(from.latitude());
+    double fromLng = toRadians(from.longitude());
     double cosDistance = cos(distance);
     double sinDistance = sin(distance);
     double sinFromLat = sin(fromLat);
@@ -92,7 +94,7 @@ public class SphericalUtil {
     double n1 = cos(distance);
     double n2 = sin(distance) * cos(heading);
     double n3 = sin(distance) * sin(heading);
-    double n4 = sin(toRadians(to.latitude));
+    double n4 = sin(toRadians(to.latitude()));
     // There are two solutions for b. b = n2 * n4 +/- sqrt(), one solution results
     // in the latitude outside the [-90, 90] range. We first try one solution and
     // back off to the other if we are outside that range.
@@ -116,7 +118,7 @@ public class SphericalUtil {
       return null;
     }
     double fromLngRadians =
-        toRadians(to.longitude) - atan2(n3, n1 * cos(fromLatRadians) - n2 * sin(fromLatRadians));
+        toRadians(to.longitude()) - atan2(n3, n1 * cos(fromLatRadians) - n2 * sin(fromLatRadians));
     return new LatLng(toDegrees(fromLatRadians), toDegrees(fromLngRadians));
   }
 
@@ -131,10 +133,10 @@ public class SphericalUtil {
    */
   public static LatLng interpolate(LatLng from, LatLng to, double fraction) {
     // http://en.wikipedia.org/wiki/Slerp
-    double fromLat = toRadians(from.latitude);
-    double fromLng = toRadians(from.longitude);
-    double toLat = toRadians(to.latitude);
-    double toLng = toRadians(to.longitude);
+    double fromLat = toRadians(from.latitude());
+    double fromLng = toRadians(from.longitude());
+    double toLat = toRadians(to.latitude());
+    double toLng = toRadians(to.longitude());
     double cosFromLat = cos(fromLat);
     double cosToLat = cos(toLat);
 
@@ -170,8 +172,8 @@ public class SphericalUtil {
    * sphere.
    */
   static double computeAngleBetween(LatLng from, LatLng to) {
-    return distanceRadians(toRadians(from.latitude), toRadians(from.longitude),
-        toRadians(to.latitude), toRadians(to.longitude));
+    return distanceRadians(toRadians(from.latitude()), toRadians(from.longitude()),
+        toRadians(to.latitude()), toRadians(to.longitude()));
   }
 
   /**
@@ -190,11 +192,11 @@ public class SphericalUtil {
     }
     double length = 0;
     LatLng prev = path.get(0);
-    double prevLat = toRadians(prev.latitude);
-    double prevLng = toRadians(prev.longitude);
+    double prevLat = toRadians(prev.latitude());
+    double prevLng = toRadians(prev.longitude());
     for (LatLng point : path) {
-      double lat = toRadians(point.latitude);
-      double lng = toRadians(point.longitude);
+      double lat = toRadians(point.latitude());
+      double lng = toRadians(point.longitude());
       length += distanceRadians(prevLat, prevLng, lat, lng);
       prevLat = lat;
       prevLng = lng;
@@ -235,13 +237,13 @@ public class SphericalUtil {
     }
     double total = 0;
     LatLng prev = path.get(size - 1);
-    double prevTanLat = tan((PI / 2 - toRadians(prev.latitude)) / 2);
-    double prevLng = toRadians(prev.longitude);
+    double prevTanLat = tan((PI / 2 - toRadians(prev.latitude())) / 2);
+    double prevLng = toRadians(prev.longitude());
     // For each edge, accumulate the signed area of the triangle formed by the North Pole
     // and that edge ("polar triangle").
     for (LatLng point : path) {
-      double tanLat = tan((PI / 2 - toRadians(point.latitude)) / 2);
-      double lng = toRadians(point.longitude);
+      double tanLat = tan((PI / 2 - toRadians(point.latitude())) / 2);
+      double lng = toRadians(point.longitude());
       total += polarTriangleArea(tanLat, lng, prevTanLat, prevLng);
       prevTanLat = tanLat;
       prevLng = lng;

@@ -18,6 +18,13 @@ public interface AlertDao {
    */
   List<Alert> getAll();
   
+  /**
+   * Get a list of Alert.
+   * 
+   * @return a list with all Alert
+   */
+  List<Alert> findActive();
+  
   /** 
    * Save or Update Alert.
    * 

@@ -20,6 +20,8 @@ import static java.lang.Math.sqrt;
 import static java.lang.Math.tan;
 import static java.lang.Math.toRadians;
 
+import com.globant.training.google.maps.alert.entity.LatLng;
+
 import java.util.ArrayList;
 
 /*
@@ -112,11 +114,11 @@ public class PolyUtil {
     if (size == 0) {
       return false;
     }
-    double lat3 = toRadians(point.latitude);
-    double lng3 = toRadians(point.longitude);
+    double lat3 = toRadians(point.latitude());
+    double lng3 = toRadians(point.longitude());
     LatLng prev = polygon.get(size - 1);
-    double lat1 = toRadians(prev.latitude);
-    double lng1 = toRadians(prev.longitude);
+    double lat1 = toRadians(prev.latitude());
+    double lng1 = toRadians(prev.longitude());
     int nIntersect = 0;
     for (LatLng point2 : polygon) {
       double dLng3 = wrap(lng3 - lng1, -PI, PI);
@@ -124,8 +126,8 @@ public class PolyUtil {
       if (lat3 == lat1 && dLng3 == 0) {
         return true;
       }
-      double lat2 = toRadians(point2.latitude);
-      double lng2 = toRadians(point2.longitude);
+      double lat2 = toRadians(point2.latitude());
+      double lng2 = toRadians(point2.longitude());
       // Offset longitudes by -lng1.
       if (intersects(lat1, lat2, wrap(lng2 - lng1, -PI, PI), lat3, dLng3, geodesic)) {
         ++nIntersect;
@@ -185,15 +187,15 @@ public class PolyUtil {
     }
     double tolerance = toleranceEarth / EARTH_RADIUS;
     double havTolerance = hav(tolerance);
-    double lat3 = toRadians(point.latitude);
-    double lng3 = toRadians(point.longitude);
+    double lat3 = toRadians(point.latitude());
+    double lng3 = toRadians(point.longitude());
     LatLng prev = poly.get(closed ? size - 1 : 0);
-    double lat1 = toRadians(prev.latitude);
-    double lng1 = toRadians(prev.longitude);
+    double lat1 = toRadians(prev.latitude());
+    double lng1 = toRadians(prev.longitude());
     if (geodesic) {
       for (LatLng point2 : poly) {
-        double lat2 = toRadians(point2.latitude);
-        double lng2 = toRadians(point2.longitude);
+        double lat2 = toRadians(point2.latitude());
+        double lng2 = toRadians(point2.longitude());
         if (isOnSegmentGC(lat1, lng1, lat2, lng2, lat3, lng3, havTolerance)) {
           return true;
         }
@@ -212,9 +214,9 @@ public class PolyUtil {
       double y3 = mercator(lat3);
       double[] xTry = new double[3];
       for (LatLng point2 : poly) {
-        double lat2 = toRadians(point2.latitude);
+        double lat2 = toRadians(point2.latitude());
         double y2 = mercator(lat2);
-        double lng2 = toRadians(point2.longitude);
+        double lng2 = toRadians(point2.longitude());
         if (max(lat1, lat2) >= minAcceptable && min(lat1, lat2) <= maxAcceptable) {
           // We offset longitudes by -lng1; the implicit x1 is 0.
           double x2 = wrap(lng2 - lng1, -PI, PI);
@@ -330,9 +332,9 @@ public class PolyUtil {
       // Add a small offset to the last point for Douglas-Peucker on polygons (see #201)
       final double OFFSET = 0.00000000001;
       lastPoint = poly.get(poly.size() - 1);
-      // LatLng.latitude and .longitude are immutable, so replace the last point
+      // LatLng.latitude() and .longitude() are immutable, so replace the last point
       poly.remove(poly.size() - 1);
-      poly.add(new LatLng(lastPoint.latitude + OFFSET, lastPoint.longitude + OFFSET));
+      poly.add(new LatLng(lastPoint.latitude() + OFFSET, lastPoint.longitude() + OFFSET));
     }
 
     int idx;
@@ -418,12 +420,12 @@ public class PolyUtil {
       computeDistanceBetween(end, p);
     }
 
-    final double s0lat = toRadians(p.latitude);
-    final double s0lng = toRadians(p.longitude);
-    final double s1lat = toRadians(start.latitude);
-    final double s1lng = toRadians(start.longitude);
-    final double s2lat = toRadians(end.latitude);
-    final double s2lng = toRadians(end.longitude);
+    final double s0lat = toRadians(p.latitude());
+    final double s0lng = toRadians(p.longitude());
+    final double s1lat = toRadians(start.latitude());
+    final double s1lng = toRadians(start.longitude());
+    final double s2lat = toRadians(end.latitude());
+    final double s2lng = toRadians(end.longitude());
 
     double s2s1lat = s2lat - s1lat;
     double s2s1lng = s2lng - s1lng;
@@ -435,9 +437,9 @@ public class PolyUtil {
     if (u >= 1) {
       return computeDistanceBetween(p, end);
     }
-    LatLng sa = new LatLng(p.latitude - start.latitude, p.longitude - start.longitude);
+    LatLng sa = new LatLng(p.latitude() - start.latitude(), p.longitude() - start.longitude());
     LatLng sb =
-        new LatLng(u * (end.latitude - start.latitude), u * (end.longitude - start.longitude));
+        new LatLng(u * (end.latitude() - start.latitude()), u * (end.longitude() - start.longitude()));
     return computeDistanceBetween(sa, sb);
   }
 
@@ -490,8 +492,8 @@ public class PolyUtil {
     final StringBuffer result = new StringBuffer();
 
     for (final LatLng point : path) {
-      long lat = Math.round(point.latitude * 1e5);
-      long lng = Math.round(point.longitude * 1e5);
+      long lat = Math.round(point.latitude() * 1e5);
+      long lng = Math.round(point.longitude() * 1e5);
 
       long dLat = lat - lastLat;
       long dLng = lng - lastLng;

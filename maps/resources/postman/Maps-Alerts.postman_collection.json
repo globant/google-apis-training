@@ -12,6 +12,8 @@
 		"806601eb-26b3-dcc7-aba4-f58af1c9bc7b",
 		"3747148c-d8bb-49aa-2313-dcd18772f35a",
 		"8d882510-ced4-fcfd-cae5-1b19e9c21ba3",
+		"5e963b93-b1c8-9677-b685-96bcb9a00936",
+		"f23b1bbc-2301-4636-7d22-55b34444d4d6",
 		"f9907463-e8ea-1fad-3686-4068d45d0261"
 	],
 	"folders": [],
@@ -51,12 +53,31 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1472057122842,
+			"time": 1472162783401,
 			"name": "Modify Alert",
 			"description": "",
 			"collectionId": "0dc99e6e-3c54-2bdf-1965-070d2e5fba50",
 			"responses": [],
-			"rawModeData": "{\n    \"name\":\"Cow alert updated\",\n    \"itemId\": {{itemId}},\n    \"active\": true,\n    \"coordinates\": [{\n        \"longitude\":\"20\",\n        \"latitude\":\"30\",\n        \"order\": 1\n    },\n    {\n        \"longitude\":\"10\",\n        \"latitude\":\"10\",\n        \"order\": 0\n    }\n    ]\n}"
+			"rawModeData": "{\n    \"name\":\"Cow alert updated\",\n    \"itemId\": {{itemId}},\n    \"active\": true,\n    \"coordinates\": [\n        \n        {\n        \"latitude\":\"32.01136394053662\",\n        \"longitude\":\"-64.80382582720586\",\n        \n        \"order\": 0\n    },\n    {\n        \"latitude\":\"25.77703321473553\",\n        \"longitude\":\"-80.17374804326658\",\n        \"order\": 1\n    },\n    {\n        \"latitude\":\"18.505860770100604\",\n        \"longitude\":\"-66.13520401738106\",\n        \"order\": 2\n    }\n    \n    ]\n}"
+		},
+		{
+			"id": "5e963b93-b1c8-9677-b685-96bcb9a00936",
+			"headers": "Authorization: Bearer {{mapsToken}}\nContent-Type: application/json\n",
+			"url": "{{backend-url}}/_ah/api/maps/v1/trackpoints",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": "var jsonData = JSON.parse(responseBody);\npostman.setGlobalVariable(\"trackpointId\", jsonData.id);",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1472162664557,
+			"name": "Add Track Point (in)",
+			"description": "",
+			"collectionId": "0dc99e6e-3c54-2bdf-1965-070d2e5fba50",
+			"responses": [],
+			"rawModeData": "{\n    \"deviceId\":\"{{deviceId}}\",\n    \"latitude\":\"26.667095801104814\",\n    \"longitude\":\"-70.2685546875\",\n    \"measuredDate\": \"2016-08-23T23:20:50.520Z\",\n    \"type\": \"GPS\"\n}"
 		},
 		{
 			"id": "6e00269f-9ea9-961f-cb66-ce71cbd0e088",
@@ -127,12 +148,12 @@
 			"tests": "var jsonData = JSON.parse(responseBody);\npostman.setGlobalVariable(\"alertId\", jsonData.id);\n\ntests[\"Status code is 200\"] = responseCode.code === 200;",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1472057350109,
-			"name": "Add Alert",
+			"time": 1472162593604,
+			"name": "Add Alert (bermudas triangle)",
 			"description": "",
 			"collectionId": "0dc99e6e-3c54-2bdf-1965-070d2e5fba50",
 			"responses": [],
-			"rawModeData": "{\n    \"name\":\"Cow alert\",\n    \"itemId\": {{itemId}},\n    \"active\": true,\n    \"coordinates\": [\n        \n        {\n        \"longitude\":\"10\",\n        \"latitude\":\"10\",\n        \"order\": 12\n    },\n        {\n        \"longitude\":\"20\",\n        \"latitude\":\"30\",\n        \"order\": 50\n    }\n    \n    ]\n}"
+			"rawModeData": "{\n    \"name\":\"Cow alert\",\n    \"itemId\": {{itemId}},\n    \"active\": true,\n    \"coordinates\": [\n        \n        {\n        \"latitude\":\"32.01136394053662\",\n        \"longitude\":\"-64.80382582720586\",\n        \n        \"order\": 0\n    },\n    {\n        \"latitude\":\"25.77703321473553\",\n        \"longitude\":\"-80.17374804326658\",\n        \"order\": 1\n    },\n    {\n        \"latitude\":\"18.505860770100604\",\n        \"longitude\":\"-66.13520401738106\",\n        \"order\": 2\n    }\n    \n    ]\n}"
 		},
 		{
 			"id": "db2ccdf9-7081-c85a-7b99-3081c3602090",
@@ -171,6 +192,25 @@
 			"collectionId": "0dc99e6e-3c54-2bdf-1965-070d2e5fba50",
 			"responses": [],
 			"rawModeData": "{\n\"longitud\":\"20\"\n}"
+		},
+		{
+			"id": "f23b1bbc-2301-4636-7d22-55b34444d4d6",
+			"headers": "Authorization: Bearer {{mapsToken}}\nContent-Type: application/json\n",
+			"url": "{{backend-url}}/_ah/api/maps/v1/trackpoints",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": "var jsonData = JSON.parse(responseBody);\npostman.setGlobalVariable(\"trackpointId\", jsonData.id);",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1472162698596,
+			"name": "Add Track Point (out)",
+			"description": "",
+			"collectionId": "0dc99e6e-3c54-2bdf-1965-070d2e5fba50",
+			"responses": [],
+			"rawModeData": "{\n    \"deviceId\":\"{{deviceId}}\",\n    \"latitude\":\"-34.594686\",\n    \"longitude\":\"-58.441335\",\n    \"measuredDate\": \"2016-08-23T23:20:50.520Z\",\n    \"type\": \"GPS\"\n}"
 		},
 		{
 			"id": "f69a4777-d273-aa01-e713-1dd1e4ddaafb",
