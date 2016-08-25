@@ -3,6 +3,7 @@ package com.globant.training.google.maps.alert.entity;
 import com.google.api.server.spi.config.ApiTransformer;
 
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Index;
 
 import com.globant.training.google.maps.alert.endpoint.transformer.AlertApiTransformer;
 import com.globant.training.google.maps.core.entity.BaseEntity;
@@ -28,8 +29,9 @@ public class Alert extends BaseEntity {
   private Long itemId;
 
   @Embedded 
-  private List<Coordinate> poligonRegion = new ArrayList<Coordinate>();
+  private List<LatLng> poligonRegion = new ArrayList<LatLng>();
 
+  @Index
   private boolean active;
 
   private Date created;
@@ -136,7 +138,7 @@ public class Alert extends BaseEntity {
    * Get the List of {@link Coordinate} that conform the polygon to me monitored.
    * @return a {@link List} of {@link Coordinate}
    */
-  public List<Coordinate> getPoligonRegion() {
+  public List<LatLng> getPoligonRegion() {
     return poligonRegion;
   }
 
@@ -145,7 +147,7 @@ public class Alert extends BaseEntity {
    * 
    * @param poligonRegion a list of {@link Coordinate} 
    */
-  public Alert setPoligonRegion(List<Coordinate> poligonRegion) {
+  public Alert setPoligonRegion(List<LatLng> poligonRegion) {
     this.poligonRegion = poligonRegion;
     return this;
   }

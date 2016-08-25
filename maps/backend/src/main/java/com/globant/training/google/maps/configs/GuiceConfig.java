@@ -17,6 +17,10 @@ import com.globant.training.google.maps.alert.dao.objectify.AlertOfyDao;
 import com.globant.training.google.maps.alert.endpoint.AlertEndpoint;
 import com.globant.training.google.maps.alert.service.AlertService;
 import com.globant.training.google.maps.alert.service.AlertServiceImpl;
+import com.globant.training.google.maps.alert.service.notification.AppEngineEmailService;
+import com.globant.training.google.maps.alert.service.notification.EmailService;
+import com.globant.training.google.maps.alert.service.processor.AlertProcessorService;
+import com.globant.training.google.maps.alert.service.processor.AlertProcessorServiceImpl;
 import com.globant.training.google.maps.antenna.dao.AntennaDao;
 import com.globant.training.google.maps.antenna.dao.objectify.AntennaOfyDao;
 import com.globant.training.google.maps.antenna.endpoint.AntennaEndpoint;
@@ -30,8 +34,8 @@ import com.globant.training.google.maps.device.daos.objectify.DeviceOfyDao;
 import com.globant.training.google.maps.device.endpoint.DeviceEndpoint;
 import com.globant.training.google.maps.device.service.DeviceService;
 import com.globant.training.google.maps.device.service.DeviceServiceImpl;
-import com.globant.training.google.maps.fusiontables.service.FusionTablesService;
-import com.globant.training.google.maps.fusiontables.service.FusionTablesServiceImpl;
+import com.globant.training.google.maps.export.fusiontables.FusionTablesService;
+import com.globant.training.google.maps.export.fusiontables.FusionTablesServiceImpl;
 import com.globant.training.google.maps.item.dao.ItemDao;
 import com.globant.training.google.maps.item.dao.objectify.ItemOfyDao;
 import com.globant.training.google.maps.item.endpoint.ItemEndpoint;
@@ -140,13 +144,12 @@ public class GuiceConfig extends GuiceServletContextListener {
       bind(DeviceService.class).to(DeviceServiceImpl.class);
       bind(TrackPointService.class).to(TrackPointServiceImpl.class);
       bind(TrackPointVisitor.class).to(TrackPointProcessorVisitor.class);
-      
       bind(TrackPointPublisher.class).to(TrackPointPushPublisher.class);
-      
       bind(FusionTablesService.class).to(FusionTablesServiceImpl.class);
       bind(HeatmapService.class).to(HeatMapServiceFusionTablesService.class);
-      
       bind(AlertService.class).to(AlertServiceImpl.class);
+      bind(AlertProcessorService.class).to(AlertProcessorServiceImpl.class);
+      bind(EmailService.class).to(AppEngineEmailService.class);
     }
 
   }

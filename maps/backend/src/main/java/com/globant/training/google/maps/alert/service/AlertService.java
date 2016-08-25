@@ -16,6 +16,13 @@ public interface AlertService {
    * @return a list with all Alert
    */
   List<Alert> getAll();
+  
+  /**
+   * Get a list of Alert.
+   * 
+   * @return a list with all Alert
+   */
+  List<Alert> findActive();
 
   /**
    * create an Alert.

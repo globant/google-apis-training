@@ -78,4 +78,9 @@ public class TrackPointAddedEvent implements Serializable {
   public DateTime getDateTime() {
     return new DateTime(measuredDate);
   }
+  
+  @Override
+  public String toString() {
+    return "[" + getLocation() + "]";
+  }
 }

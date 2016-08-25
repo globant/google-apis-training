@@ -1,4 +1,4 @@
-package com.globant.training.google.maps.fusiontables.service;
+package com.globant.training.google.maps.export.fusiontables;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.extensions.appengine.auth.oauth2.AppIdentityCredential;
