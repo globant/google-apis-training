@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/device-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
@@ -78,7 +79,7 @@
 
     <maps-request id="trackPoints"
       user="[[user]]"
-      endpoint="/trackpoints"
+      endpoint="/items/{{routeData.itemId}}/trackpoints"
       method="GET"
       params="{{searchParams}}"
       data="{{trackPoints}}"></maps-request>
@@ -87,7 +88,7 @@
       <div drawer>
         <paper-material elevation="2">
           <paper-icon-button icon="[[_getIconDrawer(_panelSelected)]]" paper-drawer-toggle></paper-icon-button>
-          <paper-icon-button icon="icons:settings-input-antenna" paper-drawer-toggle></paper-icon-button>
+          <paper-icon-button icon="device:gps-fixed" paper-drawer-toggle></paper-icon-button>
         </paper-material>
 
         <paper-toolbar>
@@ -195,8 +196,7 @@
       _getParams: function(fromDate, toDate) {
         return {
           from: fromDate,
-          to: toDate,
-          itemId: this.routeData.itemId
+          to: toDate
         };
       },
 
@@ -245,7 +245,6 @@
       _handleViewActivated: function () {
         this.fromDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
         this.toDate = moment().format('YYYY-MM-DD');
-        this.itemId = this.routeData.itemId;
       }
     });
   </script>
