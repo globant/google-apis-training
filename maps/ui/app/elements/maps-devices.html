@@ -12,6 +12,7 @@
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-styles/shadow.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
 <!--Maps components-->
 <link rel="import" href="maps-request.html">
@@ -52,7 +53,7 @@
 
       .card-actions {
         @apply(--layout-horizontal);
-        @apply(--layout-end-justified);
+        @apply(--layout-justified);
       }
 
       .item {
@@ -152,8 +153,11 @@
               <span hidden="[[!device.active]]"><em>Active</em></span>
             </div>
             <div class="card-actions">
-              <paper-icon-button icon="create" device-id="[[device.id]]" on-tap="editDevice"></paper-icon-button>
-              <paper-icon-button icon="delete" device-id="[[device.id]]" on-tap="removeDevice"></paper-icon-button>
+              <paper-icon-button icon="info" device-id="[[device.id]]" on-tap="_viewDeviceTrackedDetail"></paper-icon-button>
+              <div>
+                <paper-icon-button icon="create" device-id="[[device.id]]" on-tap="editDevice"></paper-icon-button>
+                <paper-icon-button icon="delete" device-id="[[device.id]]" on-tap="removeDevice"></paper-icon-button>
+              </div>
             </div>
           </paper-card>
         </div>
@@ -202,6 +206,10 @@
         this.$.deviceDelete.generateRequest().completes.then(function () {
           self.$.devices.generateRequest();
         });
+      },
+
+      _viewDeviceTrackedDetail: function (e) {
+        this.hash = '/device-tracking/' + e.currentTarget.deviceId;
       }
     });
   </script>
