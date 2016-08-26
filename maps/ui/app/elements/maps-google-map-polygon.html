@@ -1,0 +1,76 @@
+//Polymer components
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="maps-google-map-polygon">
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'maps-google-map-polygon',
+
+      properties: {
+        polygon: {
+          type: Object,
+          notify: true
+        },
+
+        map: {
+          type: Object,
+          observer: '_mapChanged'
+        },
+
+        path: {
+          type: Array,
+          value: null,
+          notify: true,
+          observer: '_updatePath'
+        }
+      },
+
+      detached: function() {
+        if (this.polygon) {
+          this.polygon.setMap(null);
+        }
+        if (this._contentObserver)
+          this._contentObserver.disconnect();
+      },
+
+      attached: function() {
+        if (this.polygon) {
+          this.polygon.setMap(this.map);
+        }
+      },
+
+      _updatePath: function() {
+        if (this.polygon && this.path != null) {
+          this.polygon.setPath(this.path);
+        }
+      },
+
+      _mapChanged: function() {
+        if (this.polygon) {
+          this.polygon.setMap(null);
+        }
+        if (this.map && this.map instanceof google.maps.Map) {
+          this._mapReady();
+        }
+      },
+
+      _mapReady: function() {
+        this.polygon = new google.maps.Polygon({
+          map: this.map,
+          paths: this.path,
+          strokeColor: '#0000AA',
+          fillColor: '#00AA00',
+          strokeWeight: 3
+        });
+      }
+    });
+  </script>
+</dom-module>

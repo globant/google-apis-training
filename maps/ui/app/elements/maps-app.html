@@ -30,6 +30,7 @@
 <link rel="import" href="maps-item.html">
 <link rel="import" href="maps-item-tracking.html">
 <link rel="import" href="maps-items-heatmap.html">
+<link rel="import" href="maps-alert.html">
 
 <dom-module id="maps-app">
 
@@ -102,6 +103,7 @@
             <a name="devices" href="/#/devices" hidden="[[_userIsAdmin()]]">Devices</a>
             <a name="items" href="/#/items" hidden="[[_userIsAdmin()]]">Items</a>
             <a name="heatmap" href="/#/heatmap">Heat Map</a>
+            <a name="alert" href="/#/alert">Alert</a>
           </iron-selector>
         </app-drawer>
 
@@ -136,6 +138,8 @@
               <maps-item-tracking name="item-tracking" user="[[user]]" route="[[subroute]]"></maps-item-tracking>
 
               <maps-items-heat-map name="heatmap" user="[[user]]"></maps-items-heat-map>
+
+              <maps-alert name="alert" user="[[user]]"></maps-alert>
           </iron-pages>
 
         </app-header-layout>

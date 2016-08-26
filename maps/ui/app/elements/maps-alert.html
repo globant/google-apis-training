@@ -1,0 +1,131 @@
+//Polymer components
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/google-map/google-map.html">
+<link rel="import" href="../bower_components/google-map/google-map-marker.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-styles/color.html">
+
+<link rel="import" href="maps-google-map-polygon.html">
+
+<dom-module id="maps-alert">
+  <template>
+    <style>
+      :host {
+        @apply(--layout-block);
+        @apply(--layout-flex);
+        height: 100%;
+        position: relative;
+      }
+
+      div[drawer] {
+        display: block;
+        position: relative;
+      }
+
+      paper-item {
+        padding: 16px;
+      }
+
+      paper-fab {
+        position: fixed;
+        right: 25px;
+        top: 35px;
+      }
+
+      paper-material {
+        position: absolute;
+        top: 0;
+        left: -80px;
+        background-color: white;
+        visibility: visible;
+      }
+
+      paper-listbox {
+        @apply(--layout-block);
+        @apply(--layout-scroll);
+      }
+
+      div[secondary] p {
+        margin: 5px;
+      }
+    </style>
+
+    <paper-drawer-panel id="newAlert" right-drawer force-narrow drawer-width="400px" selected="{{_panelSelected}}">
+      <div drawer>
+        <paper-material elevation="2">
+          <paper-icon-button icon="[[_getIconDrawer(_panelSelected)]]" paper-drawer-toggle></paper-icon-button>
+          <paper-icon-button icon="icons:add-alert" paper-drawer-toggle></paper-icon-button>
+        </paper-material>
+
+        <paper-toolbar>
+          <span class="title">New Alert</span>
+        </paper-toolbar>
+      </div>
+
+      <div main>
+        <google-map
+          click-events="true"
+          map="{{map}}"
+          latitude="{{_selectedTrackPoint.latitude}}"
+          longitude="{{_selectedTrackPoint.longitude}}"
+          api-key="{{constants.apiKeys.mapsApiKey}}"
+          on-google-map-click="addPolygonVertex"></google-map>
+
+        <maps-google-map-polygon
+          map="{{map}}"
+          path="[[locations]]"></maps-google-map-polygon>
+      </div>
+    </paper-drawer-panel>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'maps-alert',
+
+      properties: {
+        coordinates: {
+          type: Object,
+          value: []
+        },
+
+        locations: {
+          type: Object,
+          value: []
+        }
+      },
+
+      behaviors: [
+        MapsBehaviors.ViewBehavior,
+        MapsBehaviors.ConstantsBehavior
+      ],
+
+      _getIconDrawer: function (_panelSelected) {
+        return _panelSelected === 'drawer' ? 'chevron-right' : 'chevron-left';
+      },
+
+      _getLocations: function () {
+        this.locations = _(this.coordinates)
+          .map(coordinate => new google.maps.LatLng(parseFloat(coordinate.latitude), parseFloat(coordinate.longitude)))
+          .value();
+      },
+
+      addPolygonVertex: function (e, pointDetail) {
+        this.coordinates.push({
+          latitude: pointDetail.latLng.lat(),
+          longitude: pointDetail.latLng.lng(),
+          order: this.coordinates.length
+        });
+        this._getLocations();
+      }
+    });
+  </script>
+</dom-module>
