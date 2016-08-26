@@ -52,4 +52,15 @@ public interface TrackPointService {
    */
   List<TrackPoint> find(DateTime fromDate,
       DateTime toDate, Long itemId);
+  
+  /**
+   * Calculates Distance by Item Id.
+   * 
+   * @param fromDate from measured date
+   * @param toDate to measured date
+   * @param itemId the item id
+   */
+  double calculatesDistanceByItemId(DateTime fromDate,
+      DateTime toDate, Long itemId);
+  
 }

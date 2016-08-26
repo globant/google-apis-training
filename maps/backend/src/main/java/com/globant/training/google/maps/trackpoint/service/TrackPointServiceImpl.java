@@ -1,8 +1,11 @@
 package com.globant.training.google.maps.trackpoint.service;
 
 import com.google.inject.Inject;
+import com.google.maps.android.SphericalUtil;
 
+import com.globant.training.google.maps.alert.entity.LatLng;
 import com.globant.training.google.maps.device.service.DeviceService;
+import com.globant.training.google.maps.item.entity.Item;
 import com.globant.training.google.maps.item.service.ItemService;
 import com.globant.training.google.maps.trackpoint.dao.TrackPointDao;
 import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
@@ -28,6 +31,8 @@ public class TrackPointServiceImpl implements TrackPointService {
   
   private TrackPointPublisher publisher;
 
+  private ItemService itemService;
+  
   /**
    * Injects the needed services.
    * 
@@ -41,6 +46,7 @@ public class TrackPointServiceImpl implements TrackPointService {
     this.trackPointDao = trackPointDao;
     this.trackPointVisitor = trackPointVisitor;
     this.publisher = publisher;
+    this.itemService = itemService;
   }
 
   @Override
@@ -84,6 +90,33 @@ public class TrackPointServiceImpl implements TrackPointService {
     Validate.notNull(toDate, "To Date can not be null");
     
     return trackPointDao.find(fromDate, toDate,itemId);
+  }
+
+  @Override
+  public double calculatesDistanceByItemId(DateTime fromDate, DateTime toDate, Long itemId) {
+    Validate.notNull(itemId, "Item Id can not be null");
+    Validate.notNull(fromDate, "From date can not be null");
+    Validate.notNull(toDate, "To Date can not be null");
+    
+    Item item = itemService.findById(itemId);
+    
+    double distance = 0;
+    
+    List<TrackPoint> trackPoints = trackPointDao.find(fromDate, toDate, item.getId());
+
+    for (int k = 0; k < trackPoints.size() - 1; k++) {
+
+      LatLng fromPoint =
+          new LatLng(trackPoints.get(k).getLatitude(), trackPoints.get(k).getLongitude());
+
+      LatLng toPoint =
+          new LatLng(trackPoints.get(k + 1).getLatitude(), trackPoints.get(k + 1).getLongitude());
+
+      distance = distance + SphericalUtil.computeDistanceBetween(fromPoint, toPoint);
+    }
+    
+     
+    return distance;
   }
 
 }

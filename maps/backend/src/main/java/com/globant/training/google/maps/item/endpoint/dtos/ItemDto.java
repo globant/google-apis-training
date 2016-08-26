@@ -27,11 +27,17 @@ public class ItemDto implements Dto {
   
   private DeviceType deviceType;
   
-  private boolean active;
+  private Boolean active;
 
   private Date created;
 
   private Date lastUpdated;
+  
+  private Date fromDate;
+  
+  private Date toDate;
+  
+  private Double distanceTravelled;
 
   /**
    * Gets item id.
@@ -76,7 +82,7 @@ public class ItemDto implements Dto {
    * 
    * @return a flag to indicate if the item is active or not.
    */
-  public boolean isActive() {
+  public Boolean isActive() {
     return active;
   }
 
@@ -85,7 +91,7 @@ public class ItemDto implements Dto {
    * 
    * @param active the boolean value
    */
-  public ItemDto setActive(boolean active) {
+  public ItemDto setActive(Boolean active) {
     this.active = active;
     return this;
   }
@@ -182,6 +188,66 @@ public class ItemDto implements Dto {
    */
   public void setDeviceType(DeviceType deviceType) {
     this.deviceType = deviceType;
+  }
+
+  /**
+   * Gets From Date. It is used to show the filter applied.
+   * 
+   * @return the from date
+   */
+  public Date getFromDate() {
+    return fromDate;
+  }
+
+  /**
+   * Sets from date.
+   * 
+   * @param fromDate the from date
+   * @return the dto
+   */
+  public ItemDto setFromDate(Date fromDate) {
+    this.fromDate = fromDate;
+    return this;
+  }
+
+  /**
+   * Gets To Date. It is used to show the filter applied.
+   * 
+   * @return the to date
+   */
+  public Date getToDate() {
+    return toDate;
+  }
+
+  /**
+  * Sets to date.
+  * 
+  * @param toDate the to date.
+  * @return the dto
+  */
+  public ItemDto setToDate(Date toDate) {
+    this.toDate = toDate;
+    return this;
+  }
+
+  /**
+   * Gets the distance travelled.
+   * 
+   * @return the distance travelled
+   */
+  public Double getDistanceTravelled() {
+    return distanceTravelled;
+  }
+
+  /**
+   * Sets the distance travelled.
+   * 
+   * @param distanceTravelled the distance travelled
+   * @return the dto
+   */
+  public ItemDto setDistanceTravelled(Double distanceTravelled) {
+    this.distanceTravelled = distanceTravelled;
+    return this;
   }
 
 }

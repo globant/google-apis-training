@@ -179,7 +179,45 @@ public class ItemEndpoint extends BaseEndpoint {
 
   }
 
+  /**
+   * Calculates Distance Travelled by Item and Date Range.
+   * 
+   * @throws OAuthRequestException return an exception if the user is not logged.
+   */
+  @ApiMethod(name = "items.calculate.distance", path = "items/{itemId}/distance",
+      httpMethod = HttpMethod.GET)
+  public ItemDto calculatesDistanceByItemId(@Named("itemId") final Long itemId,
+      @Named("from") DateAndTime start, @Named("to") DateAndTime end, User user)
+      throws OAuthRequestException {
 
+    validateAdmin(user);
+    validateDates(start, end);
+   
+    DateTime fromDate = null;
+    DateTime toDate = null;
+
+    if (start == null && end == null) {
+      fromDate = new DateTime().withTimeAtStartOfDay();
+      toDate = fromDate.millisOfDay().withMaximumValue();
+    } else {
+      fromDate = new DateTime(start.toRfc3339String());
+      toDate = new DateTime(end.toRfc3339String());
+    }
+    
+    Double distance = trackPointService.calculatesDistanceByItemId(fromDate, toDate, itemId);
+    
+    ItemDto response = new ItemDto();
+    // @formatter:off
+    response.setId(itemId)
+            .setFromDate(fromDate.toDate())
+            .setToDate(toDate.toDate())
+            .setDistanceTravelled(distance);
+    // @formatter:on
+        
+    return response;
+
+  }
+  
   /**
    * Validates that provided dates (range) are: both completed or both null.
    * 
