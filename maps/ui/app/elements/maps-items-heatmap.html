@@ -180,6 +180,10 @@
         MapsBehaviors.ConstantsBehavior
       ],
 
+      listeners: {
+        'view-activated': '_handleViewActivated'
+      },
+
       _getParams: function(fromDate, toDate, itemId) {
         var params = {
           from: fromDate,
@@ -209,7 +213,7 @@
         }
       },
 
-      ready: function () {
+      _handleViewActivated: function () {
         this.fromDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
         this.toDate = moment().format('YYYY-MM-DD');
         this.itemId = '';

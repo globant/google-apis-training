@@ -25,9 +25,10 @@
 <link rel="import" href="maps-antenna.html">
 <link rel="import" href="maps-devices.html">
 <link rel="import" href="maps-device.html">
+<link rel="import" href="maps-device-tracking.html">
 <link rel="import" href="maps-items.html">
 <link rel="import" href="maps-item.html">
-<link rel="import" href="maps-device-tracking.html">
+<link rel="import" href="maps-item-tracking.html">
 <link rel="import" href="maps-items-heatmap.html">
 
 <dom-module id="maps-app">
@@ -128,11 +129,11 @@
 
               <maps-devices name="devices" user="[[user]]"></maps-devices>
               <maps-device name="device" user="[[user]]" route="[[subroute]]"></maps-device>
+              <maps-device-tracking name="device-tracking" user="[[user]]" route="[[subroute]]"></maps-device-tracking>
 
               <maps-items name="items" user="[[user]]"></maps-items>
               <maps-item name="item" user="[[user]]" route="[[subroute]]"></maps-item>
-
-              <maps-device-tracking name="device-tracking" user="[[user]]" route="[[subroute]]"></maps-device-tracking>
+              <maps-item-tracking name="item-tracking" user="[[user]]" route="[[subroute]]"></maps-item-tracking>
 
               <maps-items-heat-map name="heatmap" user="[[user]]"></maps-items-heat-map>
           </iron-pages>

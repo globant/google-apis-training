@@ -146,7 +146,7 @@
               <span hidden="[[!item.active]]"><em>Active</em></span>
             </div>
             <div class="card-actions">
-              <paper-icon-button icon="info" item-id="[[item.id]]" device-id="[[item.deviceId]]" on-tap="viewItemTrackedDetail"></paper-icon-button>
+              <paper-icon-button icon="info" item-id="[[item.id]]" on-tap="viewItemTrackedDetail"></paper-icon-button>
               <div>
                 <paper-icon-button icon="create" item-id="[[item.id]]" on-tap="editItem"></paper-icon-button>
                 <paper-icon-button icon="delete" item-id="[[item.id]]" on-tap="removeItem"></paper-icon-button>
@@ -204,7 +204,7 @@
       },
 
       viewItemTrackedDetail: function (e) {
-        this.hash = '/device-tracking/' + e.currentTarget.deviceId + '/' + e.currentTarget.itemId;
+        this.hash = '/item-tracking/' + e.currentTarget.itemId;
       },
 
       getDeviceName: function(deviceId) {
