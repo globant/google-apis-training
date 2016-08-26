@@ -1,0 +1,87 @@
+//Polymer components
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="maps-google-heatmap-layer">
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'maps-google-heatmap-layer',
+
+      properties: {
+        heatMap: {
+          type: Object,
+          notify: true
+        },
+
+        map: {
+          type: Object,
+          observer: '_mapChanged'
+        },
+
+        locations: {
+          type: Object,
+          value: [],
+          observer: '_updateLocations'
+        },
+
+        radius: {
+          type: Number,
+          value: 12,
+          observer: '_updateRadius'
+        }
+      },
+
+      detached: function() {
+        if (this.heatMap) {
+          this.heatMap.setMap(null);
+        }
+        if (this._contentObserver)
+          this._contentObserver.disconnect();
+      },
+
+      attached: function() {
+        if (this.heatMap) {
+          this.heatMap.setMap(this.map);
+        }
+      },
+
+      _updateLocations: function() {
+        if (this.heatMap && this.locations != null) {
+          this.heatMap.setData(this.locations);
+        }
+      },
+
+      _updateRadius: function () {
+        if (this.heatMap && this.locations != 0) {
+          this.heatMap.setOptions({
+            radius: parseInt(this.radius)
+          });
+        }
+      },
+
+      _mapChanged: function() {
+        if (this.heatMap) {
+          this.heatMap.setMap(null);
+        }
+        if (this.map && this.map instanceof google.maps.Map) {
+          this._mapReady();
+        }
+      },
+
+      _mapReady: function() {
+        this.heatMap = new google.maps.visualization.HeatmapLayer({
+          map: this.map,
+          data: this.locations
+        });
+      }
+    });
+  </script>
+</dom-module>

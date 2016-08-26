@@ -1,0 +1,258 @@
+//Polymer components
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/google-map/google-map.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+
+<link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+
+//Maps components
+<link rel="import" href="maps-request.html">
+<link rel="import" href="maps-google-heatmap-layer.html">
+
+//Maps behaviours
+<link rel="import" href="behaviors/maps-view-behavior.html">
+<link rel="import" href="behaviors/maps-constants-behavior.html">
+
+<dom-module id="maps-items-heat-map">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-flex-factors iron-positioning">
+      :host {
+        @apply(--layout-block);
+        @apply(--layout-flex);
+        height: 100%;
+        position: relative;
+      }
+
+      div[drawer] {
+        display: block;
+        position: relative;
+      }
+
+      paper-material {
+        position: absolute;
+        top: 0;
+        left: -80px;
+        background-color: white;
+        visibility: visible;
+      }
+
+      paper-item {
+        padding: 16px;
+      }
+
+      paper-fab {
+        position: fixed;
+        right: 25px;
+        top: 35px;
+      }
+
+      div[secondary] p {
+        margin: 5px;
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+
+    <maps-request id="trackPoints"
+      user="[[user]]"
+      endpoint="/trackpoints"
+      method="GET"
+      params="{{searchParams}}"
+      data="{{trackPoints}}"></maps-request>
+
+    <maps-request id="items"
+      user="[[user]]"
+      endpoint="/items"
+      method="GET"
+      data="{{items}}"
+      load-with-view></maps-request>
+
+    <iron-location hash="{{hash}}"></iron-location>
+
+    <paper-drawer-panel id="trackPointsList" right-drawer force-narrow drawer-width="400px" selected="{{_panelSelected}}">
+      <div drawer>
+        <paper-material elevation="2">
+          <paper-icon-button icon="[[_getIconDrawer(_panelSelected)]]" paper-drawer-toggle></paper-icon-button>
+          <paper-icon-button icon="icons:search" paper-drawer-toggle></paper-icon-button>
+        </paper-material>
+
+        <paper-toolbar>
+          <span class="title">Track Points</span>
+        </paper-toolbar>
+
+        <paper-item>
+          <paper-dropdown-menu label="Item">
+            <paper-listbox class="dropdown-content" selected="{{itemId}}" attr-for-selected="option">
+              <paper-item option="">All</paper-item>
+              <template is="dom-repeat" items="[[items.items]]">
+                <paper-item option="[[item.id]]">[[item.name]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </paper-item>
+
+        <paper-item>
+          <paper-item-body two-line>
+            <div>Show track points: </div>
+            <div secondary>
+              <vaadin-date-picker label="from" value="{{fromDate}}"></vaadin-date-picker>
+              <vaadin-date-picker label="to" value="{{toDate}}"></vaadin-date-picker>
+            </div>
+          </paper-item-body>
+        </paper-item>
+
+        <paper-item>
+          <paper-item-body two-line>
+            <div>Radius</div>
+            <div secondary>
+              <paper-slider min="1" max="50" immediate-value="{{radius}}" value="{{radius}}" editable></paper-slider>
+            </div>
+          </paper-item-body>
+        </paper-item>
+      </div>
+
+      <div main>
+        <google-map
+          map="{{map}}"
+          latitude="{{_selectedTrackPoint.latitude}}"
+          longitude="{{_selectedTrackPoint.longitude}}"
+          api-key="{{constants.apiKeys.mapsApiKey}}"></google-map>
+
+        <maps-google-heatmap-layer
+          map="{{map}}"
+          locations="[[locations]]"
+          radius="[[radius]]"></maps-google-heatmap-layer>
+      </div>
+    </paper-drawer-panel>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'maps-items-heat-map',
+
+      properties: {
+        trackPoints: {
+          type: Object,
+          value: []
+        },
+
+        locations: {
+          computed: '_getLocations(trackPoints)'
+        },
+
+        radius: {
+          type: Number,
+          value: 12
+        },
+
+        searchParams: {
+          computed: '_getParams(fromDate, toDate, itemId)',
+          observer: '_updateTrackPoints'
+        },
+
+        _trackPointIndex: {
+          type: Number,
+          observer: '_setSelectedTrackPoint'
+        },
+
+        _selectedTrackPoint: {
+          type: Object,
+          computed: '_getSelectedTrackPoint(trackPoints)'
+        }
+      },
+
+      behaviors: [
+        MapsBehaviors.ViewBehavior,
+        MapsBehaviors.ConstantsBehavior
+      ],
+
+      _getParams: function(fromDate, toDate, itemId) {
+        var params = {
+          from: fromDate,
+          to: toDate
+        };
+
+        if(itemId !== '') {
+          params.itemId = itemId;
+        }
+
+        return params;
+      },
+
+      _updateTrackPoints: function () {
+        if(this.fromDate !== '' && this.toDate !== '') {
+          this.$.trackPoints.generateRequest();
+        }
+      },
+
+      _getLocations: function (trackPoints) {
+        if(trackPoints.items && trackPoints.items.length > 0) {
+          return _(trackPoints.items)
+            .map(trackPoint => new google.maps.LatLng(parseFloat(trackPoint.latitude), parseFloat(trackPoint.longitude)))
+            .value();
+        } else {
+          return [];
+        }
+      },
+
+      ready: function () {
+        this.fromDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
+        this.toDate = moment().format('YYYY-MM-DD');
+        this.itemId = '';
+      },
+
+      _getIconDrawer: function (_panelSelected) {
+        return _panelSelected === 'drawer' ? 'chevron-right' : 'chevron-left';
+      },
+
+      _setSelectedTrackPoint: function (trackPointIndex) {
+        var newCenter = new google.maps.LatLng(this.trackPoints.items[trackPointIndex].latitude, this.trackPoints.items[trackPointIndex].longitude);
+        this.map.panTo(newCenter);
+        this.$.antennasList.closeDrawer();
+      },
+
+      _getSelectedTrackPoint: function (trackPoints) {
+        var selected = {};
+
+        if(trackPoints.items && trackPoints.items.length) {
+          selected.latitude = this.trackPoints.items[0].latitude;
+          selected.longitude = this.trackPoints.items[0].longitude;
+        } else {
+          selected.latitude = 0;
+          selected.longitude = 0;
+        }
+        return selected;
+      },
+
+      addAntenna: function () {
+        this.$.antennasList.closeDrawer();
+        this.hash = '/antenna/create';
+      },
+
+      editAntenna: function (e) {
+        this.$.antennasList.closeDrawer();
+        this.hash = '/antenna/edit/' + e.currentTarget.antennaId;
+      },
+
+      removeAntenna: function (e) {
+        this.antennaToDelete = e.currentTarget.antennaId;
+        this.$.antennaDelete.generateRequest();
+        this.$.antennas.generateRequest();
+      }
+    });
+  </script>
+</dom-module>

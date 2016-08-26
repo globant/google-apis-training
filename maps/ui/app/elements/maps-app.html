@@ -12,6 +12,7 @@
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/google-apis/google-client-loader.html">
 
 //Login components
 <link rel="import" href="maps-shade.html">
@@ -27,6 +28,7 @@
 <link rel="import" href="maps-items.html">
 <link rel="import" href="maps-item.html">
 <link rel="import" href="maps-device-tracking.html">
+<link rel="import" href="maps-items-heatmap.html">
 
 <dom-module id="maps-app">
 
@@ -74,6 +76,11 @@
       }
     </style>
 
+    <maps-request id="userInfo"
+      user="[[user]]"
+      endpoint="/users"
+      data="{{users}}"></maps-request>
+
     <app-location route="{{route}}" use-hash-as-path></app-location>
 
     <app-route
@@ -90,9 +97,10 @@
           <app-toolbar>Menu</app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
             <a name="home" href="/#/home">Home</a>
-            <a name="antennas" href="/#/antennas">Antennas</a>
-            <a name="devices" href="/#/devices">Devices</a>
-            <a name="items" href="/#/items">Items</a>
+            <a name="antennas" href="/#/antennas" hidden="[[_userIsAdmin()]]">Antennas</a>
+            <a name="devices" href="/#/devices" hidden="[[_userIsAdmin()]]">Devices</a>
+            <a name="items" href="/#/items" hidden="[[_userIsAdmin()]]">Items</a>
+            <a name="heatmap" href="/#/heatmap">Heat Map</a>
           </iron-selector>
         </app-drawer>
 
@@ -125,6 +133,8 @@
               <maps-item name="item" user="[[user]]" route="[[subroute]]"></maps-item>
 
               <maps-device-tracking name="device-tracking" user="[[user]]" route="[[subroute]]"></maps-device-tracking>
+
+              <maps-items-heat-map name="heatmap" user="[[user]]"></maps-items-heat-map>
           </iron-pages>
 
         </app-header-layout>
@@ -153,13 +163,24 @@
 
         user: {
           type: Object,
-          value: null
+          value: null,
+          observer: '_observeUser'
         }
       },
 
       observers: [
         '_handleSubRouteChanged(subroute.path)'
       ],
+
+      _observeUser: function () {
+        if (this.user !== null) {
+          this.$.userInfo.generateRequest();
+        }
+      },
+
+      _userIsAdmin: function() {
+        return !!(this.users && this.users.items[0].roles[1] === 'ADMIN');
+      },
 
       _handleSubRouteChanged: function () {
         if(this.routeData.page) {
