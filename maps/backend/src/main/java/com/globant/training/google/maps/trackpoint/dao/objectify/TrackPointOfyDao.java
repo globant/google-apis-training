@@ -38,7 +38,8 @@ public class TrackPointOfyDao extends BaseOfyDao<TrackPoint> implements TrackPoi
 
     query = query.filter("measuredDate >=", fromDate);
     query = query.filter("measuredDate <=", toDate);
-
+    query = query.order("measuredDate");
+    
     return query.list();
   }
 
