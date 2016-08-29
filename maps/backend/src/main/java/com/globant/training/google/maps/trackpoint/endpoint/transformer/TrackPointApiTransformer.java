@@ -11,7 +11,6 @@ import com.globant.training.google.maps.trackpoint.endpoint.dtos.TrackPointDto;
 import com.globant.training.google.maps.trackpoint.endpoint.dtos.TrackPointFactory;
 import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
 
-import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -52,8 +51,10 @@ public class TrackPointApiTransformer implements Transformer<TrackPoint, TrackPo
     // @formatter:off
     dto.setId(trackPoint.getId()).setLatitude(trackPoint.getLatitude())
         .setLongitude(trackPoint.getLongitude())
-        .setMeasuredDate(DateAndTime.parseRfc3339String(dateFormatter.print(trackPoint.getMeasuredDate())))
-        .setSavedDate(DateAndTime.parseRfc3339String(dateFormatter.print(trackPoint.getSavedDate())));
+        .setMeasuredDate(
+            DateAndTime.parseRfc3339String(dateFormatter.print(trackPoint.getMeasuredDate())))
+        .setSavedDate(
+            DateAndTime.parseRfc3339String(dateFormatter.print(trackPoint.getSavedDate())));
     // @formatter:on
     
     
