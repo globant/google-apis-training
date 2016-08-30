@@ -53,13 +53,6 @@ public abstract class Device extends BaseEntity {
   public abstract Map<String, String> getAttributes();
 
   /**
-   * Provide a Map of particular values for device.
-   * 
-   * @param device device.
-   */
-  public abstract void update(Device device);
-
-  /**
    * Get device name.
    * 
    */

@@ -1,5 +1,6 @@
 package com.globant.training.google.maps.alert.endpoint.dtos;
 
+import com.globant.training.google.maps.alert.entity.EvaluationMode;
 import com.globant.training.google.maps.alert.entity.LatLng;
 import com.globant.training.google.maps.core.endpoint.dto.Dto;
 
@@ -33,6 +34,8 @@ public class AlertDto implements Dto {
   private Date lastUpdated;
 
   private boolean active;
+  
+  private EvaluationMode mode = EvaluationMode.IN;
 
   /**
    * Gets antenna id.
@@ -125,6 +128,15 @@ public class AlertDto implements Dto {
 
   public AlertDto setCoordinates(List<CoordinatePointDto> coordinates) {
     this.coordinates = coordinates;
+    return this;
+  }
+
+  public EvaluationMode getMode() {
+    return mode;
+  }
+
+  public AlertDto setMode(EvaluationMode mode) {
+    this.mode = mode;
     return this;
   }
 
