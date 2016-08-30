@@ -4,7 +4,6 @@ import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
-import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.types.DateAndTime;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.inject.Inject;
@@ -16,7 +15,6 @@ import com.globant.training.google.maps.item.entity.Item;
 import com.globant.training.google.maps.item.service.ItemService;
 import com.globant.training.google.maps.trackpoint.entity.TrackPoint;
 import com.globant.training.google.maps.trackpoint.service.TrackPointService;
-import com.globant.training.google.maps.user.entity.AppUser;
 import com.globant.training.google.maps.user.service.UserService;
 
 import org.joda.time.DateTime;
@@ -43,7 +41,9 @@ public class ItemEndpoint extends BaseEndpoint {
   /**
    * Constructor.
    * 
-   * @param itemService the item service.
+   * @param userService the user service
+   * @param trackPointService trackPointService
+   * @param itemService the item service
    */
   @Inject
   public ItemEndpoint(ItemService itemService, UserService userService,
@@ -57,24 +57,16 @@ public class ItemEndpoint extends BaseEndpoint {
    * Get an Item by id.
    * 
    * @param itemId the id to be found
+   * @param user the user logged
    * @return {@link Item}
    * @throws OAuthRequestException returns a exception if the user is not authenticated
-   * @throws NotFoundException if none item found for provided id
    */
   @ApiMethod(name = "items.get", path = "items/{itemId}", httpMethod = HttpMethod.GET)
   public Item getItem(@Named("itemId") final Long itemId, User user) throws OAuthRequestException {
 
-    AppUser loggedUser = loginUser(user);
-
-    if (!loggedUser.isAdmin()) {
-      throw new RuntimeException("User not authorized");
-    }
+    validateAdmin(user);
 
     Item item = itemService.findById(itemId);
-
-    if (item == null) {
-      throw new RuntimeException("Item Not Found");
-    }
 
     return item;
   }
@@ -82,7 +74,7 @@ public class ItemEndpoint extends BaseEndpoint {
   /**
    * Add Item.
    *
-   * @param user provided user.
+   * @param user the user logged
    * @param itemToSave the item request
    * @return item the item persisted with id
    * @throws OAuthRequestException returns a exception if the user is not authenticated
@@ -100,7 +92,7 @@ public class ItemEndpoint extends BaseEndpoint {
   /**
    * Modify Item.
    * 
-   * @param user provided user.
+   * @param user the user logged
    * @param itemId item to update.
    * @param itemToUpdate the item request
    * @return item the item
@@ -118,8 +110,9 @@ public class ItemEndpoint extends BaseEndpoint {
   }
 
   /**
-   * Find items.
+   * Return all items.
    * 
+   * @param user the user logged
    * @return List of {@link ItemDto}
    * @throws OAuthRequestException returns a exception if the user is not authenticated
    */
@@ -137,7 +130,9 @@ public class ItemEndpoint extends BaseEndpoint {
   /**
    * Delete item by id.
    * 
-   * @throws OAuthRequestException
+   * @param itemId the item id to be deleted.
+   * @param user the user logged
+   * @throws OAuthRequestException returns a exception if the user is not authenticated
    * 
    */
   @ApiMethod(name = "items.delete", path = "items/{itemId}", httpMethod = HttpMethod.DELETE)
@@ -153,6 +148,10 @@ public class ItemEndpoint extends BaseEndpoint {
   /**
    * Find track points by item id and date range.
    * 
+   * @param itemId the item id
+   * @param start the start date
+   * @param end the end date.
+   * @param user the user logged
    * @throws OAuthRequestException return an exception if the user is not logged.
    */
   @ApiMethod(name = "items.find.trackpoints", path = "items/{itemId}/trackpoints",
@@ -182,6 +181,10 @@ public class ItemEndpoint extends BaseEndpoint {
   /**
    * Calculates Distance Travelled by Item and Date Range.
    * 
+   * @param itemId the item id
+   * @param start the start date
+   * @param end the end date
+   * @param user the user logged
    * @throws OAuthRequestException return an exception if the user is not logged.
    */
   @ApiMethod(name = "items.calculate.distance", path = "items/{itemId}/distance",
