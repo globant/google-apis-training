@@ -65,11 +65,18 @@ public class TrackPointEndpoint extends BaseEndpoint {
   /**
    * Gets track point by id.
    * 
+   * @param trackPointId the track point id
+   * @param user the user logged
    * @return {@link TrackPointDto}
+   * @throws OAuthRequestException return an exception if the user is not logged
    */
   @ApiMethod(name = "trackpoint.get", path = "trackpoints/{trackPointId}",
       httpMethod = HttpMethod.GET)
-  public TrackPoint getTrackPoint(@Named("trackPointId") final Long trackPointId) {
+  public TrackPoint getTrackPoint(@Named("trackPointId") final Long trackPointId, User user)
+      throws OAuthRequestException {
+    
+    validateAdmin(user);
+     
     TrackPoint trackPoint = trackPointService.findById(trackPointId);
 
     return trackPoint;
@@ -79,6 +86,9 @@ public class TrackPointEndpoint extends BaseEndpoint {
   /**
    * Find track points by item id and date range.
    * 
+   * @itemId the item id
+   * @param start the start date
+   * @param end the end date
    * @throws OAuthRequestException return an exception if the user is not logged.
    */
   @ApiMethod(name = "trackpoint.find", path = "trackpoints", httpMethod = HttpMethod.GET)
@@ -86,7 +96,7 @@ public class TrackPointEndpoint extends BaseEndpoint {
       @Named("from") DateAndTime start, @Named("to") DateAndTime end, User user)
           throws OAuthRequestException {
 
-    validateAdmin(user);
+    loginUser(user);
 
     validateDates(start, end);
 

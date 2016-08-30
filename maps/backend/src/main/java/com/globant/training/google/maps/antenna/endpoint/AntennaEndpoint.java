@@ -4,7 +4,6 @@ import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
-import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.inject.Inject;
 
@@ -13,7 +12,6 @@ import com.globant.training.google.maps.antenna.entity.Antenna;
 import com.globant.training.google.maps.antenna.service.AntennaService;
 import com.globant.training.google.maps.configs.Constants;
 import com.globant.training.google.maps.core.endpoint.BaseEndpoint;
-import com.globant.training.google.maps.user.entity.AppUser;
 import com.globant.training.google.maps.user.service.UserService;
 
 import java.util.List;
@@ -49,19 +47,15 @@ public class AntennaEndpoint extends BaseEndpoint {
    * Get an Antenna by id.
    * 
    * @param antennaId the id to be found
+   * @param user the user logged
    * @return {@link AntennaDto}
    * @throws OAuthRequestException returns a exception if the user is not authenticated
-   * @throws NotFoundException if none antenna found for provided id
    */
   @ApiMethod(name = "antennas.get", path = "antennas/{antennaId}", httpMethod = HttpMethod.GET)
   public Antenna getAntenna(@Named("antennaId") final Long antennaId, User user)
       throws OAuthRequestException {
 
-    AppUser loggedUser = loginUser(user);
-
-    if (!loggedUser.isAdmin()) {
-      throw new RuntimeException("User not authorized");
-    }
+    validateAdmin(user);
 
     Antenna antenna = antennaService.findById(antennaId);
 
@@ -72,17 +66,14 @@ public class AntennaEndpoint extends BaseEndpoint {
    * Add Antenna.
    * 
    * @param antenna the antenna request
-   * @return user the logged user
+   * @param user the user logged
+   * @return the antenna added
    * @throws OAuthRequestException returns a exception if the user is not authenticated
    */
   @ApiMethod(name = "antennas.add", path = "antennas", httpMethod = HttpMethod.POST)
   public Antenna addAntenna(Antenna antenna, User user) throws OAuthRequestException {
 
-    AppUser loggedUser = loginUser(user);
-
-    if (!loggedUser.isAdmin()) {
-      throw new RuntimeException("User not authorized");
-    }
+    validateAdmin(user);
 
     return antennaService.create(antenna);
   }
@@ -90,7 +81,9 @@ public class AntennaEndpoint extends BaseEndpoint {
   /**
    * Modify Antenna.
    * 
+   * @param putId the antenna id to be modified.
    * @param antenna the antenna request
+   * @param user the user logged
    * @return antenna the antenna
    * @throws OAuthRequestException returns a exception if the user is not authenticated
    */
@@ -98,11 +91,7 @@ public class AntennaEndpoint extends BaseEndpoint {
   public Antenna modify(@Named("putId") final Long putId, Antenna antenna, User user)
       throws OAuthRequestException {
 
-    AppUser loggedUser = loginUser(user);
-
-    if (!loggedUser.isAdmin()) {
-      throw new RuntimeException("User not authorized");
-    }
+    validateAdmin(user);
 
     return antennaService.update(putId, antenna);
   }
@@ -116,31 +105,25 @@ public class AntennaEndpoint extends BaseEndpoint {
   @ApiMethod(name = "antennas.find", path = "antennas", httpMethod = HttpMethod.GET)
   public List<Antenna> findAntennas(User user) throws OAuthRequestException {
 
-    AppUser loggedUser = loginUser(user);
-
-    if (!loggedUser.isAdmin()) {
-      throw new RuntimeException("User not authorized");
-    }
-
+    validateAdmin(user);
+    
     return antennaService.getAll();
 
   }
 
   /**
    * Delete Antenna by id.
-   * 
-   * @throws OAuthRequestException
+   *  
+   * @param deleteId the antenna id
+   * @param user the user logged
+   * @throws OAuthRequestException returns a exception if the user is not authenticated
    * 
    */
   @ApiMethod(name = "antennas.delete", path = "antennas/{deleteId}", httpMethod = HttpMethod.DELETE)
   public void deleteAntenna(@Named("deleteId") final Long deleteId, User user)
       throws OAuthRequestException {
 
-    AppUser loggedUser = loginUser(user);
-
-    if (!loggedUser.isAdmin()) {
-      throw new RuntimeException("User not authorized");
-    }
+    validateAdmin(user);
 
     antennaService.deleteById(deleteId);
 
