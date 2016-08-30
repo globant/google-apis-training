@@ -13,6 +13,7 @@
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-styles/color.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
 
 <link rel="import" href="maps-google-map-polygon.html">
 
@@ -54,10 +55,26 @@
         @apply(--layout-scroll);
       }
 
+      paper-checkbox {
+        @apply(--layout-block);
+        margin: 20px 0;
+      }
+
       div[secondary] p {
         margin: 5px;
       }
+
+      form {
+        padding: 10px;
+      }
     </style>
+
+    <maps-request id="items"
+      user="[[user]]"
+      endpoint="/items"
+      method="GET"
+      data="{{items}}"
+      load-with-view></maps-request>
 
     <paper-drawer-panel id="newAlert" right-drawer force-narrow drawer-width="400px" selected="{{_panelSelected}}">
       <div drawer>
@@ -69,6 +86,33 @@
         <paper-toolbar>
           <span class="title">New Alert</span>
         </paper-toolbar>
+
+        <form is="iron-form">
+          <paper-input
+            label="Name"
+            type="text"
+            required
+            auto-validate
+            error-message="This field is required"
+            value="{{alert.name}}"></paper-input>
+
+          <paper-dropdown-menu label="Item">
+            <paper-listbox class="dropdown-content" selected="{{alert.itemId}}" attr-for-selected="option">
+              <template is="dom-repeat" items="[[items.items]]">
+                <paper-item option="[[item.id]]">[[item.name]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+
+          <paper-dropdown-menu label="Alert Type">
+            <paper-listbox class="dropdown-content" selected="{{alert.mode}}" attr-for-selected="option">
+              <paper-item option="IN">In alert</paper-item>
+              <paper-item option="OUT">Out alert</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+
+          <paper-checkbox checked="{{alert.active}}">Active</paper-checkbox>
+        </form>
       </div>
 
       <div main>
@@ -82,7 +126,8 @@
 
         <maps-google-map-polygon
           map="{{map}}"
-          path="[[locations]]"></maps-google-map-polygon>
+          path="[[locations]]"
+          geodesic></maps-google-map-polygon>
       </div>
     </paper-drawer-panel>
   </template>
@@ -92,6 +137,11 @@
       is: 'maps-alert',
 
       properties: {
+        alert: {
+          type: Object,
+          value: {}
+        },
+
         coordinates: {
           type: Object,
           value: []

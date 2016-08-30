@@ -30,6 +30,11 @@
           value: null,
           notify: true,
           observer: '_updatePath'
+        },
+
+        geodesic: {
+          type: Boolean,
+          value: false
         }
       },
 
@@ -68,7 +73,8 @@
           paths: this.path,
           strokeColor: '#0000AA',
           fillColor: '#00AA00',
-          strokeWeight: 3
+          strokeWeight: 3,
+          geodesic: this.geodesic
         });
       }
     });
