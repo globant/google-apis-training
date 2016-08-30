@@ -114,16 +114,27 @@
 
       _getLocations: function () {
         this.locations = _(this.coordinates)
-          .map(coordinate => new google.maps.LatLng(parseFloat(coordinate.latitude), parseFloat(coordinate.longitude)))
+          .map(coordinate => {
+            return new google.maps.LatLng(parseFloat(coordinate.latitude), parseFloat(coordinate.longitude))
+          })
           .value();
       },
 
       addPolygonVertex: function (e, pointDetail) {
-        this.coordinates.push({
+        var self = this;
+        var marker = Polymer.Base.create('google-map-marker', {
+          map: this.map,
           latitude: pointDetail.latLng.lat(),
           longitude: pointDetail.latLng.lng(),
-          order: this.coordinates.length
+          draggable: true,
+          dragEvents: true
+
         });
+        marker.addEventListener('google-map-marker-dragend', function() {
+          self._getLocations();
+        });
+        this.$$('google-map').appendChild(marker);
+        this.coordinates.push(marker);
         this._getLocations();
       }
     });
