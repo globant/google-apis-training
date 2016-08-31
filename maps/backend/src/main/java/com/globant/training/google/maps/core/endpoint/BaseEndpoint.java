@@ -2,8 +2,10 @@ package com.globant.training.google.maps.core.endpoint;
 
 import com.google.api.server.spi.auth.common.User;
 import com.google.appengine.api.oauth.OAuthRequestException;
+import com.google.appengine.api.utils.SystemProperty;
 
 import com.globant.training.google.maps.user.entity.AppUser;
+import com.globant.training.google.maps.user.entity.UserRole;
 import com.globant.training.google.maps.user.service.UserService;
 
 /**
@@ -46,6 +48,12 @@ public abstract class BaseEndpoint {
 
       applicationUser = new AppUser(user.getId(), user.getEmail());
       applicationUser.setActive(true);
+      
+      //In development environment every user will be admin.
+      if (!SystemProperty.environment.value().equals(SystemProperty.Environment.Value.Production)) {
+        applicationUser.getRoles().add(UserRole.ADMIN);
+      }
+      
       userService.create(applicationUser);
 
     }
