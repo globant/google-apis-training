@@ -88,7 +88,8 @@
       user="[[user]]"
       endpoint="/alerts{{viewData.path}}"
       method="GET"
-      data="{{alert}}"></maps-request>
+      data="{{alert}}"
+      on-response="_handleAlertResponse"></maps-request>
 
     <maps-request id="alertCreate"
       user="[[user]]"
@@ -243,14 +244,27 @@
       _handleViewActivated: function () {
         if(this.routeData.action === 'edit') {
           this.$.alertFind.generateRequest();
+        } else {
+          this.alert = {
+            name: '',
+            itemId: '',
+            mode: 'IN',
+            active: false,
+            coordinates: null
+          };
+          this.$$('form').reset();
         }
-
-        this.$$('form').reset();
         this._reset();
       },
 
       _handleSuccessfulResponse: function () {
         this.hash = '/alerts';
+      },
+
+      _handleAlertResponse: function () {
+        _(this.alert.coordinates)
+          .forEach(coordinate => this._addMarker(coordinate.latitude, coordinate.longitude));
+        this._getLocations();
       },
 
       _clearAllMarkers: function () {
@@ -261,12 +275,12 @@
         this.coordinates = [];
       },
 
-      addPolygonVertex: function (e, pointDetail) {
+      _addMarker: function (latitude, longitude) {
         var self = this;
         var marker = Polymer.Base.create('google-map-marker', {
           map: this.map,
-          latitude: pointDetail.latLng.lat(),
-          longitude: pointDetail.latLng.lng(),
+          latitude: latitude,
+          longitude: longitude,
           draggable: true,
           dragEvents: true
 
@@ -275,6 +289,10 @@
           self._getLocations();
         });
         this.coordinates.push(marker);
+      },
+
+      addPolygonVertex: function (e, pointDetail) {
+        this._addMarker(pointDetail.latLng.lat(), pointDetail.latLng.lng());
         this._getLocations();
       }
     });
