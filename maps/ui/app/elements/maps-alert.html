@@ -232,8 +232,7 @@
       },
 
       _reset: function () {
-        this.$$('google-map').clear();
-        this.coordinates = [];
+        this._clearAllMarkers();
         this._getLocations();
       },
 
@@ -247,10 +246,19 @@
         }
 
         this.$$('form').reset();
+        this._reset();
       },
 
       _handleSuccessfulResponse: function () {
         this.hash = '/alerts';
+      },
+
+      _clearAllMarkers: function () {
+        this.$$('google-map').clear();
+        _(this.coordinates).forEach(function(coordinate) {
+            coordinate.map = null;
+          });
+        this.coordinates = [];
       },
 
       addPolygonVertex: function (e, pointDetail) {
@@ -266,7 +274,6 @@
         marker.addEventListener('google-map-marker-dragend', function() {
           self._getLocations();
         });
-        this.$$('google-map').appendChild(marker);
         this.coordinates.push(marker);
         this._getLocations();
       }
