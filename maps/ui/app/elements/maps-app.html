@@ -30,6 +30,7 @@
 <link rel="import" href="maps-item.html">
 <link rel="import" href="maps-item-tracking.html">
 <link rel="import" href="maps-items-heatmap.html">
+<link rel="import" href="maps-alerts.html">
 <link rel="import" href="maps-alert.html">
 
 <dom-module id="maps-app">
@@ -99,11 +100,11 @@
           <app-toolbar>Menu</app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
             <a name="home" href="/#/home">Home</a>
+            <a name="heatmap" href="/#/heatmap">Heat Map</a>
             <a name="antennas" href="/#/antennas" hidden="[[_userIsAdmin()]]">Antennas</a>
             <a name="devices" href="/#/devices" hidden="[[_userIsAdmin()]]">Devices</a>
             <a name="items" href="/#/items" hidden="[[_userIsAdmin()]]">Items</a>
-            <a name="heatmap" href="/#/heatmap">Heat Map</a>
-            <a name="alert" href="/#/alert">Alert</a>
+            <a name="alerts" href="/#/alerts">Alert</a>
           </iron-selector>
         </app-drawer>
 
@@ -139,7 +140,8 @@
 
               <maps-items-heat-map name="heatmap" user="[[user]]"></maps-items-heat-map>
 
-              <maps-alert name="alert" user="[[user]]"></maps-alert>
+              <maps-alerts name="alerts" user="[[user]]"></maps-alerts>
+              <maps-alert name="alert" user="[[user]]" route="[[subroute]]"></maps-alert>
           </iron-pages>
 
         </app-header-layout>

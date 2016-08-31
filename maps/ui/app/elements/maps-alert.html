@@ -32,16 +32,6 @@
         position: relative;
       }
 
-      paper-item {
-        padding: 16px;
-      }
-
-      paper-fab {
-        position: fixed;
-        right: 25px;
-        top: 35px;
-      }
-
       paper-material {
         position: absolute;
         top: 0;
@@ -67,7 +57,25 @@
       form {
         padding: 10px;
       }
+
+      .actions-container {
+        @apply(--layout-horizontal);
+        @apply(--layout-end-justified);
+      }
+
+      paper-button.primary {
+        background-color: var(--paper-pink-a200);
+        color: white;
+      }
     </style>
+
+    <app-route
+      route="{{route}}"
+      pattern="/:action"
+      data="{{routeData}}"
+      tail="{{viewData}}"></app-route>
+
+    <iron-location hash="{{hash}}"></iron-location>
 
     <maps-request id="items"
       user="[[user]]"
@@ -75,6 +83,26 @@
       method="GET"
       data="{{items}}"
       load-with-view></maps-request>
+
+    <maps-request id="alertFind"
+      user="[[user]]"
+      endpoint="/alerts{{viewData.path}}"
+      method="GET"
+      data="{{alert}}"></maps-request>
+
+    <maps-request id="alertCreate"
+      user="[[user]]"
+      endpoint="/alerts"
+      method="POST"
+      body="{{body}}"
+      on-response="_handleSuccessfulResponse"></maps-request>
+
+    <maps-request id="alertEdit"
+      user="[[user]]"
+      endpoint="/alerts{{viewData.path}}"
+      method="PUT"
+      body="{{body}}"
+      on-response="_handleSuccessfulResponse"></maps-request>
 
     <paper-drawer-panel id="newAlert" right-drawer force-narrow drawer-width="400px" selected="{{_panelSelected}}">
       <div drawer>
@@ -113,6 +141,12 @@
 
           <paper-checkbox checked="{{alert.active}}">Active</paper-checkbox>
         </form>
+
+        <div class="actions-container">
+          <paper-button class="primary" raised on-tap="_submit">Save</paper-button>
+          <paper-button raised on-tap="_reset">Reset Polygon</paper-button>
+          <paper-button raised on-tap="_cancel">Cancel</paper-button>
+        </div>
       </div>
 
       <div main>
@@ -139,7 +173,13 @@
       properties: {
         alert: {
           type: Object,
-          value: {}
+          value: {
+            name: '',
+            itemId: '',
+            mode: 'IN',
+            active: false,
+            coordinates: []
+          }
         },
 
         coordinates: {
@@ -153,6 +193,10 @@
         }
       },
 
+      listeners: {
+        'view-activated': '_handleViewActivated'
+      },
+
       behaviors: [
         MapsBehaviors.ViewBehavior,
         MapsBehaviors.ConstantsBehavior
@@ -164,10 +208,49 @@
 
       _getLocations: function () {
         this.locations = _(this.coordinates)
-          .map(coordinate => {
-            return new google.maps.LatLng(parseFloat(coordinate.latitude), parseFloat(coordinate.longitude))
+          .map(coordinate => new google.maps.LatLng(parseFloat(coordinate.latitude), parseFloat(coordinate.longitude)) )
+          .value();
+      },
+
+      _submit: function () {
+        this.alert.coordinates = _(this.coordinates)
+          .map((coordinate, index) => {
+            return {
+              latitude: coordinate.latitude,
+              longitude: coordinate.longitude,
+              order: index
+            };
           })
           .value();
+
+        this.body = JSON.stringify(this.alert);
+        if(this.routeData.action === 'create') {
+          this.$.alertCreate.generateRequest();
+        } else {
+          this.$.alertEdit.generateRequest();
+        }
+      },
+
+      _reset: function () {
+        this.$$('google-map').clear();
+        this.coordinates = [];
+        this._getLocations();
+      },
+
+      _cancel: function () {
+        this.hash = '/alerts';
+      },
+
+      _handleViewActivated: function () {
+        if(this.routeData.action === 'edit') {
+          this.$.alertFind.generateRequest();
+        }
+
+        this.$$('form').reset();
+      },
+
+      _handleSuccessfulResponse: function () {
+        this.hash = '/alerts';
       },
 
       addPolygonVertex: function (e, pointDetail) {
