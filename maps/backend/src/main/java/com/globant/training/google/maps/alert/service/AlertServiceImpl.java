@@ -98,10 +98,13 @@ public class AlertServiceImpl implements AlertService {
    * @param alert the alert to be validated.
    */
   private void validateItem(Alert alert) {
-    Item item = itemService.findById(alert.getItemId());
+    
+    if (alert.getId() != null) {
+      Item item = itemService.findById(alert.getItemId());
 
-    if (!item.isActive()) {
-      throw new RuntimeException("The provided item is not active");
+      if (!item.isActive()) {
+        throw new RuntimeException("The provided item is not active");
+      }
     }
   }
 
