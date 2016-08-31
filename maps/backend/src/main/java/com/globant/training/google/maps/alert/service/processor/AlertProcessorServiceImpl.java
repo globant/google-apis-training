@@ -1,7 +1,5 @@
 package com.globant.training.google.maps.alert.service.processor;
 
-
-
 import com.google.inject.Inject;
 import com.google.maps.android.PolyUtil;
 
@@ -79,27 +77,26 @@ public class AlertProcessorServiceImpl implements AlertProcessorService {
 
     LatLng point = new LatLng(trackPoint.getLatitude(), trackPoint.getLongitude());
 
-    Map<Long, List<LatLng>> activeAlerts = getAlertPolygonsMap();
+    Map<Long, Alert> activeAlerts = getAlertPolygonsMap();
 
-    for (Entry<Long, List<LatLng>> entry : activeAlerts.entrySet()) {
+    for (Entry<Long, Alert> entry : activeAlerts.entrySet()) {
 
-      List<LatLng> polygon = entry.getValue();
+      Alert alert = entry.getValue();
+      
+      List<LatLng> polygon = alert.getPoligonRegion();
 
-      boolean triggerAlert = PolyUtil.containsLocation(point, polygon, true);
+      boolean polygonContainsLocation = PolyUtil.containsLocation(point, polygon, true);
 
-      if (triggerAlert) {
+      if (alert.checkTrigger(polygonContainsLocation)) {
 
         // get fresh alert
-        Alert alert = alertService.findById(entry.getKey());
+        Alert freshAlert = alertService.findById(entry.getKey());
 
-        sendNotification(alert, trackPoint);
+        sendNotification(freshAlert, trackPoint);
 
       }
-
-
     }
   }
-
 
   private void sendNotification(Alert alert, TrackPointAddedEvent trackPoint) {
 
@@ -138,11 +135,11 @@ public class AlertProcessorServiceImpl implements AlertProcessorService {
    * 
    * @return a Map.
    */
-  private Map<Long, List<LatLng>> getAlertPolygonsMap() {
+  private Map<Long, Alert> getAlertPolygonsMap() {
 
-    Map<Long, List<LatLng>> alertPoligonsMaps = new HashMap<Long, List<LatLng>>();
+    Map<Long, Alert> alertPoligonsMaps = new HashMap<Long, Alert>();
     for (Alert alert : alertService.findActive()) {
-      alertPoligonsMaps.put(alert.getId(), alert.getPoligonRegion());
+      alertPoligonsMaps.put(alert.getId(), alert);
     }
     return alertPoligonsMaps;
   }

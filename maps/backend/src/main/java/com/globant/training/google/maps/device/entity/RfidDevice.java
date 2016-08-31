@@ -104,10 +104,4 @@ public class RfidDevice extends Device {
   public void setData(Map<String, String> data) {
     this.data = data;
   }
-
-  @Override
-  public void update(Device device) {
-    // TODO Auto-generated method stub
-
-  }
 }

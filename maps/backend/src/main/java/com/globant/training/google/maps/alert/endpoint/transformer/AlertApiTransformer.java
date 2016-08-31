@@ -42,6 +42,7 @@ public class AlertApiTransformer implements Transformer<Alert, AlertDto> {
         .setName(dto.getName())
         .setActive(dto.isActive())
         .setItemId(dto.getItemId())
+        .setMode(dto.getMode())
         .setPoligonRegion(processDtoCoordinates(dto.getCoordinates()));
     // @formatter:on
     if (dto.getId() != null) {
@@ -60,9 +61,9 @@ public class AlertApiTransformer implements Transformer<Alert, AlertDto> {
     // @formatter:off
     dto.setId(alert.getId())
        .setName(alert.getName())
-
        .setCreated(alert.getCreated())
        .setLastUpdated(alert.getLastUpdated())
+       .setMode(alert.getMode())
        .setActive(alert.isActive())
        .setItemId(alert.getItemId())
        .setCoordinatesFromEntity(alert.getPoligonRegion());

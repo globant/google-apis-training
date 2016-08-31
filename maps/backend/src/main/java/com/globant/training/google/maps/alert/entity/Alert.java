@@ -37,6 +37,8 @@ public class Alert extends BaseEntity {
   private Date created;
 
   private Date lastUpdated;
+  
+  private EvaluationMode mode;
 
   /**
    * Returns <b>true</b> if the Antenna is active, otherwise <b>false</b>
@@ -151,4 +153,39 @@ public class Alert extends BaseEntity {
     this.poligonRegion = poligonRegion;
     return this;
   }
+
+  /**
+   * Get evaluation mode for alarm and polygon.
+   * @return a {@link EvaluationMode}
+   */
+  public EvaluationMode getMode() {
+    return mode;
+  }
+
+  /**
+   * Set evaluation mode for alarm and polygon.
+   * @param mode {@link EvaluationMode}
+   */
+  public Alert setMode(EvaluationMode mode) {
+    this.mode = mode;
+    return this;
+  }
+  
+  /**
+   * Checks if an alert must be triggered based in the alert type.
+   * 
+   * @param polygonContainsLocation boolean indicating if point is inside or outside polygon.
+   * @return true if alert is activaded or false if shouldn't
+   */
+  public boolean checkTrigger(boolean polygonContainsLocation) {
+    boolean triggerAlert = false;
+        
+    if (EvaluationMode.IN.equals(mode)) {
+      triggerAlert = polygonContainsLocation;
+    } else {
+      triggerAlert = !polygonContainsLocation;
+    }
+    return triggerAlert;
+  }
+  
 }

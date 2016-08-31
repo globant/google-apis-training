@@ -79,10 +79,4 @@ public class GpsDevice extends Device {
     this.data = data;
   }
 
-  @Override
-  public void update(Device device) {
-    // TODO Auto-generated method stub
-    
-  }
-
 }
