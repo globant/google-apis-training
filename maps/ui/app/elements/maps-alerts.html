@@ -16,7 +16,7 @@
 
 //Maps components
 <link rel="import" href="maps-request.html">
-<link rel="import" href="maps-google-map-circle.html">
+<link rel="import" href="maps-google-map-polygon.html">
 
 //Maps behaviours
 <link rel="import" href="behaviors/maps-view-behavior.html">
@@ -62,6 +62,13 @@
 
     <iron-location hash="{{hash}}"></iron-location>
 
+    <maps-request id="items"
+      user="[[user]]"
+      endpoint="/items"
+      method="GET"
+      load-with-view
+      on-response="_handleItemsResponse"></maps-request>
+
     <maps-request id="alerts"
       user="[[user]]"
       endpoint="/alerts"
@@ -92,10 +99,10 @@
                 <div>{{item.name}}</div>
                 <div secondary class="layout horizontal justified">
                   <div>
-                    <p><em>Serial number:</em> {{item.serialNumber}}</p>
-                    <p><em>Latitude:</em> {{item.latitude}}</p>
-                    <p><em>Longitude:</em> {{item.longitude}}</p>
-                    <p><em>Range:</em> {{item.rangeLimit}}</p>
+                    <p><em>Item:</em> {{getItemName(item.itemId)}}</p>
+                    <p><em>Mode:</em> {{getModeText(item.mode)}}</p>
+                    <p><em>Created:</em> [[formatDate(item.created)]]</p>
+                    <p><em>Last Updated:</em> [[formatDate(item.lastUpdate)]]</p>
                   </div>
                   <div class="layout vertical justified">
                     <paper-icon-button icon="create" alert-id="{{item.id}}" on-tap="editAlert"></paper-icon-button>
@@ -114,25 +121,13 @@
           map="{{map}}"
           latitude="{{_selectedAlert.latitude}}"
           longitude="{{_selectedAlert.longitude}}"
-          api-key="{{constants.apiKeys.mapsApiKey}}"></google-map>
+          api-key="{{constants.apiKeys.mapsApiKey}}"
+          on-google-map-ready="_mapReady"></google-map>
 
-        <template is="dom-repeat" items="[[alerts.items]]">
-          <google-map-marker
-            map="{{map}}"
-            latitude="[[item.latitude]]"
-            longitude="[[item.longitude]]"
-            title="[[item.name]]"
-            draggable="false"
-            click-events="true"
-            data="[[item.id]]"
-            on-google-map-marker-dblclick="_handleDbClickMarker"></google-map-marker>
-
-          <maps-google-map-circle
-            map="{{map}}"
-            latitude="[[item.latitude]]"
-            longitude="[[item.longitude]]"
-            radius="[[item.rangeLimit]]"></maps-google-map-circle>
-        </template>
+        <maps-google-map-polygon
+          map="{{map}}"
+          locations="[[locations]]"
+          geodesic></maps-google-map-polygon>
       </div>
     </paper-drawer-panel>
   </template>
@@ -150,6 +145,11 @@
         alertToDelete: {
           type: String,
           value: ''
+        },
+
+        locations: {
+          type: Object,
+          value: []
         },
 
         _alertIndex: {
@@ -172,27 +172,61 @@
         return _panelSelected === 'drawer' ? 'chevron-right' : 'chevron-left';
       },
 
-      _handleDbClickMarker: function (e) {
-        this.editAlert(e.currentTarget.data);
-      },
-
       _setSelectedAlert: function (alertIndex) {
-        var newCenter = new google.maps.LatLng(this.alerts.items[alertIndex].latitude, this.alerts.items[alertIndex].longitude);
+        var newCenter = new google.maps.LatLng(this.alerts.items[alertIndex].coordinates[0].latitude, this.alerts.items[alertIndex].coordinates[0].longitude);
         this.map.panTo(newCenter);
         this.$.alertsList.closeDrawer();
+        this.activeAlert = this.alerts.items[alertIndex];
+        this._getLocations();
       },
 
       _getSelectedAlert: function (alerts) {
         var selected = {};
 
         if(alerts.items && alerts.items.length) {
-          selected.latitude = this.alerts.items[0].latitude;
-          selected.longitude = this.alerts.items[0].longitude;
+          selected.latitude = this.alerts.items[0].coordinates[0].latitude;
+          selected.longitude = this.alerts.items[0].coordinates[0].longitude;
+          this.activeAlert = this.alerts.items[0];
         } else {
           selected.latitude = 0;
           selected.longitude = 0;
+          this.activeAlert = {
+            coordinates: [ selected ]
+          };
         }
         return selected;
+      },
+
+      _handleItemsResponse: function (e, responseData) {
+        this.items = _(responseData.items).keyBy('id').value();
+      },
+
+      _getLocations: function () {
+        this.locations = _(this.activeAlert.coordinates)
+          .map(coordinate => new google.maps.LatLng(parseFloat(coordinate.latitude), parseFloat(coordinate.longitude)) )
+          .value();
+      },
+
+      _mapReady: function () {
+        this._getLocations();
+      },
+
+      formatDate: function (date) {
+        return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+      },
+
+      getItemName: function(itemId) {
+        if(itemId) {
+          return this.items[itemId].name;
+        }
+      },
+
+      getModeText: function (mode) {
+        if( mode === 'IN') {
+          return 'In alert';
+        } else if( mode === 'OUT' ) {
+          return 'Out alert';
+        }
       },
 
       addAlert: function () {
