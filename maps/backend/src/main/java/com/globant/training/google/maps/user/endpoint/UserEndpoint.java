@@ -10,11 +10,9 @@ import com.google.inject.Inject;
 
 import com.globant.training.google.maps.configs.Constants;
 import com.globant.training.google.maps.core.endpoint.BaseEndpoint;
-import com.globant.training.google.maps.user.entity.AppUser;
+import com.globant.training.google.maps.core.endpoint.dto.PaginatedResponseDto;
 import com.globant.training.google.maps.user.entity.UserRole;
 import com.globant.training.google.maps.user.service.UserService;
-
-import java.util.List;
 
 import javax.inject.Named;
 
@@ -27,6 +25,8 @@ import javax.inject.Named;
     clientIds = {Constants.WEB_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID},
     description = "API for maps poc.")
 public class UserEndpoint extends BaseEndpoint {
+  
+  private static final int MAX_LIMIT = 50;
 
   /**
    * Constructor.
@@ -42,28 +42,27 @@ public class UserEndpoint extends BaseEndpoint {
    * Find {@link EntityUser} in the application.
    * 
    * @param user currently authenticated {@link User}
-   * @return {@link EntityUser}
-   * @throws NotFoundException if none antenna found for provided id.
+   * @param page the page index
+   * @param pageSize the page size
+   * @return {@link PaginatedResponseDto}
    * @throws OAuthRequestException return the exception if the user is not authenticated
    */
   @ApiMethod(name = "findUsers", path = "users", httpMethod = HttpMethod.GET)
-  public List<AppUser> findUsers(User user) throws NotFoundException, OAuthRequestException {
+  public PaginatedResponseDto findUsers(@Named("pageIndex") Integer page,
+      @Named("pageSize") Integer pageSize, User user)
+      throws NotFoundException, OAuthRequestException {
 
-    List<AppUser> users = userService.getAllUsers();
+    validateAdmin(user);
+    
+    if (page == null) {
+      page = 0;
+    }
 
-    return users;
+    if (pageSize == null || pageSize > 50) {
+      pageSize = MAX_LIMIT;
+    }
+    
+    return userService.findUsersPaginated(page, pageSize);
   }
 
-
-  /**
-   * Sets admin role for a specific user. The user must be registered into the application.
-   * 
-   * @param googleId the google id.
-   */
-  @ApiMethod(name = "user.admin", path = "users/admin/role/{googleId}", httpMethod = HttpMethod.PUT)
-  public void setAdminRole(@Named("googleId") final String googleId) {
-
-    userService.addRole(googleId, UserRole.ADMIN);
-
-  }
 }

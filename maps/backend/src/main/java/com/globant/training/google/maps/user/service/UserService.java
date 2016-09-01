@@ -1,6 +1,7 @@
 package com.globant.training.google.maps.user.service;
 
 import com.globant.training.google.maps.antenna.entity.Antenna;
+import com.globant.training.google.maps.core.endpoint.dto.PaginatedResponseDto;
 import com.globant.training.google.maps.user.entity.AppUser;
 import com.globant.training.google.maps.user.entity.UserRole;
 
@@ -53,5 +54,14 @@ public interface UserService {
    * @return the {@link Antenna}
    */
   AppUser findUserByGoogleId(String id);
+  
+  /**
+   * Find users Paginated.
+   * 
+   * @param offset the offset
+   * @param limit the limit
+   * @return {@link PaginatedResponseDto}
+   */
+  PaginatedResponseDto findUsersPaginated(Integer offset, Integer limit);
 
 }

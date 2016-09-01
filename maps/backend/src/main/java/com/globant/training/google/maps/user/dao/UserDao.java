@@ -1,8 +1,8 @@
 package com.globant.training.google.maps.user.dao;
 
-import java.util.List;
-
 import com.globant.training.google.maps.user.entity.AppUser;
+
+import java.util.List;
 
 /**
  * User DAO Interface.
@@ -33,5 +33,21 @@ public interface UserDao {
    * @return the {@link AppUser}
    */
   AppUser findByGoogleId(String id);
+  
+  /**
+   * Find users Paginated.
+   * 
+   * @param offset the offset
+   * @param limit the limit
+   * @return List of {@link AppUser}
+   */
+  List<AppUser> findUsersPaginated(Integer offset, Integer limit);
+  
+  /**
+   * Count all Users.
+   * 
+   * @return the quantity
+   */
+  int countAll();
 
 }
