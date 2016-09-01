@@ -93,7 +93,7 @@
         </paper-toolbar>
 
         <paper-listbox selected="{{_alertIndex}}">
-          <template is="dom-repeat" items="[[alerts.items]]">
+          <template id="alertsTemplate" is="dom-repeat" items="[[alerts.items]]">
             <paper-item>
               <paper-item-body two-line>
                 <div>{{item.name}}</div>
@@ -121,12 +121,11 @@
           map="{{map}}"
           latitude="{{_selectedAlert.latitude}}"
           longitude="{{_selectedAlert.longitude}}"
-          api-key="{{constants.apiKeys.mapsApiKey}}"
-          on-google-map-ready="_mapReady"></google-map>
+          api-key="{{constants.apiKeys.mapsApiKey}}"></google-map>
 
         <maps-google-map-polygon
           map="{{map}}"
-          locations="[[locations]]"
+          path="[[locations]]"
           geodesic></maps-google-map-polygon>
       </div>
     </paper-drawer-panel>
@@ -158,8 +157,7 @@
         },
 
         _selectedAlert: {
-          type: Object,
-          computed: '_getSelectedAlert(alerts)'
+          type: Object
         }
       },
 
@@ -168,33 +166,27 @@
         MapsBehaviors.ConstantsBehavior
       ],
 
+      observers: [
+        '_handleRequestsCompleted(map, items, alerts)'
+      ],
+
       _getIconDrawer: function (_panelSelected) {
         return _panelSelected === 'drawer' ? 'chevron-right' : 'chevron-left';
       },
 
       _setSelectedAlert: function (alertIndex) {
-        var newCenter = new google.maps.LatLng(this.alerts.items[alertIndex].coordinates[0].latitude, this.alerts.items[alertIndex].coordinates[0].longitude);
-        this.map.panTo(newCenter);
-        this.$.alertsList.closeDrawer();
-        this.activeAlert = this.alerts.items[alertIndex];
-        this._getLocations();
-      },
-
-      _getSelectedAlert: function (alerts) {
-        var selected = {};
-
-        if(alerts.items && alerts.items.length) {
-          selected.latitude = this.alerts.items[0].coordinates[0].latitude;
-          selected.longitude = this.alerts.items[0].coordinates[0].longitude;
-          this.activeAlert = this.alerts.items[0];
+        if(this._alertIndex !== -1) {
+          var newCenter = new google.maps.LatLng(this.alerts.items[alertIndex].coordinates[0].latitude, this.alerts.items[alertIndex].coordinates[0].longitude);
+          this.map.panTo(newCenter);
+          this.$.alertsList.closeDrawer();
+          this.activeAlert = this.alerts.items[alertIndex];
+          this._getLocations();
         } else {
-          selected.latitude = 0;
-          selected.longitude = 0;
-          this.activeAlert = {
-            coordinates: [ selected ]
-          };
+          this._selectedAlert = {
+            latitude: 0,
+            longitude: 0
+          }
         }
-        return selected;
       },
 
       _handleItemsResponse: function (e, responseData) {
@@ -202,13 +194,26 @@
       },
 
       _getLocations: function () {
-        this.locations = _(this.activeAlert.coordinates)
-          .map(coordinate => new google.maps.LatLng(parseFloat(coordinate.latitude), parseFloat(coordinate.longitude)) )
-          .value();
+        if(window.google) {
+          this.locations = _(this.activeAlert.coordinates)
+            .map(coordinate => new google.maps.LatLng(parseFloat(coordinate.latitude), parseFloat(coordinate.longitude)))
+            .value();
+        }
       },
 
-      _mapReady: function () {
-        this._getLocations();
+      _getSelectedAlert: function () {
+        if(this.alerts.items && this.alerts.items.length) {
+          this._alertIndex = 0;
+        } else {
+          this._alertIndex = -1;
+        }
+      },
+
+      _handleRequestsCompleted: function (map, items, alerts) {
+        if(map && items && alerts) {
+          this._getSelectedAlert();
+          this.$.alertsTemplate.render();
+        }
       },
 
       formatDate: function (date) {
