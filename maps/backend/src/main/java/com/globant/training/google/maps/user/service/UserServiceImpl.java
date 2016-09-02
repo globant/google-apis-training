@@ -3,11 +3,13 @@ package com.globant.training.google.maps.user.service;
 
 import com.google.inject.Inject;
 
+import com.globant.training.google.maps.core.endpoint.dto.PaginatedResponseDto;
 import com.globant.training.google.maps.user.dao.UserDao;
 import com.globant.training.google.maps.user.entity.AppUser;
 import com.globant.training.google.maps.user.entity.UserRole;
 
-import java.util.ArrayList;
+import org.apache.commons.lang3.Validate;
+
 import java.util.List;
 
 /**
@@ -74,6 +76,26 @@ public class UserServiceImpl implements UserService {
     user.getRoles().add(UserRole.ADMIN);
 
     return userDao.put(user);
+  }
+
+  @Override
+  public PaginatedResponseDto findUsersPaginated(Integer offset, Integer limit) {
+    Validate.notNull(offset, "offset can not be null");
+    Validate.notNull(limit, "limit can not be null");
+    
+    int totalUsers = userDao.countAll();
+    
+    List<AppUser> users = userDao.findUsersPaginated(offset, limit);
+    
+    // @formatter:off
+    return new PaginatedResponseDto.Builder<AppUser>()
+                                    .items(users)
+                                    .pageSize(limit)
+                                    .pageIndex(offset)
+                                    .total(totalUsers)
+                                    .build();
+    // @formatter:on
+    
   }
 
 }

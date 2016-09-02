@@ -99,8 +99,9 @@ public class AlertProcessorServiceImpl implements AlertProcessorService {
   }
 
   private void sendNotification(Alert alert, TrackPointAddedEvent trackPoint) {
+    
 
-    Item item = itemService.findById(alert.getItemId());
+    Item item = itemService.findById(trackPoint.getItemId());
 
     // @formatter:off
     EmailNotification notification = new EntryPointAlertNotification.Builder()

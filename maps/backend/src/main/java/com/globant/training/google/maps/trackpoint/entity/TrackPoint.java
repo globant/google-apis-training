@@ -184,8 +184,9 @@ public abstract class TrackPoint extends BaseEntity {
   }
   
   /**
+   * Sets a {@link TrackPointVisitor}.
    * 
-   * @param visitor
+   * @param visitor the visitor 
    */
   public abstract void visit(TrackPointVisitor visitor);
 
