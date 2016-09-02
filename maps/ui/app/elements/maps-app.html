@@ -99,7 +99,6 @@
         <app-drawer>
           <app-toolbar>Menu</app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a name="home" href="/#/home">Home</a>
             <a name="heatmap" href="/#/heatmap">Heat Map</a>
             <a name="antennas" href="/#/antennas" hidden="[[_userIsAdmin()]]">Antennas</a>
             <a name="devices" href="/#/devices" hidden="[[_userIsAdmin()]]">Devices</a>
@@ -125,7 +124,6 @@
             attr-for-selected="name"
             on-iron-select="_handleIronSelect"
             on-iron-deselect="_handleIronDeselect">
-              <maps-home name="home" user="[[user]]"></maps-home>
 
               <maps-antennas name="antennas" user="[[user]]"></maps-antennas>
               <maps-antenna name="antenna" user="[[user]]" route="[[subroute]]"></maps-antenna>
