@@ -157,7 +157,9 @@
           latitude="{{_selectedTrackPoint.latitude}}"
           longitude="{{_selectedTrackPoint.longitude}}"
           api-key="{{constants.apiKeys.mapsApiKey}}"
-          on-google-map-click="addPolygonVertex"></google-map>
+          on-google-map-click="addPolygonVertex"
+          fit-to-markers
+          on-google-map-ready="_handleMapReady"></google-map>
 
         <maps-google-map-polygon
           map="{{map}}"
@@ -208,9 +210,11 @@
       },
 
       _getLocations: function () {
-        this.locations = _(this.coordinates)
-          .map(coordinate => new google.maps.LatLng(parseFloat(coordinate.latitude), parseFloat(coordinate.longitude)) )
-          .value();
+        if(window.google) {
+          this.locations = _(this.coordinates)
+            .map(coordinate => new google.maps.LatLng(parseFloat(coordinate.latitude), parseFloat(coordinate.longitude)) )
+            .value();
+        }
       },
 
       _submit: function () {
@@ -265,6 +269,7 @@
         _(this.alert.coordinates)
           .forEach(coordinate => this._addMarker(coordinate.latitude, coordinate.longitude));
         this._getLocations();
+        this.$$('google-map')._fitToMarkersChanged();
       },
 
       _clearAllMarkers: function () {
@@ -288,6 +293,11 @@
           self._getLocations();
         });
         this.coordinates.push(marker);
+        this.$$('google-map').markers.push(marker);
+      },
+
+      _handleMapReady: function () {
+        this._getLocations();
       },
 
       addPolygonVertex: function (e, pointDetail) {
