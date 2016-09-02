@@ -4,7 +4,7 @@ import com.globant.training.google.maps.trackpoint.entity.GpsTrackPoint;
 import com.globant.training.google.maps.trackpoint.entity.RfidTrackPoint;
 
 /**
- * Trackpoint visitor contact.
+ * Trackpoint visitor contract.
  * 
  * @author gabriel.sideri
  */
